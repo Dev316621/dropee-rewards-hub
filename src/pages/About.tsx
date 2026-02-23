@@ -17,75 +17,70 @@ const schedules = {
 const About = () => {
   return (
     <>
-      {/* Hero */}
-      <section className="hero-section py-24 md:py-32">
+      <section className="hero-section py-16 sm:py-24 md:py-32">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl">
-            <h1 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
+            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-primary-foreground mb-3 sm:mb-4">
               About <span className="text-gradient-primary">DROPEE</span>
             </h1>
-            <p className="text-lg text-primary-foreground/70">
-              Born in Ukhrul, built for the community. We're making local delivery simple, affordable, and rewarding.
+            <p className="text-sm sm:text-lg text-primary-foreground/70">
+              Born in Ukhrul, built for the community. Making local delivery simple, affordable, and rewarding.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Mission */}
-      <AnimatedSection className="py-16">
+      <AnimatedSection className="py-10 sm:py-16">
         <div className="container mx-auto px-4 max-w-3xl">
-          <div className="flex items-start gap-4 card-elevated p-8">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-              <Heart className="w-6 h-6 text-primary" />
+          <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 card-elevated p-5 sm:p-8">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+              <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             </div>
             <div>
-              <h2 className="font-display text-2xl font-bold mb-3">Our Mission</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                To empower the people of Ukhrul with fast, reliable delivery — while making every order count through our loyalty-driven ecosystem. We believe that when you reward consistency, you build lasting relationships.
+              <h2 className="font-display text-xl sm:text-2xl font-bold mb-2 sm:mb-3">Our Mission</h2>
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                To empower the people of Ukhrul with fast, reliable delivery — while making every order count through our loyalty-driven ecosystem.
               </p>
             </div>
           </div>
         </div>
       </AnimatedSection>
 
-      {/* Coverage */}
-      <AnimatedSection className="py-16 bg-muted">
+      <AnimatedSection className="py-10 sm:py-16 bg-muted">
         <div className="container mx-auto px-4 max-w-3xl">
-          <div className="flex items-start gap-4 mb-8">
-            <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0">
-              <MapPin className="w-6 h-6 text-secondary" />
+          <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 mb-6 sm:mb-8">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0">
+              <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-secondary" />
             </div>
             <div>
-              <h2 className="font-display text-2xl font-bold mb-2">Coverage Area</h2>
-              <p className="text-muted-foreground">
-                DROPEE currently operates within Ukhrul town and its immediate surrounding areas in Manipur. We deliver door-to-door within our service boundary, covering the main market area, residential zones, and nearby villages within a 10km radius.
+              <h2 className="font-display text-xl sm:text-2xl font-bold mb-2">Coverage Area</h2>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                DROPEE operates within Ukhrul town and its surrounding areas in Manipur. Door-to-door within our service boundary, covering the main market, residential zones, and nearby villages within 10km.
               </p>
             </div>
           </div>
         </div>
       </AnimatedSection>
 
-      {/* Delivery Schedules */}
-      <AnimatedSection className="py-16">
+      <AnimatedSection className="py-10 sm:py-16">
         <div className="container mx-auto px-4 max-w-3xl">
-          <div className="flex items-start gap-4 mb-8">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-              <Clock className="w-6 h-6 text-primary" />
+          <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 mb-6 sm:mb-8">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+              <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             </div>
-            <h2 className="font-display text-2xl font-bold">Delivery Time Slots</h2>
+            <h2 className="font-display text-xl sm:text-2xl font-bold">Delivery Time Slots</h2>
           </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             {(["summer", "winter"] as const).map((season) => (
-              <div key={season} className="card-elevated p-6">
-                <h3 className="font-display font-semibold text-lg mb-4 capitalize">
+              <div key={season} className="card-elevated p-5 sm:p-6">
+                <h3 className="font-display font-semibold text-base sm:text-lg mb-3 sm:mb-4">
                   {season === "summer" ? "☀️ Summer Schedule" : "❄️ Winter Schedule"}
                 </h3>
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {schedules[season].map((s) => (
-                    <div key={s.slot} className="flex justify-between items-center py-2 border-b border-border last:border-0">
-                      <span className="font-medium text-sm">{s.slot}</span>
-                      <span className="text-sm text-muted-foreground">{s.time}</span>
+                    <div key={s.slot} className="flex justify-between items-center py-1.5 sm:py-2 border-b border-border last:border-0">
+                      <span className="font-medium text-xs sm:text-sm">{s.slot}</span>
+                      <span className="text-xs sm:text-sm text-muted-foreground">{s.time}</span>
                     </div>
                   ))}
                 </div>
@@ -95,41 +90,39 @@ const About = () => {
         </div>
       </AnimatedSection>
 
-      {/* Weight Rules */}
-      <AnimatedSection className="py-16 bg-muted">
+      <AnimatedSection className="py-10 sm:py-16 bg-muted">
         <div className="container mx-auto px-4 max-w-3xl">
-          <div className="flex items-start gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-              <Weight className="w-6 h-6 text-primary" />
+          <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+              <Weight className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             </div>
             <div>
-              <h2 className="font-display text-2xl font-bold mb-2">Weight & Pricing</h2>
-              <p className="text-muted-foreground">
-                Standard delivery rate applies for packages up to <strong>7 kg</strong>. For packages above 7 kg, an extra charge is applied per kilogram. This ensures fair pricing while keeping deliveries fast and efficient.
+              <h2 className="font-display text-xl sm:text-2xl font-bold mb-2">Weight & Pricing</h2>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                Standard delivery rate applies for packages up to <strong>7 kg</strong>. Extra charge per kg above 7 kg.
               </p>
             </div>
           </div>
-          <div className="card-elevated p-6">
-            <div className="grid grid-cols-2 gap-4 text-center">
-              <div className="p-4 rounded-lg bg-primary/5">
-                <div className="font-display text-2xl font-bold text-primary">≤ 7 kg</div>
-                <p className="text-sm text-muted-foreground mt-1">Standard Rate</p>
+          <div className="card-elevated p-4 sm:p-6">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 text-center">
+              <div className="p-3 sm:p-4 rounded-lg bg-primary/5">
+                <div className="font-display text-xl sm:text-2xl font-bold text-primary">≤ 7 kg</div>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">Standard Rate</p>
               </div>
-              <div className="p-4 rounded-lg bg-secondary/5">
-                <div className="font-display text-2xl font-bold text-secondary">&gt; 7 kg</div>
-                <p className="text-sm text-muted-foreground mt-1">Extra per kg</p>
+              <div className="p-3 sm:p-4 rounded-lg bg-secondary/5">
+                <div className="font-display text-xl sm:text-2xl font-bold text-secondary">&gt; 7 kg</div>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">Extra per kg</p>
               </div>
             </div>
           </div>
         </div>
       </AnimatedSection>
 
-      {/* Brand Story */}
-      <AnimatedSection className="py-16">
+      <AnimatedSection className="py-10 sm:py-16">
         <div className="container mx-auto px-4 max-w-3xl text-center">
-          <h2 className="font-display text-2xl font-bold mb-4">Our Story</h2>
-          <p className="text-muted-foreground leading-relaxed">
-            DROPEE started as a simple idea — what if deliveries in Ukhrul weren't just transactions, but a rewarding experience? We set out to build a delivery platform that values loyalty, celebrates milestones, and brings the community closer together. From our first delivery to thousands, every package tells a story of trust, speed, and commitment to Ukhrul.
+          <h2 className="font-display text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Our Story</h2>
+          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+            DROPEE started as a simple idea — what if deliveries in Ukhrul weren't just transactions, but a rewarding experience? We set out to build a delivery platform that values loyalty, celebrates milestones, and brings the community closer together.
           </p>
         </div>
       </AnimatedSection>

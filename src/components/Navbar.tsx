@@ -22,12 +22,12 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14 md:h-16">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
-              <Package className="w-5 h-5 text-primary-foreground" />
+            <div className="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-primary flex items-center justify-center">
+              <Package className="w-4 h-4 md:w-5 md:h-5 text-primary-foreground" />
             </div>
-            <span className="font-display text-xl font-bold tracking-tight">DROPEE</span>
+            <span className="font-display text-lg md:text-xl font-bold tracking-tight">DROPEE</span>
           </Link>
 
           {/* Desktop nav */}
@@ -57,45 +57,48 @@ const Navbar = () => {
           </div>
 
           {/* Mobile toggle */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 rounded-lg hover:bg-muted"
-          >
-            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          <div className="flex items-center gap-2 lg:hidden">
+            <Link to="/login">
+              <Button size="sm" className="h-8 px-3 text-xs">Log In</Button>
+            </Link>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-lg hover:bg-muted active:bg-muted/80 touch-manipulation"
+            >
+              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu — full-screen overlay */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden border-t border-border bg-background"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="lg:hidden fixed inset-0 top-14 bg-background z-40 overflow-y-auto"
           >
-            <div className="container mx-auto px-4 py-4 space-y-1">
+            <div className="container mx-auto px-4 py-6 space-y-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
                   onClick={() => setIsOpen(false)}
-                  className={`block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`flex items-center px-4 py-3.5 rounded-xl text-base font-medium transition-colors touch-manipulation ${
                     location.pathname === link.to
                       ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted active:bg-muted/80"
                   }`}
                 >
                   {link.label}
                 </Link>
               ))}
-              <div className="pt-3 flex gap-2">
-                <Link to="/login" className="flex-1">
-                  <Button variant="outline" className="w-full" size="sm">Log In</Button>
-                </Link>
-                <Link to="/login" className="flex-1">
-                  <Button className="w-full" size="sm">Track Deliveries</Button>
+              <div className="pt-4 space-y-3">
+                <Link to="/login" onClick={() => setIsOpen(false)} className="block">
+                  <Button className="w-full h-12 text-base" size="lg">Track Deliveries</Button>
                 </Link>
               </div>
             </div>

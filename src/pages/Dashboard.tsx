@@ -7,23 +7,23 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--dashboard-bg))] text-[hsl(var(--dashboard-card-foreground))]">
-      <header className="border-b border-[hsl(var(--dashboard-border))] px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center">
-            <Package className="h-5 w-5 text-primary-foreground" />
+      <header className="border-b border-[hsl(var(--dashboard-border))] px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg bg-primary flex items-center justify-center">
+            <Package className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground" />
           </div>
-          <h1 className="text-xl font-bold">DROPEE Dashboard</h1>
+          <h1 className="text-lg sm:text-xl font-bold">DROPEE</h1>
         </div>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-muted-foreground">{user?.email}</span>
-          <Button variant="ghost" size="sm" onClick={signOut}>
+        <div className="flex items-center gap-2 sm:gap-4">
+          <span className="text-xs sm:text-sm text-muted-foreground hidden sm:inline truncate max-w-[200px]">{user?.email}</span>
+          <Button variant="ghost" size="sm" onClick={signOut} className="h-8 w-8 sm:h-9 sm:w-auto sm:px-3 p-0 sm:p-2">
             <LogOut className="h-4 w-4" />
           </Button>
         </div>
       </header>
-      <main className="p-6 max-w-7xl mx-auto">
-        <h2 className="text-2xl font-bold mb-4">Welcome to your Dashboard</h2>
-        <p className="text-muted-foreground">Your gamified delivery dashboard is coming next in Phase 3.</p>
+      <main className="p-4 sm:p-6 max-w-7xl mx-auto">
+        <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Welcome to your Dashboard</h2>
+        <p className="text-sm sm:text-base text-muted-foreground">Your gamified delivery dashboard is coming next in Phase 3.</p>
       </main>
     </div>
   );
