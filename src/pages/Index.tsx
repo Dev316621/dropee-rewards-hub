@@ -6,44 +6,37 @@ import { motion } from "framer-motion";
 import { Package, Truck, Users, Star, ArrowRight, Gift, Zap, Clock, Trophy, ChevronRight } from "lucide-react";
 
 const DeliveryAnimation = () => (
-  <div className="relative w-full h-48 md:h-64">
-    {/* Road */}
+  <div className="relative w-full h-32 sm:h-48 md:h-64">
     <div className="absolute bottom-8 left-0 right-0 h-1 bg-primary-foreground/20 rounded-full" />
-    {/* Delivery person */}
     <motion.div
       animate={{ x: ["-10%", "110%"] }}
       transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
       className="absolute bottom-10"
     >
       <div className="relative">
-        <Truck className="w-12 h-12 md:w-16 md:h-16 text-primary" />
+        <Truck className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-primary" />
         <motion.div
           animate={{ y: [-2, 2, -2] }}
           transition={{ duration: 0.5, repeat: Infinity }}
           className="absolute -top-2 -right-1"
         >
-          <Package className="w-5 h-5 text-secondary" />
+          <Package className="w-4 h-4 sm:w-5 sm:h-5 text-secondary" />
         </motion.div>
       </div>
     </motion.div>
-    {/* Buildings */}
     {[10, 30, 55, 75, 90].map((left, i) => (
       <div
         key={i}
         className="absolute bottom-8 bg-primary-foreground/10 rounded-t-md"
-        style={{
-          left: `${left}%`,
-          width: `${20 + i * 5}px`,
-          height: `${40 + i * 15}px`,
-        }}
+        style={{ left: `${left}%`, width: `${20 + i * 5}px`, height: `${30 + i * 12}px` }}
       />
     ))}
   </div>
 );
 
 const stats = [
-  { icon: Truck, label: "Deliveries Completed", value: 2480, suffix: "+" },
-  { icon: Users, label: "Happy Customers", value: 850, suffix: "+" },
+  { icon: Truck, label: "Deliveries", value: 2480, suffix: "+" },
+  { icon: Users, label: "Customers", value: 850, suffix: "+" },
   { icon: Star, label: "5-Star Reviews", value: 420, suffix: "+" },
   { icon: Package, label: "Partners", value: 35, suffix: "+" },
 ];
@@ -66,7 +59,6 @@ const tiers = [
 const Index = () => {
   return (
     <>
-      {/* JSON-LD */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
@@ -86,20 +78,16 @@ const Index = () => {
       })}} />
 
       {/* Hero */}
-      <section className="hero-section relative overflow-hidden min-h-[90vh] flex items-center">
+      <section className="hero-section relative overflow-hidden min-h-[80vh] sm:min-h-[90vh] flex items-center">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-20 right-10 w-72 h-72 rounded-full bg-primary/10 blur-3xl" />
-          <div className="absolute bottom-20 left-10 w-96 h-96 rounded-full bg-secondary/10 blur-3xl" />
+          <div className="absolute top-20 right-10 w-48 sm:w-72 h-48 sm:h-72 rounded-full bg-primary/10 blur-3xl" />
+          <div className="absolute bottom-20 left-10 w-64 sm:w-96 h-64 sm:h-96 rounded-full bg-secondary/10 blur-3xl" />
         </div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-medium mb-6">
-                <Zap className="w-3.5 h-3.5" /> Now delivering in Ukhrul, Manipur
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/20 text-primary text-xs sm:text-sm font-medium mb-4 sm:mb-6">
+                <Zap className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Now delivering in Ukhrul
               </span>
             </motion.div>
 
@@ -107,7 +95,7 @@ const Index = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-tight mb-6"
+              className="font-display text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-tight mb-4 sm:mb-6"
             >
               Every Delivery{" "}
               <span className="text-gradient-primary">Earns You</span>{" "}
@@ -118,24 +106,24 @@ const Index = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-lg md:text-xl text-primary-foreground/70 mb-8 max-w-xl"
+              className="text-sm sm:text-lg md:text-xl text-primary-foreground/70 mb-6 sm:mb-8 max-w-xl"
             >
-              Ukhrul's smartest delivery service. Earn loyalty points, unlock tiers, spin the wheel, and get free deliveries — just by using DROPEE.
+              Ukhrul's smartest delivery service. Earn loyalty points, unlock tiers, spin the wheel, and get free deliveries.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-wrap gap-4"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4"
             >
-              <Link to="/login">
-                <Button variant="hero" size="xl">
-                  Track My Deliveries <ArrowRight className="w-5 h-5" />
+              <Link to="/login" className="w-full sm:w-auto">
+                <Button variant="hero" size="xl" className="w-full sm:w-auto h-12 sm:h-auto text-sm sm:text-base">
+                  Track My Deliveries <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
               </Link>
-              <Link to="/services">
-                <Button variant="heroOutline" size="xl">
+              <Link to="/services" className="w-full sm:w-auto">
+                <Button variant="heroOutline" size="xl" className="w-full sm:w-auto h-12 sm:h-auto text-sm sm:text-base">
                   Our Services
                 </Button>
               </Link>
@@ -146,7 +134,7 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 1 }}
-            className="mt-12"
+            className="mt-8 sm:mt-12"
           >
             <DeliveryAnimation />
           </motion.div>
@@ -154,18 +142,18 @@ const Index = () => {
       </section>
 
       {/* Stats */}
-      <AnimatedSection className="py-16 bg-muted">
+      <AnimatedSection className="py-10 sm:py-16 bg-muted">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             {stats.map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <stat.icon className="w-6 h-6 text-primary" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 sm:mb-3 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <stat.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
-                <div className="font-display text-3xl md:text-4xl font-bold text-foreground">
+                <div className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
                   <CountUp end={stat.value} suffix={stat.suffix} />
                 </div>
-                <p className="text-sm text-muted-foreground mt-1">{stat.label}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -173,19 +161,19 @@ const Index = () => {
       </AnimatedSection>
 
       {/* Loyalty Points Explainer */}
-      <AnimatedSection className="py-20">
+      <AnimatedSection className="py-12 sm:py-20">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             How <span className="text-gradient-primary">Rewards</span> Work
           </h2>
-          <p className="text-muted-foreground max-w-lg mx-auto mb-12">
+          <p className="text-sm sm:text-base text-muted-foreground max-w-lg mx-auto mb-8 sm:mb-12">
             Simple, transparent, and rewarding. Every delivery brings you closer to free ones.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
             {[
-              { icon: Truck, title: "Complete Deliveries", desc: "Every delivery you complete earns you 2 loyalty points automatically." },
-              { icon: Gift, title: "Collect 20 Points", desc: "Once you reach 20 points, redeem them for a completely free delivery!" },
-              { icon: Trophy, title: "Level Up Tiers", desc: "The more you deliver, the higher your tier — unlock exclusive perks." },
+              { icon: Truck, title: "Complete Deliveries", desc: "Every delivery earns you 2 loyalty points automatically." },
+              { icon: Gift, title: "Collect 20 Points", desc: "Reach 20 points to redeem for a completely free delivery!" },
+              { icon: Trophy, title: "Level Up Tiers", desc: "The more you deliver, the higher your tier — unlock perks." },
             ].map((item, i) => (
               <motion.div
                 key={item.title}
@@ -193,13 +181,13 @@ const Index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.15 }}
-                className="card-elevated p-6 text-center hover:scale-[1.02] transition-transform"
+                className="card-elevated p-5 sm:p-6 text-center"
               >
-                <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-primary/10 flex items-center justify-center">
-                  <item.icon className="w-7 h-7 text-primary" />
+                <div className="w-12 h-12 sm:w-14 sm:h-14 mx-auto mb-3 sm:mb-4 rounded-2xl bg-primary/10 flex items-center justify-center">
+                  <item.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
                 </div>
-                <h3 className="font-display font-semibold text-lg mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">{item.desc}</p>
+                <h3 className="font-display font-semibold text-base sm:text-lg mb-1.5 sm:mb-2">{item.title}</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -207,18 +195,18 @@ const Index = () => {
       </AnimatedSection>
 
       {/* Tier Leaderboard Preview */}
-      <AnimatedSection className="py-16 bg-muted">
+      <AnimatedSection className="py-10 sm:py-16 bg-muted">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-6 sm:mb-8">
             <div>
-              <h2 className="font-display text-3xl font-bold mb-2">Tier Leaderboard</h2>
-              <p className="text-muted-foreground">Top performers this month</p>
+              <h2 className="font-display text-xl sm:text-3xl font-bold mb-1">Tier Leaderboard</h2>
+              <p className="text-xs sm:text-sm text-muted-foreground">Top performers this month</p>
             </div>
-            <Link to="/tiers" className="mt-4 md:mt-0 text-primary text-sm font-medium flex items-center gap-1 hover:gap-2 transition-all">
-              View all tiers <ChevronRight className="w-4 h-4" />
+            <Link to="/tiers" className="text-primary text-xs sm:text-sm font-medium flex items-center gap-1 hover:gap-2 transition-all">
+              View all <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </Link>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             {tiers.map((tier, i) => (
               <motion.div
                 key={tier.name}
@@ -226,12 +214,11 @@ const Index = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                className={`${tier.className} rounded-xl p-5 text-center text-primary-foreground`}
+                className={`${tier.className} rounded-xl p-4 sm:p-5 text-center text-primary-foreground`}
               >
-                <span className="text-3xl">{tier.icon}</span>
-                <h3 className="font-display font-bold mt-2">{tier.name}</h3>
-                <p className="text-sm opacity-80">{tier.deliveries} deliveries</p>
+                <span className="text-2xl sm:text-3xl">{tier.icon}</span>
+                <h3 className="font-display font-bold text-sm sm:text-base mt-1.5 sm:mt-2">{tier.name}</h3>
+                <p className="text-xs opacity-80">{tier.deliveries} deliveries</p>
               </motion.div>
             ))}
           </div>
@@ -239,23 +226,23 @@ const Index = () => {
       </AnimatedSection>
 
       {/* Weekly Offer Banner */}
-      <AnimatedSection className="py-16">
+      <AnimatedSection className="py-10 sm:py-16">
         <div className="container mx-auto px-4">
-          <div className="relative overflow-hidden rounded-2xl bg-primary p-8 md:p-12">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary-foreground/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+          <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-primary p-6 sm:p-8 md:p-12">
+            <div className="absolute top-0 right-0 w-40 sm:w-64 h-40 sm:h-64 bg-primary-foreground/10 rounded-full -translate-y-1/2 translate-x-1/2" />
             <div className="relative z-10 max-w-lg">
-              <span className="inline-flex items-center gap-1 bg-primary-foreground/20 px-3 py-1 rounded-full text-primary-foreground text-xs font-semibold mb-4">
-                <Clock className="w-3 h-3" /> Limited Time Offer
+              <span className="inline-flex items-center gap-1 bg-primary-foreground/20 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-primary-foreground text-[10px] sm:text-xs font-semibold mb-3 sm:mb-4">
+                <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> Limited Time Offer
               </span>
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-primary-foreground mb-3">
+              <h2 className="font-display text-xl sm:text-2xl md:text-3xl font-bold text-primary-foreground mb-2 sm:mb-3">
                 This Week's DROPEE Special
               </h2>
-              <p className="text-primary-foreground/80 mb-6">
-                Double loyalty points on all deliveries this week! That means 4 points per delivery — reach your free delivery faster.
+              <p className="text-xs sm:text-sm md:text-base text-primary-foreground/80 mb-4 sm:mb-6">
+                Double loyalty points on all deliveries this week! 4 points per delivery — reach your free delivery faster.
               </p>
               <Link to="/offers">
-                <Button variant="heroOutline" size="lg">
-                  View All Offers <ArrowRight className="w-4 h-4" />
+                <Button variant="heroOutline" size="lg" className="h-10 sm:h-auto text-xs sm:text-sm">
+                  View All Offers <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </Button>
               </Link>
             </div>
@@ -264,19 +251,19 @@ const Index = () => {
       </AnimatedSection>
 
       {/* FAQ Section */}
-      <AnimatedSection className="py-16 bg-muted">
+      <AnimatedSection className="py-10 sm:py-16 bg-muted">
         <div className="container mx-auto px-4 max-w-3xl">
-          <h2 className="font-display text-3xl font-bold text-center mb-10">
+          <h2 className="font-display text-xl sm:text-3xl font-bold text-center mb-6 sm:mb-10">
             Frequently Asked Questions
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {faqs.map((faq, i) => (
-              <details key={i} className="group card-elevated p-5 cursor-pointer">
-                <summary className="font-semibold text-foreground flex items-center justify-between list-none">
-                  {faq.q}
-                  <ChevronRight className="w-4 h-4 text-muted-foreground transition-transform group-open:rotate-90" />
+              <details key={i} className="group card-elevated p-4 sm:p-5 cursor-pointer touch-manipulation">
+                <summary className="font-semibold text-sm sm:text-base text-foreground flex items-center justify-between list-none gap-2">
+                  <span>{faq.q}</span>
+                  <ChevronRight className="w-4 h-4 text-muted-foreground transition-transform group-open:rotate-90 shrink-0" />
                 </summary>
-                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
+                <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
               </details>
             ))}
           </div>
@@ -284,17 +271,17 @@ const Index = () => {
       </AnimatedSection>
 
       {/* CTA */}
-      <AnimatedSection className="py-20">
+      <AnimatedSection className="py-12 sm:py-20">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
             Start Earning <span className="text-gradient-primary">Rewards</span> Today
           </h2>
-          <p className="text-muted-foreground max-w-md mx-auto mb-8">
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto mb-6 sm:mb-8">
             Join hundreds of happy customers in Ukhrul who earn points and free deliveries with every order.
           </p>
           <Link to="/login">
-            <Button variant="hero" size="xl">
-              Get Started — It's Free <ArrowRight className="w-5 h-5" />
+            <Button variant="hero" size="xl" className="w-full sm:w-auto h-12 sm:h-auto text-sm sm:text-base">
+              Get Started — It's Free <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </Button>
           </Link>
         </div>

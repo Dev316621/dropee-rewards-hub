@@ -5,31 +5,11 @@ import { motion } from "framer-motion";
 import { Package, Truck, ShoppingBag, Zap, Handshake, ArrowRight } from "lucide-react";
 
 const services = [
-  {
-    icon: Package,
-    title: "Pick & Drop",
-    description: "Need something picked up and delivered? We'll handle it. From documents to parcels, DROPEE picks up from any location in Ukhrul and drops it where you need.",
-  },
-  {
-    icon: Truck,
-    title: "Custom Delivery",
-    description: "Have specific delivery requirements? Fragile items, timed deliveries, or special handling — we customize the delivery experience to match your needs.",
-  },
-  {
-    icon: ShoppingBag,
-    title: "Food & Grocery",
-    description: "Order from your favorite restaurants and local grocery stores. We bring fresh food and daily essentials right to your doorstep in Ukhrul.",
-  },
-  {
-    icon: Zap,
-    title: "Instant Delivery",
-    description: "Urgent delivery? Our instant delivery service gets your package moving within minutes. Priority handling for time-sensitive items.",
-  },
-  {
-    icon: Handshake,
-    title: "Business Partnership",
-    description: "Partner with DROPEE to offer delivery services for your business. Bulk rates, dedicated support, and featured placement on our platform.",
-  },
+  { icon: Package, title: "Pick & Drop", description: "From documents to parcels, DROPEE picks up from any location in Ukhrul and drops it where you need." },
+  { icon: Truck, title: "Custom Delivery", description: "Fragile items, timed deliveries, or special handling — we customize the delivery experience." },
+  { icon: ShoppingBag, title: "Food & Grocery", description: "Fresh food and daily essentials from restaurants and local stores, right to your doorstep." },
+  { icon: Zap, title: "Instant Delivery", description: "Urgent delivery? Your package moves within minutes with priority handling." },
+  { icon: Handshake, title: "Business Partnership", description: "Bulk rates, dedicated support, and featured placement on our platform for your business." },
 ];
 
 const Services = () => {
@@ -39,28 +19,25 @@ const Services = () => {
         "@context": "https://schema.org",
         "@type": "ItemList",
         "itemListElement": services.map((s, i) => ({
-          "@type": "Service",
-          "position": i + 1,
-          "name": s.title,
-          "description": s.description,
+          "@type": "Service", "position": i + 1, "name": s.title, "description": s.description,
           "provider": { "@type": "LocalBusiness", "name": "DROPEE", "address": { "@type": "PostalAddress", "addressLocality": "Ukhrul", "addressRegion": "Manipur" } },
         })),
       })}} />
 
-      <section className="hero-section py-24 md:py-32">
+      <section className="hero-section py-16 sm:py-24 md:py-32">
         <div className="container mx-auto px-4">
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
+          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-primary-foreground mb-3 sm:mb-4">
             Our <span className="text-gradient-primary">Services</span>
           </h1>
-          <p className="text-lg text-primary-foreground/70 max-w-xl">
-            Everything you need, delivered. From instant parcels to business partnerships — DROPEE has you covered in Ukhrul.
+          <p className="text-sm sm:text-lg text-primary-foreground/70 max-w-xl">
+            Everything you need, delivered. From instant parcels to business partnerships.
           </p>
         </div>
       </section>
 
-      <AnimatedSection className="py-16">
+      <AnimatedSection className="py-10 sm:py-16">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {services.map((service, i) => (
               <motion.div
                 key={service.title}
@@ -68,16 +45,15 @@ const Services = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -5, boxShadow: "0 20px 40px -15px hsl(24 95% 53% / 0.15)" }}
-                className="card-elevated p-6 group cursor-pointer"
+                className="card-elevated p-5 sm:p-6 group"
               >
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary/20 transition-colors">
-                  <service.icon className="w-7 h-7 text-primary" />
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 sm:mb-5 group-hover:bg-primary/20 transition-colors">
+                  <service.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
                 </div>
-                <h3 className="font-display text-xl font-bold mb-3">{service.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-5">{service.description}</p>
-                <Link to="/login" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:gap-2 transition-all">
-                  Get Started <ArrowRight className="w-4 h-4" />
+                <h3 className="font-display text-lg sm:text-xl font-bold mb-2 sm:mb-3">{service.title}</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-4 sm:mb-5">{service.description}</p>
+                <Link to="/login" className="inline-flex items-center gap-1 text-xs sm:text-sm font-medium text-primary hover:gap-2 transition-all">
+                  Get Started <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </Link>
               </motion.div>
             ))}
@@ -85,14 +61,14 @@ const Services = () => {
         </div>
       </AnimatedSection>
 
-      <AnimatedSection className="py-16 bg-muted">
+      <AnimatedSection className="py-10 sm:py-16 bg-muted">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="font-display text-3xl font-bold mb-4">Ready to Start Delivering?</h2>
-          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-            Join DROPEE today and earn rewards with every delivery in Ukhrul.
+          <h2 className="font-display text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Ready to Start?</h2>
+          <p className="text-sm text-muted-foreground mb-5 sm:mb-6 max-w-md mx-auto">
+            Join DROPEE today and earn rewards with every delivery.
           </p>
           <Link to="/login">
-            <Button variant="hero" size="lg">
+            <Button variant="hero" size="lg" className="w-full sm:w-auto h-12 sm:h-auto text-sm sm:text-base">
               Sign Up Now <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
