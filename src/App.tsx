@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import PublicLayout from "./components/PublicLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
+import DashboardLayout from "./components/dashboard/DashboardLayout";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Services from "./pages/Services";
@@ -21,7 +22,11 @@ import Register from "./pages/Register";
 import AdminLogin from "./pages/AdminLogin";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import Dashboard from "./pages/Dashboard";
+import DashboardOverview from "./components/dashboard/DashboardOverview";
+import DeliveryHistory from "./components/dashboard/DeliveryHistory";
+import LoyaltyRewards from "./components/dashboard/LoyaltyRewards";
+import DashboardAnalytics from "./components/dashboard/DashboardAnalytics";
+import NotificationsPage from "./components/dashboard/NotificationsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -54,9 +59,15 @@ const App = () => (
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
 
-            {/* Protected user routes */}
+            {/* Protected dashboard routes */}
             <Route element={<ProtectedRoute />}>
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route element={<DashboardLayout />}>
+                <Route path="/dashboard" element={<DashboardOverview />} />
+                <Route path="/dashboard/deliveries" element={<DeliveryHistory />} />
+                <Route path="/dashboard/rewards" element={<LoyaltyRewards />} />
+                <Route path="/dashboard/analytics" element={<DashboardAnalytics />} />
+                <Route path="/dashboard/notifications" element={<NotificationsPage />} />
+              </Route>
             </Route>
 
             {/* Protected admin routes */}
