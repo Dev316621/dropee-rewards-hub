@@ -8,6 +8,7 @@ import PublicLayout from "./components/PublicLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import DashboardLayout from "./components/dashboard/DashboardLayout";
+import AdminLayout from "./components/admin/AdminLayout";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Services from "./pages/Services";
@@ -27,6 +28,14 @@ import DeliveryHistory from "./components/dashboard/DeliveryHistory";
 import LoyaltyRewards from "./components/dashboard/LoyaltyRewards";
 import DashboardAnalytics from "./components/dashboard/DashboardAnalytics";
 import NotificationsPage from "./components/dashboard/NotificationsPage";
+import AdminDashboard from "./components/admin/AdminDashboard";
+import AdminCustomers from "./components/admin/AdminCustomers";
+import AdminDeliveries from "./components/admin/AdminDeliveries";
+import AdminCoupons from "./components/admin/AdminCoupons";
+import AdminLoyalty from "./components/admin/AdminLoyalty";
+import AdminSpin from "./components/admin/AdminSpin";
+import AdminBlog from "./components/admin/AdminBlog";
+import AdminPartners from "./components/admin/AdminPartners";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -72,7 +81,17 @@ const App = () => (
 
             {/* Protected admin routes */}
             <Route element={<AdminRoute />}>
-              <Route path="/admin" element={<div className="p-8 text-center">Admin Panel — Phase 5</div>} />
+              <Route element={<AdminLayout />}>
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/analytics" element={<AdminDashboard />} />
+                <Route path="/admin/customers" element={<AdminCustomers />} />
+                <Route path="/admin/deliveries" element={<AdminDeliveries />} />
+                <Route path="/admin/coupons" element={<AdminCoupons />} />
+                <Route path="/admin/loyalty" element={<AdminLoyalty />} />
+                <Route path="/admin/spin" element={<AdminSpin />} />
+                <Route path="/admin/blog" element={<AdminBlog />} />
+                <Route path="/admin/partners" element={<AdminPartners />} />
+              </Route>
             </Route>
 
             <Route path="*" element={<NotFound />} />
