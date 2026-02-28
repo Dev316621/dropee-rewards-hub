@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Package } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Menu, X, Package, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -18,17 +18,26 @@ const navLinks = [
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const isHome = location.pathname === "/";
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-14 md:h-16">
-          <Link to="/" className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
+            {!isHome && (
+              <button onClick={() => navigate(-1)} className="p-1.5 rounded-lg hover:bg-muted mr-1 touch-manipulation">
+                <ArrowLeft className="w-4 h-4 text-muted-foreground" />
+              </button>
+            )}
+            <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-primary flex items-center justify-center">
               <Package className="w-4 h-4 md:w-5 md:h-5 text-primary-foreground" />
             </div>
             <span className="font-display text-lg md:text-xl font-bold tracking-tight">DROPEE</span>
           </Link>
+          </div>
 
           {/* Desktop nav */}
           <div className="hidden lg:flex items-center gap-1">
