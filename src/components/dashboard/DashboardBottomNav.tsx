@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Truck, Gift, BarChart3, Bell } from "lucide-react";
+import { Home, Truck, Gift, Disc3, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNotifications } from "@/hooks/useNotifications";
 
@@ -7,7 +7,7 @@ const navItems = [
   { icon: Home, label: "Overview", path: "/dashboard" },
   { icon: Truck, label: "Deliveries", path: "/dashboard/deliveries" },
   { icon: Gift, label: "Rewards", path: "/dashboard/rewards" },
-  { icon: BarChart3, label: "Analytics", path: "/dashboard/analytics" },
+  { icon: Disc3, label: "Spin", path: "/dashboard/spin" },
   { icon: Bell, label: "Alerts", path: "/dashboard/notifications" },
 ];
 
