@@ -28,6 +28,8 @@ import DeliveryHistory from "./components/dashboard/DeliveryHistory";
 import LoyaltyRewards from "./components/dashboard/LoyaltyRewards";
 import DashboardAnalytics from "./components/dashboard/DashboardAnalytics";
 import NotificationsPage from "./components/dashboard/NotificationsPage";
+import SpinWheel from "./components/dashboard/SpinWheel";
+import BadgesPage from "./components/dashboard/BadgesPage";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import AdminCustomers from "./components/admin/AdminCustomers";
 import AdminDeliveries from "./components/admin/AdminDeliveries";
@@ -76,6 +78,8 @@ const App = () => (
                 <Route path="/dashboard/rewards" element={<LoyaltyRewards />} />
                 <Route path="/dashboard/analytics" element={<DashboardAnalytics />} />
                 <Route path="/dashboard/notifications" element={<NotificationsPage />} />
+                <Route path="/dashboard/spin" element={<SpinWheel />} />
+                <Route path="/dashboard/badges" element={<BadgesPage />} />
               </Route>
             </Route>
 
