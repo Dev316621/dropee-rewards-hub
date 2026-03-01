@@ -1,4 +1,5 @@
 import AnimatedSection from "@/components/AnimatedSection";
+import SEOHead from "@/components/SEOHead";
 import { ChevronRight } from "lucide-react";
 
 const policies = [
@@ -18,6 +19,7 @@ const faqItems = [
 const Policies = () => {
   return (
     <>
+      <SEOHead title="Policies" description="DROPEE delivery terms, weight charges, refund policy, and loyalty policy. Clear, fair, and transparent." path="/policies" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org", "@type": "FAQPage",
         "mainEntity": faqItems.map(f => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })),

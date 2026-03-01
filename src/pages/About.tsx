@@ -1,4 +1,5 @@
 import AnimatedSection from "@/components/AnimatedSection";
+import SEOHead from "@/components/SEOHead";
 import { MapPin, Clock, Weight, Heart } from "lucide-react";
 
 const schedules = {
@@ -17,6 +18,7 @@ const schedules = {
 const About = () => {
   return (
     <>
+      <SEOHead title="About DROPEE" description="Learn about DROPEE — Ukhrul's community delivery service. Coverage area, delivery schedules, pricing, and our story." path="/about" />
       <section className="hero-section py-16 sm:py-24 md:py-32">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl">

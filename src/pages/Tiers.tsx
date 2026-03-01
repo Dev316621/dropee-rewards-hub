@@ -1,4 +1,5 @@
 import AnimatedSection from "@/components/AnimatedSection";
+import SEOHead from "@/components/SEOHead";
 import { motion } from "framer-motion";
 import { ChevronRight, Check } from "lucide-react";
 
@@ -19,6 +20,7 @@ const faqItems = [
 const Tiers = () => {
   return (
     <>
+      <SEOHead title="Loyalty Tiers" description="Unlock exclusive perks with DROPEE tiers — Starter, Regular, Elite, and Prime. The more you deliver, the more you earn." path="/tiers" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org", "@type": "FAQPage",
         "mainEntity": faqItems.map(f => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } })),

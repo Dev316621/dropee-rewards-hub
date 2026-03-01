@@ -1,4 +1,5 @@
 import AnimatedSection from "@/components/AnimatedSection";
+import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -15,6 +16,7 @@ const services = [
 const Services = () => {
   return (
     <>
+      <SEOHead title="Services" description="DROPEE delivery services in Ukhrul — Pick & Drop, Custom Delivery, Food & Grocery, Instant Delivery, and Business Partnerships." path="/services" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "ItemList",

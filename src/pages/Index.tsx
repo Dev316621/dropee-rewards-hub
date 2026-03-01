@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import CountUp from "@/components/CountUp";
 import AnimatedSection from "@/components/AnimatedSection";
+import SEOHead from "@/components/SEOHead";
 import { motion } from "framer-motion";
 import { Package, Truck, Users, Star, ArrowRight, Gift, Zap, Clock, Trophy, ChevronRight } from "lucide-react";
 
@@ -59,6 +60,7 @@ const tiers = [
 const Index = () => {
   return (
     <>
+      <SEOHead title="DROPEE — Delivery Loyalty & Rewards in Ukhrul, Manipur" description="Ukhrul's smartest delivery service. Earn loyalty points, unlock tiers, spin the wheel, and get free deliveries with every order." path="/" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
