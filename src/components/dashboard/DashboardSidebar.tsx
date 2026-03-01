@@ -1,11 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Truck, Gift, BarChart3, Bell, LogOut, Package, Disc3, Trophy } from "lucide-react";
+import { Globe, Home, Truck, Gift, BarChart3, Bell, LogOut, Package, Disc3, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNotifications } from "@/hooks/useNotifications";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
+  { icon: Globe, label: "Home", path: "/" },
   { icon: Home, label: "Overview", path: "/dashboard" },
   { icon: Truck, label: "Deliveries", path: "/dashboard/deliveries" },
   { icon: Gift, label: "Rewards", path: "/dashboard/rewards" },

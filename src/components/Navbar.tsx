@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X, Package, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -20,6 +21,7 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isHome = location.pathname === "/";
+  const { user } = useAuth();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
@@ -57,19 +59,33 @@ const Navbar = () => {
           </div>
 
           <div className="hidden lg:flex items-center gap-3">
-            <Link to="/login">
-              <Button variant="ghost" size="sm">Log In</Button>
-            </Link>
-            <Link to="/login">
-              <Button size="sm">Track Deliveries</Button>
-            </Link>
+            {user ? (
+              <Link to="/dashboard">
+                <Button size="sm">Dashboard</Button>
+              </Link>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button variant="ghost" size="sm">Log In</Button>
+                </Link>
+                <Link to="/login">
+                  <Button size="sm">Track Deliveries</Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile toggle */}
           <div className="flex items-center gap-2 lg:hidden">
-            <Link to="/login">
-              <Button size="sm" className="h-8 px-3 text-xs">Log In</Button>
-            </Link>
+            {user ? (
+              <Link to="/dashboard">
+                <Button size="sm" className="h-8 px-3 text-xs">Dashboard</Button>
+              </Link>
+            ) : (
+              <Link to="/login">
+                <Button size="sm" className="h-8 px-3 text-xs">Log In</Button>
+              </Link>
+            )}
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 rounded-lg hover:bg-muted active:bg-muted/80 touch-manipulation"
@@ -106,9 +122,15 @@ const Navbar = () => {
                 </Link>
               ))}
               <div className="pt-4 space-y-3">
-                <Link to="/login" onClick={() => setIsOpen(false)} className="block">
-                  <Button className="w-full h-12 text-base" size="lg">Track Deliveries</Button>
-                </Link>
+                {user ? (
+                  <Link to="/dashboard" onClick={() => setIsOpen(false)} className="block">
+                    <Button className="w-full h-12 text-base" size="lg">Dashboard</Button>
+                  </Link>
+                ) : (
+                  <Link to="/login" onClick={() => setIsOpen(false)} className="block">
+                    <Button className="w-full h-12 text-base" size="lg">Track Deliveries</Button>
+                  </Link>
+                )}
               </div>
             </div>
           </motion.div>
