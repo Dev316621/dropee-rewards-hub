@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
-import { Package, Coins, Truck, Award, Copy, ChevronRight, Zap } from "lucide-react";
+import { Package, Coins, Truck, Award, Copy, ChevronRight, Zap, Users, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useDashboardData } from "@/hooks/useDashboardData";
+import { useReferrals } from "@/hooks/useReferrals";
 import CountUp from "@/components/CountUp";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
@@ -24,6 +25,7 @@ const tierIcons: Record<string, string> = {
 const DashboardOverview = () => {
   const { profile, pointsBalance, deliveryCount, userTier, tiers, freeCredits, totalFees } =
     useDashboardData();
+  const { referralCount, referralPointsEarned } = useReferrals();
 
   const tierName = userTier.data?.tier_name ?? "Starter";
   const tierBadge = userTier.data?.tier_badge ?? "bronze";
@@ -47,10 +49,25 @@ const DashboardOverview = () => {
   // Points progress toward free delivery (20 pts = 1 free)
   const pointsProgress = Math.min(100, (points / 20) * 100);
 
-  const copyReferral = () => {
+  const copyReferralLink = () => {
     if (profile.data?.referral_code) {
-      navigator.clipboard.writeText(profile.data.referral_code);
-      toast.success("Referral code copied!");
+      const link = `${window.location.origin}/register?ref=${profile.data.referral_code}`;
+      navigator.clipboard.writeText(link);
+      toast.success("Referral link copied!");
+    }
+  };
+
+  const shareReferral = async () => {
+    if (profile.data?.referral_code && navigator.share) {
+      try {
+        await navigator.share({
+          title: "Join DROPEE!",
+          text: `Sign up for DROPEE and we both earn 10 bonus loyalty points! Use my referral code: ${profile.data.referral_code}`,
+          url: `${window.location.origin}/register?ref=${profile.data.referral_code}`,
+        });
+      } catch {}
+    } else {
+      copyReferralLink();
     }
   };
 
@@ -160,16 +177,29 @@ const DashboardOverview = () => {
           transition={{ delay: 0.4 }}
           className="bg-dashboard-card border border-dashboard-border rounded-xl p-4"
         >
-          <h3 className="text-sm font-semibold text-dashboard-card-foreground mb-2">Refer & Earn</h3>
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-semibold text-dashboard-card-foreground">Refer & Earn</h3>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Users className="h-3.5 w-3.5" />
+              <span>{referralCount} referrals</span>
+              <span>•</span>
+              <span>{referralPointsEarned} pts earned</span>
+            </div>
+          </div>
           <p className="text-xs text-muted-foreground mb-3">
-            Share your code and earn bonus points when friends sign up!
+            Share your link — you both get 10 bonus points!
           </p>
           <div className="flex items-center gap-2">
-            <code className="flex-1 bg-dashboard-border rounded-lg px-3 py-2 text-sm font-mono text-primary">
-              {profile.data?.referral_code || "Loading..."}
+            <code className="flex-1 bg-dashboard-border rounded-lg px-3 py-2 text-xs font-mono text-primary truncate">
+              {profile.data?.referral_code
+                ? `${window.location.origin}/register?ref=${profile.data.referral_code}`
+                : "Loading..."}
             </code>
-            <Button size="sm" variant="outline" onClick={copyReferral} className="border-dashboard-border text-dashboard-card-foreground">
+            <Button size="sm" variant="outline" onClick={copyReferralLink} className="border-dashboard-border text-dashboard-card-foreground" title="Copy link">
               <Copy className="h-4 w-4" />
+            </Button>
+            <Button size="sm" variant="outline" onClick={shareReferral} className="border-dashboard-border text-dashboard-card-foreground" title="Share">
+              <Share2 className="h-4 w-4" />
             </Button>
           </div>
         </motion.div>

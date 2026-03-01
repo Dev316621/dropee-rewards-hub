@@ -2,6 +2,7 @@ import { Outlet, useLocation, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Home } from "lucide-react";
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardBottomNav from "./DashboardBottomNav";
+import NotificationOptIn from "./NotificationOptIn";
 
 const DashboardLayout = () => {
   const location = useLocation();
@@ -27,6 +28,7 @@ const DashboardLayout = () => {
         <Outlet />
       </main>
       <DashboardBottomNav />
+      <NotificationOptIn />
     </div>
   );
 };

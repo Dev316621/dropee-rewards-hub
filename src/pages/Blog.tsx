@@ -1,4 +1,5 @@
 import AnimatedSection from "@/components/AnimatedSection";
+import SEOHead from "@/components/SEOHead";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Calendar, Tag, ArrowRight } from "lucide-react";
@@ -16,6 +17,7 @@ const posts = [
 const Blog = () => {
   return (
     <>
+      <SEOHead title="Blog & Notices" description="Stay updated with DROPEE news, promotions, delivery updates, and events in Ukhrul, Manipur." path="/blog" />
       <section className="hero-section py-16 sm:py-24 md:py-32">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-primary-foreground mb-3 sm:mb-4">

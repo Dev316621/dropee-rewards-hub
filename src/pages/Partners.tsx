@@ -1,4 +1,5 @@
 import AnimatedSection from "@/components/AnimatedSection";
+import SEOHead from "@/components/SEOHead";
 import { motion } from "framer-motion";
 import { ExternalLink, Star } from "lucide-react";
 
@@ -14,6 +15,7 @@ const partners = [
 const Partners = () => {
   return (
     <>
+      <SEOHead title="Partners" description="Local businesses in Ukhrul that trust DROPEE. Exclusive discounts from partner restaurants, pharmacies, and stores." path="/partners" />
       <section className="hero-section py-16 sm:py-24 md:py-32">
         <div className="container mx-auto px-4">
           <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-primary-foreground mb-3 sm:mb-4">
