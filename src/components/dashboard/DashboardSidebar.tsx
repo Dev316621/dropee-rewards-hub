@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Globe, Home, Truck, Gift, BarChart3, Bell, LogOut, Package, Disc3, Trophy } from "lucide-react";
+import { Globe, Home, Truck, Gift, BarChart3, Bell, LogOut, Package, Disc3, Trophy, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -18,7 +18,7 @@ const navItems = [
 
 const DashboardSidebar = () => {
   const location = useLocation();
-  const { signOut, user } = useAuth();
+  const { signOut, user, isAdmin } = useAuth();
   const { unreadCount } = useNotifications();
 
   return (
@@ -60,6 +60,15 @@ const DashboardSidebar = () => {
             </Link>
           );
         })}
+        {isAdmin && (
+          <Link
+            to="/admin"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all mt-2 border border-dashed border-dashboard-border"
+          >
+            <Shield className="h-4.5 w-4.5" />
+            Admin Panel
+          </Link>
+        )}
       </nav>
 
       {/* User & Logout */}
