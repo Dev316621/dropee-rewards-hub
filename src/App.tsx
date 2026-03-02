@@ -39,6 +39,7 @@ import AdminLoyalty from "./components/admin/AdminLoyalty";
 import AdminSpin from "./components/admin/AdminSpin";
 import AdminBlog from "./components/admin/AdminBlog";
 import AdminPartners from "./components/admin/AdminPartners";
+import AdminContent from "./components/admin/AdminContent";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -97,6 +98,7 @@ const App = () => (
                 <Route path="/admin/spin" element={<AdminSpin />} />
                 <Route path="/admin/blog" element={<AdminBlog />} />
                 <Route path="/admin/partners" element={<AdminPartners />} />
+                <Route path="/admin/content" element={<AdminContent />} />
               </Route>
             </Route>
 

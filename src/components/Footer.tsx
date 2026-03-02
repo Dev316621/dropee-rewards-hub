@@ -1,7 +1,15 @@
 import { Link } from "react-router-dom";
 import { Package, MapPin, Phone, Mail } from "lucide-react";
+import { useFooterLinks, useSiteSettings } from "@/hooks/useContentData";
 
 const Footer = () => {
+  const { data: links = [] } = useFooterLinks();
+  const { data: settings = {} } = useSiteSettings();
+
+  const address = settings.contact_address || "Ukhrul, Manipur";
+  const phone = settings.contact_phone || "+91 XXXXX XXXXX";
+  const email = settings.contact_email || "hello@dropee.in";
+
   return (
     <footer className="bg-foreground text-background">
       <div className="container mx-auto px-4 py-8 md:py-12">
@@ -23,14 +31,8 @@ const Footer = () => {
           <div>
             <h4 className="font-display font-semibold text-sm mb-3">Quick Links</h4>
             <div className="space-y-2">
-              {[
-                { to: "/about", label: "About Us" },
-                { to: "/services", label: "Services" },
-                { to: "/tiers", label: "Loyalty Tiers" },
-                { to: "/offers", label: "Offers" },
-                { to: "/blog", label: "Blog" },
-              ].map((link) => (
-                <Link key={link.to} to={link.to} className="block text-sm text-background/60 hover:text-primary transition-colors">
+              {links.map((link) => (
+                <Link key={link.id} to={link.url} className="block text-sm text-background/60 hover:text-primary transition-colors">
                   {link.label}
                 </Link>
               ))}
@@ -43,15 +45,15 @@ const Footer = () => {
             <div className="space-y-2.5 text-sm text-background/60">
               <div className="flex items-start gap-2">
                 <MapPin className="w-3.5 h-3.5 mt-0.5 shrink-0 text-primary" />
-                <span>Ukhrul, Manipur</span>
+                <span>{address}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 shrink-0 text-primary" />
-                <span>+91 XXXXX XXXXX</span>
+                <span>{phone}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 shrink-0 text-primary" />
-                <span>hello@dropee.in</span>
+                <span>{email}</span>
               </div>
             </div>
           </div>
