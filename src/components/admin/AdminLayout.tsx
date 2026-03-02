@@ -2,7 +2,7 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import { 
   BarChart3, Users, Truck, Gift, Settings, FileText, 
   Handshake, Ticket, LogOut, Package, ChevronLeft, ChevronRight,
-  LayoutDashboard, Disc3
+  LayoutDashboard, Disc3, Home, ScrollText
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -37,6 +37,13 @@ const navSections = [
     items: [
       { icon: FileText, label: "Blog", path: "/admin/blog" },
       { icon: Handshake, label: "Partners", path: "/admin/partners" },
+      { icon: ScrollText, label: "Site Content", path: "/admin/content" },
+    ],
+  },
+  {
+    label: "Quick Links",
+    items: [
+      { icon: Home, label: "User Dashboard", path: "/dashboard" },
     ],
   },
 ];
