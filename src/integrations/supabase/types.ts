@@ -169,6 +169,7 @@ export type Database = {
       deliveries: {
         Row: {
           created_at: string
+          description: string | null
           dropoff: string
           fee: number | null
           id: string
@@ -176,6 +177,8 @@ export type Database = {
           notes: string | null
           pickup: string
           points_earned: number | null
+          receipt: string | null
+          recipient_name: string | null
           status: string
           updated_at: string
           user_id: string
@@ -183,6 +186,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          description?: string | null
           dropoff: string
           fee?: number | null
           id?: string
@@ -190,6 +194,8 @@ export type Database = {
           notes?: string | null
           pickup: string
           points_earned?: number | null
+          receipt?: string | null
+          recipient_name?: string | null
           status?: string
           updated_at?: string
           user_id: string
@@ -197,6 +203,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          description?: string | null
           dropoff?: string
           fee?: number | null
           id?: string
@@ -204,6 +211,8 @@ export type Database = {
           notes?: string | null
           pickup?: string
           points_earned?: number | null
+          receipt?: string | null
+          recipient_name?: string | null
           status?: string
           updated_at?: string
           user_id?: string
@@ -294,6 +303,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      location_requests: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          delivery_id: string | null
+          id: string
+          latitude: number | null
+          longitude: number | null
+          status: string
+          token: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          delivery_id?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          status?: string
+          token: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          delivery_id?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          status?: string
+          token?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "location_requests_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "deliveries"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       loyalty_points_log: {
         Row: {
@@ -491,34 +544,40 @@ export type Database = {
       }
       profiles: {
         Row: {
+          address: string | null
           avatar_url: string | null
           created_at: string
           date_of_birth: string | null
           full_name: string
           id: string
           phone: string | null
+          profile_completed: boolean | null
           referral_code: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          address?: string | null
           avatar_url?: string | null
           created_at?: string
           date_of_birth?: string | null
           full_name?: string
           id?: string
           phone?: string | null
+          profile_completed?: boolean | null
           referral_code?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          address?: string | null
           avatar_url?: string | null
           created_at?: string
           date_of_birth?: string | null
           full_name?: string
           id?: string
           phone?: string | null
+          profile_completed?: boolean | null
           referral_code?: string | null
           updated_at?: string
           user_id?: string

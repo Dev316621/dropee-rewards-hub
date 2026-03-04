@@ -75,7 +75,7 @@ export const useAdminDeliveries = (page: number, statusFilter: string) => {
 export const useCreateDelivery = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (delivery: { user_id: string; pickup: string; dropoff: string; fee: number; weight: number; status: string; is_free: boolean }) => {
+    mutationFn: async (delivery: { user_id: string; pickup: string; dropoff: string; fee: number; weight: number; status: string; is_free: boolean; recipient_name?: string; description?: string; receipt?: string }) => {
       const { error } = await supabase.from("deliveries").insert(delivery);
       if (error) throw error;
     },
@@ -86,7 +86,7 @@ export const useCreateDelivery = () => {
 export const useUpdateDelivery = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, ...updates }: { id: string; status?: string; fee?: number; is_free?: boolean }) => {
+    mutationFn: async ({ id, ...updates }: { id: string; status?: string; fee?: number; is_free?: boolean; recipient_name?: string; description?: string; receipt?: string }) => {
       const { error } = await supabase.from("deliveries").update(updates).eq("id", id);
       if (error) throw error;
     },
