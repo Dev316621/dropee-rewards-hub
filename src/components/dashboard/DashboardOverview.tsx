@@ -1,9 +1,13 @@
 import { motion } from "framer-motion";
-import { Package, Coins, Truck, Award, Copy, ChevronRight, Zap, Users, Share2 } from "lucide-react";
+import { Package, Coins, Truck, Award, Copy, ChevronRight, Zap, Users, Share2, Globe, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 import { useDashboardData } from "@/hooks/useDashboardData";
 import { useReferrals } from "@/hooks/useReferrals";
+import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import CountUp from "@/components/CountUp";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
@@ -26,6 +30,17 @@ const DashboardOverview = () => {
   const { profile, pointsBalance, deliveryCount, userTier, tiers, freeCredits, totalFees } =
     useDashboardData();
   const { referralCount, referralPointsEarned } = useReferrals();
+  const { user } = useAuth();
+
+  const trackedOrders = useQuery({
+    queryKey: ["my-tracked-orders", user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("tracked_orders").select("*").eq("user_id", user!.id).order("created_at", { ascending: false }).limit(5);
+      if (error) throw error;
+      return data ?? [];
+    },
+    enabled: !!user?.id,
+  });
 
   const tierName = userTier.data?.tier_name ?? "Starter";
   const tierBadge = userTier.data?.tier_badge ?? "bronze";
@@ -231,6 +246,38 @@ const DashboardOverview = () => {
           </Button>
         </motion.div>
       </div>
+
+      {/* My Tracked Orders */}
+      {(trackedOrders.data ?? []).length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="bg-dashboard-card border border-dashboard-border rounded-xl p-4"
+        >
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-dashboard-card-foreground flex items-center gap-2">
+              <Globe className="h-4 w-4 text-primary" /> My Orders
+            </h3>
+          </div>
+          <div className="space-y-2">
+            {(trackedOrders.data ?? []).map(o => (
+              <div key={o.id} className="flex items-center gap-3 p-2 rounded-lg bg-dashboard-bg border border-dashboard-border">
+                <Package className="h-4 w-4 text-primary shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-dashboard-card-foreground font-mono">{o.external_order_id}</p>
+                </div>
+                <Badge variant="secondary" className="text-[10px]">{o.status}</Badge>
+                {o.tracking_url && (
+                  <Button variant="ghost" size="icon" className="h-7 w-7" asChild>
+                    <a href={o.tracking_url} target="_blank" rel="noopener noreferrer"><ExternalLink className="h-3.5 w-3.5" /></a>
+                  </Button>
+                )}
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 };

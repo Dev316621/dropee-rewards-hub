@@ -83,13 +83,33 @@ export const useSpinWheel = (spinType: "daily" | "weekly" = "daily") => {
       const activeSlots = slots.data ?? [];
       if (activeSlots.length === 0) throw new Error("No slots configured");
 
-      // Weighted random selection
-      const totalWeight = activeSlots.reduce((s, sl) => s + sl.probability_weight, 0);
-      let rand = Math.random() * totalWeight;
+      // Check for preset win first
       let winner = activeSlots[0];
-      for (const slot of activeSlots) {
-        rand -= slot.probability_weight;
-        if (rand <= 0) { winner = slot; break; }
+      let presetUsed = false;
+      
+      const { data: preset } = await supabase
+        .from("spin_preset_wins")
+        .select("*, spin_slots(*)")
+        .eq("user_id", userId!)
+        .eq("spin_type", spinType)
+        .eq("used", false)
+        .order("created_at")
+        .limit(1)
+        .maybeSingle();
+      
+      if (preset && preset.spin_slots) {
+        winner = preset.spin_slots as any;
+        presetUsed = true;
+        // Mark preset as used
+        await supabase.from("spin_preset_wins").update({ used: true }).eq("id", preset.id);
+      } else {
+        // Weighted random selection
+        const totalWeight = activeSlots.reduce((s, sl) => s + sl.probability_weight, 0);
+        let rand = Math.random() * totalWeight;
+        for (const slot of activeSlots) {
+          rand -= slot.probability_weight;
+          if (rand <= 0) { winner = slot; break; }
+        }
       }
 
       // Record result
