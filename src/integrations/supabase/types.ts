@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      api_integrations: {
+        Row: {
+          api_key_encrypted: string | null
+          base_url: string
+          created_at: string
+          headers_json: Json | null
+          id: string
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          api_key_encrypted?: string | null
+          base_url?: string
+          created_at?: string
+          headers_json?: Json | null
+          id?: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          api_key_encrypted?: string | null
+          base_url?: string
+          created_at?: string
+          headers_json?: Json | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       badges: {
         Row: {
           condition_type: string
@@ -659,6 +692,41 @@ export type Database = {
         }
         Relationships: []
       }
+      spin_preset_wins: {
+        Row: {
+          created_at: string
+          id: string
+          slot_id: string
+          spin_type: string
+          used: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          slot_id: string
+          spin_type?: string
+          used?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          slot_id?: string
+          spin_type?: string
+          used?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "spin_preset_wins_slot_id_fkey"
+            columns: ["slot_id"]
+            isOneToOne: false
+            referencedRelation: "spin_slots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       spin_results: {
         Row: {
           created_at: string
@@ -774,6 +842,50 @@ export type Database = {
           perks?: Json | null
         }
         Relationships: []
+      }
+      tracked_orders: {
+        Row: {
+          created_at: string
+          external_order_id: string
+          id: string
+          integration_id: string
+          last_checked_at: string | null
+          last_response: Json | null
+          status: string
+          tracking_url: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          external_order_id?: string
+          id?: string
+          integration_id: string
+          last_checked_at?: string | null
+          last_response?: Json | null
+          status?: string
+          tracking_url?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          external_order_id?: string
+          id?: string
+          integration_id?: string
+          last_checked_at?: string | null
+          last_response?: Json | null
+          status?: string
+          tracking_url?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tracked_orders_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "api_integrations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_badges: {
         Row: {

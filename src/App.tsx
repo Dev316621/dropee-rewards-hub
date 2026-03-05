@@ -42,6 +42,8 @@ import AdminSpin from "./components/admin/AdminSpin";
 import AdminBlog from "./components/admin/AdminBlog";
 import AdminPartners from "./components/admin/AdminPartners";
 import AdminContent from "./components/admin/AdminContent";
+import AdminCustomerDetail from "./components/admin/AdminCustomerDetail";
+import AdminApiIntegrations from "./components/admin/AdminApiIntegrations";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -96,7 +98,9 @@ const App = () => (
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin/analytics" element={<AdminDashboard />} />
                 <Route path="/admin/customers" element={<AdminCustomers />} />
+                <Route path="/admin/customers/:id" element={<AdminCustomerDetail />} />
                 <Route path="/admin/deliveries" element={<AdminDeliveries />} />
+                <Route path="/admin/api-integrations" element={<AdminApiIntegrations />} />
                 <Route path="/admin/coupons" element={<AdminCoupons />} />
                 <Route path="/admin/loyalty" element={<AdminLoyalty />} />
                 <Route path="/admin/spin" element={<AdminSpin />} />

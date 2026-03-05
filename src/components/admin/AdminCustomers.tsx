@@ -7,9 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Search, Users, Plus, Loader2 } from "lucide-react";
+import { Search, Users, Plus, Loader2, Eye } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -18,6 +19,7 @@ const AdminCustomers = () => {
   const [search, setSearch] = useState("");
   const { data: customers, isLoading } = useAdminCustomers(search);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const navigate = useNavigate();
   const [form, setForm] = useState({ full_name: "", email: "", phone: "", password: "" });
   const qc = useQueryClient();
 
@@ -96,20 +98,24 @@ const AdminCustomers = () => {
                     <TableHead className="text-muted-foreground text-xs">Name</TableHead>
                     <TableHead className="text-muted-foreground text-xs">Phone</TableHead>
                     <TableHead className="text-muted-foreground text-xs">Referral Code</TableHead>
-                    <TableHead className="text-muted-foreground text-xs">Joined</TableHead>
-                  </TableRow>
-                </TableHeader>
+                     <TableHead className="text-muted-foreground text-xs">Joined</TableHead>
+                     <TableHead className="text-muted-foreground text-xs">Actions</TableHead>
+                   </TableRow>
+                 </TableHeader>
                 <TableBody>
                   {(customers ?? []).map((c) => (
                     <TableRow key={c.id} className="border-dashboard-border">
                       <TableCell className="text-dashboard-card-foreground text-sm font-medium">{c.full_name || "—"}</TableCell>
                       <TableCell className="text-muted-foreground text-sm">{c.phone || "—"}</TableCell>
                       <TableCell><Badge variant="outline" className="font-mono text-[10px] border-dashboard-border text-muted-foreground">{c.referral_code}</Badge></TableCell>
-                      <TableCell className="text-muted-foreground text-xs">{format(new Date(c.created_at), "MMM d, yyyy")}</TableCell>
-                    </TableRow>
+                       <TableCell className="text-muted-foreground text-xs">{format(new Date(c.created_at), "MMM d, yyyy")}</TableCell>
+                       <TableCell>
+                         <Button variant="ghost" size="icon" className="h-7 w-7 text-primary" onClick={() => navigate(`/admin/customers/${c.user_id}`)}><Eye className="h-3.5 w-3.5" /></Button>
+                       </TableCell>
+                     </TableRow>
                   ))}
                   {(customers ?? []).length === 0 && (
-                    <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground py-8">No customers found</TableCell></TableRow>
+                    <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-8">No customers found</TableCell></TableRow>
                   )}
                 </TableBody>
               </Table>

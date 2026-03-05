@@ -1,4 +1,4 @@
-import { useAdminSpinConfig, useUpsertSpinSlot, useDeleteSpinSlot, useUpdateSpinConfig } from "@/hooks/useAdminData";
+import { useAdminSpinConfig, useUpsertSpinSlot, useDeleteSpinSlot, useUpdateSpinConfig, useAdminCustomers } from "@/hooks/useAdminData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,18 +7,52 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Disc3, Plus, Trash2 } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Disc3, Plus, Trash2, Target, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { format } from "date-fns";
 
 const AdminSpin = () => {
   const { data, isLoading } = useAdminSpinConfig();
   const upsertSlot = useUpsertSpinSlot();
   const deleteSlot = useDeleteSpinSlot();
   const updateConfig = useUpdateSpinConfig();
+  const { data: customers } = useAdminCustomers("");
+  const qc = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [presetDialog, setPresetDialog] = useState(false);
+  const [presetForm, setPresetForm] = useState({ user_id: "", spin_type: "daily", slot_id: "" });
   const [form, setForm] = useState({ label: "", prize_type: "no_prize", prize_value: "", probability_weight: 1, color: "#FF6B35", icon: "🎁", spin_type: "daily", is_active: true, display_order: 0, coupon_expiry_days: 7 });
+
+  const presetWins = useQuery({
+    queryKey: ["admin-preset-wins"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("spin_preset_wins").select("*, spin_slots(label, icon)").eq("used", false).order("created_at", { ascending: false });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  const createPreset = useMutation({
+    mutationFn: async (d: typeof presetForm) => {
+      const { error } = await supabase.from("spin_preset_wins").insert(d);
+      if (error) throw error;
+    },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["admin-preset-wins"] }); toast.success("Preset win saved"); setPresetDialog(false); },
+    onError: () => toast.error("Failed"),
+  });
+
+  const deletePreset = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("spin_preset_wins").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["admin-preset-wins"] }); toast.success("Removed"); },
+  });
 
   const handleSaveSlot = async () => {
     if (!form.label) { toast.error("Label required"); return; }
@@ -137,6 +171,81 @@ const AdminSpin = () => {
           </CardContent>
         </Card>
       ))}
+
+      {/* Preset Wins Section */}
+      <Card className="bg-dashboard-card border-dashboard-border">
+        <CardHeader className="pb-2 flex flex-row items-center justify-between">
+          <CardTitle className="text-sm text-dashboard-card-foreground flex items-center gap-2"><Target className="h-4 w-4 text-primary" /> Preset Wins</CardTitle>
+          <Dialog open={presetDialog} onOpenChange={setPresetDialog}>
+            <DialogTrigger asChild><Button size="sm" variant="outline" className="gap-1 border-dashboard-border text-xs"><Plus className="h-3 w-3" /> Set Win</Button></DialogTrigger>
+            <DialogContent className="bg-dashboard-card border-dashboard-border text-dashboard-card-foreground">
+              <DialogHeader><DialogTitle>Set Predetermined Win</DialogTitle></DialogHeader>
+              <div className="space-y-3">
+                <div>
+                  <Label className="text-xs text-muted-foreground">User</Label>
+                  <Select value={presetForm.user_id} onValueChange={v => setPresetForm({ ...presetForm, user_id: v })}>
+                    <SelectTrigger className="bg-dashboard-bg border-dashboard-border"><SelectValue placeholder="Select user" /></SelectTrigger>
+                    <SelectContent>
+                      {(customers ?? []).map(c => <SelectItem key={c.user_id} value={c.user_id}>{c.full_name || c.phone || c.user_id}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-xs text-muted-foreground">Spin Type</Label>
+                  <Select value={presetForm.spin_type} onValueChange={v => setPresetForm({ ...presetForm, spin_type: v })}>
+                    <SelectTrigger className="bg-dashboard-bg border-dashboard-border"><SelectValue /></SelectTrigger>
+                    <SelectContent><SelectItem value="daily">Daily</SelectItem><SelectItem value="weekly">Weekly</SelectItem></SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-xs text-muted-foreground">Prize Slot</Label>
+                  <Select value={presetForm.slot_id} onValueChange={v => setPresetForm({ ...presetForm, slot_id: v })}>
+                    <SelectTrigger className="bg-dashboard-bg border-dashboard-border"><SelectValue placeholder="Select prize" /></SelectTrigger>
+                    <SelectContent>
+                      {slots.filter(s => s.spin_type === presetForm.spin_type).map(s => <SelectItem key={s.id} value={s.id}>{s.icon} {s.label}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button onClick={() => { if (!presetForm.user_id || !presetForm.slot_id) { toast.error("Select user and prize"); return; } createPreset.mutate(presetForm); }} disabled={createPreset.isPending} className="w-full">
+                  {createPreset.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save Preset Win"}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </CardHeader>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-dashboard-border hover:bg-transparent">
+                <TableHead className="text-muted-foreground text-xs">User</TableHead>
+                <TableHead className="text-muted-foreground text-xs">Type</TableHead>
+                <TableHead className="text-muted-foreground text-xs">Prize</TableHead>
+                <TableHead className="text-muted-foreground text-xs">Created</TableHead>
+                <TableHead className="text-muted-foreground text-xs"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {(presetWins.data ?? []).map((pw: any) => {
+                const user = (customers ?? []).find(c => c.user_id === pw.user_id);
+                return (
+                  <TableRow key={pw.id} className="border-dashboard-border">
+                    <TableCell className="text-xs text-dashboard-card-foreground">{user?.full_name || pw.user_id.slice(0, 8)}</TableCell>
+                    <TableCell className="text-xs text-muted-foreground capitalize">{pw.spin_type}</TableCell>
+                    <TableCell className="text-xs text-dashboard-card-foreground">{pw.spin_slots?.icon} {pw.spin_slots?.label}</TableCell>
+                    <TableCell className="text-xs text-muted-foreground">{format(new Date(pw.created_at), "MMM d")}</TableCell>
+                    <TableCell>
+                      <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => deletePreset.mutate(pw.id)}><Trash2 className="h-3.5 w-3.5" /></Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+              {(presetWins.data ?? []).length === 0 && (
+                <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-6 text-xs">No preset wins configured</TableCell></TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 };
