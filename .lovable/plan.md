@@ -1,123 +1,110 @@
 
 
-## Plan: Admin Enhancements, Google Auth, Premium Spin Wheel, and Delivery Management
+## Plan: Enhanced Admin Customer Profiles, Spin Win Config, and API Order Tracking
 
-This is a large, multi-part implementation. Here is the breakdown organized by feature area.
-
----
-
-### 1. Google Sign-In + Profile Completion Flow
-
-**Database Changes:**
-- Add `address` column to `profiles` table (text, nullable)
-- Add `profile_completed` boolean column to `profiles` (default false), set true when user fills in all details
-- Update the `handle_new_user` trigger to set `profile_completed = false` for Google signups
-
-**Auth Configuration:**
-- Enable Google OAuth via the managed Lovable Cloud provider (no API key needed)
-
-**New Components:**
-- `src/pages/CompleteProfile.tsx` — a form page that collects Full Name, Phone, Date of Birth, Home Address. Shown after first Google sign-in when profile is incomplete.
-- Update `src/components/ProtectedRoute.tsx` to check `profile_completed` and redirect to `/complete-profile` if false.
-
-**Login/Register Updates:**
-- Add "Sign in with Google" button to both `Login.tsx` and `Register.tsx` using `supabase.auth.signInWithOAuth({ provider: 'google' })`
-
-**Route:**
-- Add `/complete-profile` route in `App.tsx`
+Three feature areas to implement:
 
 ---
 
-### 2. Admin — User Management (Add Users Manually)
+### 1. Admin Customer Detail Page with Full Activity View
 
-**AdminCustomers.tsx Updates:**
-- Add an "Add User" dialog where admin enters: Full Name, Email, Phone, Password
-- Use `supabase.auth.admin.createUser()` via an edge function (since admin user creation requires service role key)
-- Create edge function `supabase/functions/admin-create-user/index.ts` that validates admin role, then creates user via service role
+**Current state:** AdminCustomers shows a flat table with name, phone, referral code, and join date. No way to view a customer's full profile or activity.
 
-**Access Restriction:**
-- The current system already requires registration. The requirement "only users added by admin or registered through Google can access" means removing the public self-registration page. Instead, we'll hide the `/register` route (remove it from nav/login page links) but keep Google sign-in available. The admin manually adds users, or users sign in via Google.
-- Actually, re-reading the requirement: self-registration via email/password should be removed from the public flow. Only Google sign-up OR admin-added accounts can log in. We'll remove the Register page link from Login and keep Google as the public sign-up method.
+**Changes:**
 
----
+- **New component: `src/components/admin/AdminCustomerDetail.tsx`**
+  - Expandable detail view (dialog or dedicated page at `/admin/customers/:id`)
+  - Shows: full name, email, phone, DOB, address, referral code, join date, profile photo
+  - **Map section:** OpenStreetMap embed showing the customer's saved address (geocoded) or last known location from `location_requests`
+  - **Activity summary cards:** total deliveries, completed deliveries, points balance, current tier, badges earned
+  - **Delivery history table:** all deliveries for that user with status, date, fee
+  - **Spin history:** recent spin results
+  - **Points log:** recent loyalty points transactions
+  - Admin can edit customer profile fields (name, phone, DOB, address) directly
 
-### 3. Premium Spin Wheel Upgrade
+- **Update `AdminCustomers.tsx`:** Add a "View" button per row that opens the detail view
 
-**SpinWheel.tsx — Complete Rewrite of Visual Layer:**
-- **Gold outer ring** with SVG gradient + small gem dots (circles) positioned around the circumference
-- **Segment gradients** — each segment gets a two-tone gradient using SVG `<linearGradient>` derived from the slot color
-- **Bold prize label + description** text on each segment
-- **Glowing gold center hub** with a star icon (★)
-- **Gold triangle needle** at top with a glowing circle, CSS animation for idle sway + spinning tick
-- **Spin animation**: 8-13 full rotations, cubic-bezier easing with bounce at end. Duration ~6-8 seconds.
-- **Particle effects**: floating colored circles using framer-motion during spin
-- **Pulsing glow backdrop** behind wheel during spin
-- **Prize pills** below the wheel showing all prizes; winning pill gets a glow highlight
-- **Win popup**: 500ms delay after stop, confetti burst, smooth scale-in animation with celebration emoji + prize name + button
+- **Update `useAdminData.ts`:** Add hooks:
+  - `useAdminCustomerDetail(userId)` — fetches profile + deliveries + points log + spin results + badges + location for one user
+  - `useUpdateCustomerProfile()` — mutation to update profile fields
+
+- **New route:** `/admin/customers/:id` in `App.tsx`
 
 ---
 
-### 4. Enhanced Delivery Management (New Admin Feature)
+### 2. Admin Spin Win Configuration (Preset Wins)
 
-**Database Changes:**
-- Add columns to `deliveries` table: `recipient_name` (text), `description` (text), `receipt` (text), plus update status enum to include `out_for_delivery`
-- Add `address` column to `profiles` (already planned above)
-- Create `location_requests` table: `id`, `delivery_id`, `user_id`, `token` (unique text), `latitude`, `longitude`, `status` (pending/completed), `created_at`, `completed_at`
-- RLS: admin can manage all, users can read/update own location requests
+**Current state:** Admin can configure spin slots with probability weights. The spin result is determined client-side via weighted random. Admin wants to "set spin wins" — meaning the admin can predetermine what a specific user wins.
 
-**AdminDeliveries.tsx Overhaul:**
-- New delivery form with: recipient name, description, status (Pending / Out for Delivery / Delivered), receipt text area
-- Each delivery row shows: recipient, description, status, date, and action buttons
-- **Receipt page**: Dialog/modal showing full delivery details formatted for printing (with `window.print()` button)
-- **WhatsApp button**: Opens `https://wa.me/{phone}?text={encoded_message}` with delivery details pre-filled. Phone comes from the user's profile.
-- **Location request**: Admin clicks "Request Location" → creates a `location_requests` row with unique token → generates a shareable link → WhatsApp send with that link
+**Changes:**
 
-**New Page: Location Share**
-- `src/pages/ShareLocation.tsx` — public page at `/share-location/:token`
-- Requests browser geolocation permission, captures coordinates, sends them back to `location_requests` table
-- No auth required (token-based access)
+- **Database migration:** Create `spin_preset_wins` table:
+  - `id`, `user_id` (uuid), `spin_type` (text), `slot_id` (uuid, references spin_slots), `used` (boolean, default false), `created_at`
+  - RLS: admin-only management
 
-**Admin Map View:**
-- When location is captured, show coordinates in the delivery detail view using a simple embedded map (OpenStreetMap iframe or static image link — no API key needed)
+- **Update `AdminSpin.tsx`:** Add a "Preset Wins" section where admin can:
+  - Select a user from dropdown
+  - Select a spin type (daily/weekly)
+  - Select a slot (prize)
+  - Save — this guarantees that user's next spin lands on that prize
 
-**Route additions:**
-- `/share-location/:token` (public, no auth)
+- **Update `useSpinWheel.ts`:** Before doing weighted random, check `spin_preset_wins` for a pending preset for the current user. If found, use that slot and mark it as `used`.
+
+- **Update `useAdminData.ts`:** Add `useAdminPresetWins()`, `useCreatePresetWin()`, `useDeletePresetWin()` hooks
 
 ---
 
-### 5. Files to Create/Edit Summary
+### 3. API Integration Feature — External Order Tracking
 
-**New Files:**
-- `src/pages/CompleteProfile.tsx`
-- `src/pages/ShareLocation.tsx`  
-- `supabase/functions/admin-create-user/index.ts`
+**Current state:** No API integration capability exists.
 
-**Edited Files:**
-- `src/pages/Login.tsx` — add Google sign-in button, remove register link
-- `src/pages/Register.tsx` — remove or redirect (admin-only creation now)
-- `src/components/ProtectedRoute.tsx` — profile completion check
-- `src/components/dashboard/SpinWheel.tsx` — premium redesign
-- `src/components/admin/AdminDeliveries.tsx` — full overhaul with receipt, WhatsApp, location
-- `src/components/admin/AdminCustomers.tsx` — add user dialog
-- `src/hooks/useAdminData.ts` — add admin user creation hook, delivery updates
-- `src/hooks/useSpinWheel.ts` — adjust rotation count (8-13)
-- `src/App.tsx` — new routes
-- `src/contexts/AuthContext.tsx` — no changes needed
+**Changes:**
 
-**Database Migration:**
-- Add `address`, `profile_completed` to `profiles`
-- Add `recipient_name`, `description`, `receipt` to `deliveries`
-- Create `location_requests` table with RLS
-- Update status options
+- **Database migration:** Create `api_integrations` table:
+  - `id`, `name` (text), `base_url` (text), `api_key_encrypted` (text), `headers_json` (jsonb), `is_active` (boolean), `created_at`, `updated_at`
+  - RLS: admin-only
+
+- Create `tracked_orders` table:
+  - `id`, `integration_id` (uuid, references api_integrations), `user_id` (uuid), `external_order_id` (text), `status` (text), `last_response` (jsonb), `tracking_url` (text), `last_checked_at` (timestamptz), `created_at`
+  - RLS: admin can manage all, users can read own
+
+- **New admin component: `src/components/admin/AdminApiIntegrations.tsx`**
+  - Admin can add/edit/delete API integrations (name, base URL, API key, custom headers)
+  - Admin can create tracked orders: select integration, select user, enter external order ID and tracking endpoint path
+  - "Check Status" button that calls an edge function to fetch the external API and update `last_response`
+  - Display tracked orders table with status, last checked time, raw response preview
+
+- **New edge function: `supabase/functions/track-order/index.ts`**
+  - Accepts `integration_id` and `order_id`
+  - Fetches the integration config from DB (using service role)
+  - Makes GET request to `{base_url}/{endpoint}` with stored API key/headers
+  - Updates `tracked_orders.last_response` and `status`
+  - Returns the result
+
+- **User dashboard update:** Add a small "My Orders" section in `DashboardOverview.tsx` showing tracked orders for the logged-in user with status and tracking link
+
+- **New route:** `/admin/api-integrations` in `App.tsx`
+- **Update `AdminLayout.tsx`:** Add "API Tracking" nav item under Management section
 
 ---
 
-### Technical Considerations
-- Google OAuth uses Lovable Cloud's managed credentials — no setup needed
-- The edge function for admin user creation uses `SUPABASE_SERVICE_ROLE_KEY` (already in secrets)
-- WhatsApp integration is purely client-side URL construction — no API needed
-- Location sharing uses the browser Geolocation API with a token-based public page
-- Map display uses OpenStreetMap embed (free, no key)
-- Spin wheel particles use framer-motion for performance
-- All new tables get proper RLS policies
+### Files Summary
+
+**New files:**
+- `src/components/admin/AdminCustomerDetail.tsx`
+- `src/components/admin/AdminApiIntegrations.tsx`
+- `supabase/functions/track-order/index.ts`
+
+**Edited files:**
+- `src/components/admin/AdminCustomers.tsx` — add View button per row
+- `src/components/admin/AdminSpin.tsx` — add preset wins section
+- `src/components/admin/AdminLayout.tsx` — add nav items
+- `src/components/dashboard/DashboardOverview.tsx` — add tracked orders section
+- `src/hooks/useAdminData.ts` — add customer detail, preset wins, API integration hooks
+- `src/hooks/useSpinWheel.ts` — check preset wins before random
+- `src/App.tsx` — add new routes
+
+**Database migration:**
+- Create `spin_preset_wins`, `api_integrations`, `tracked_orders` tables with RLS
+- Enable realtime on `tracked_orders` for live status updates
 
