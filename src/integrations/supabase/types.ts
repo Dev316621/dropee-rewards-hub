@@ -337,6 +337,56 @@ export type Database = {
         }
         Relationships: []
       }
+      live_orders: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          dropoff: string
+          estimated_fee: number | null
+          id: string
+          notes: string | null
+          pickup: string
+          service_type_id: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          dropoff: string
+          estimated_fee?: number | null
+          id?: string
+          notes?: string | null
+          pickup: string
+          service_type_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          dropoff?: string
+          estimated_fee?: number | null
+          id?: string
+          notes?: string | null
+          pickup?: string
+          service_type_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "live_orders_service_type_id_fkey"
+            columns: ["service_type_id"]
+            isOneToOne: false
+            referencedRelation: "service_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       location_requests: {
         Row: {
           completed_at: string | null
@@ -575,6 +625,93 @@ export type Database = {
         }
         Relationships: []
       }
+      pricing_addons: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          is_active: boolean
+          name: string
+          price: number
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          price?: number
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          price?: number
+        }
+        Relationships: []
+      }
+      pricing_config: {
+        Row: {
+          id: string
+          key: string
+          label: string
+          updated_at: string
+          value: number
+        }
+        Insert: {
+          id?: string
+          key: string
+          label?: string
+          updated_at?: string
+          value?: number
+        }
+        Update: {
+          id?: string
+          key?: string
+          label?: string
+          updated_at?: string
+          value?: number
+        }
+        Relationships: []
+      }
+      pricing_zones: {
+        Row: {
+          center_lat: number
+          center_lng: number
+          color: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          multiplier: number
+          name: string
+          radius_km: number
+        }
+        Insert: {
+          center_lat?: number
+          center_lng?: number
+          color?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          multiplier?: number
+          name: string
+          radius_km?: number
+        }
+        Update: {
+          center_lat?: number
+          center_lng?: number
+          color?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          multiplier?: number
+          name?: string
+          radius_km?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string | null
@@ -584,6 +721,7 @@ export type Database = {
           full_name: string
           id: string
           phone: string | null
+          plus_code: string | null
           profile_completed: boolean | null
           referral_code: string | null
           updated_at: string
@@ -597,6 +735,7 @@ export type Database = {
           full_name?: string
           id?: string
           phone?: string | null
+          plus_code?: string | null
           profile_completed?: boolean | null
           referral_code?: string | null
           updated_at?: string
@@ -610,6 +749,7 @@ export type Database = {
           full_name?: string
           id?: string
           phone?: string | null
+          plus_code?: string | null
           profile_completed?: boolean | null
           referral_code?: string | null
           updated_at?: string
@@ -638,6 +778,39 @@ export type Database = {
           id?: string
           referred_id?: string
           referrer_id?: string
+        }
+        Relationships: []
+      }
+      service_types: {
+        Row: {
+          base_price: number
+          created_at: string
+          description: string | null
+          display_order: number
+          icon: string | null
+          id: string
+          is_active: boolean
+          name: string
+        }
+        Insert: {
+          base_price?: number
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+        }
+        Update: {
+          base_price?: number
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
         }
         Relationships: []
       }
