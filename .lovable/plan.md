@@ -1,110 +1,76 @@
 
 
-## Plan: Enhanced Admin Customer Profiles, Spin Win Config, and API Order Tracking
+## Plan: Plus Code Address, Pricing/Zone Map, and Admin Services Management
 
-Three feature areas to implement:
-
----
-
-### 1. Admin Customer Detail Page with Full Activity View
-
-**Current state:** AdminCustomers shows a flat table with name, phone, referral code, and join date. No way to view a customer's full profile or activity.
+### 1. Customer Plus Code Address Support
 
 **Changes:**
+- Add `plus_code` column (text, nullable) to `profiles` table
+- Update `AdminCustomerDetail.tsx` to show/edit Plus Code field alongside address
+- Update `CompleteProfile.tsx` to optionally accept Plus Code
+- When a Plus Code is present, use it to generate an OpenStreetMap/Google Maps embed link
 
-- **New component: `src/components/admin/AdminCustomerDetail.tsx`**
-  - Expandable detail view (dialog or dedicated page at `/admin/customers/:id`)
-  - Shows: full name, email, phone, DOB, address, referral code, join date, profile photo
-  - **Map section:** OpenStreetMap embed showing the customer's saved address (geocoded) or last known location from `location_requests`
-  - **Activity summary cards:** total deliveries, completed deliveries, points balance, current tier, badges earned
-  - **Delivery history table:** all deliveries for that user with status, date, fee
-  - **Spin history:** recent spin results
-  - **Points log:** recent loyalty points transactions
-  - Admin can edit customer profile fields (name, phone, DOB, address) directly
+### 2. Admin Pricing Management (per km, weight, add-ons, zone pricing)
 
-- **Update `AdminCustomers.tsx`:** Add a "View" button per row that opens the detail view
+**Database:**
+- Create `pricing_config` table: `id`, `key` (text, unique — e.g. `base_fee`, `per_km_rate`, `per_kg_rate`, `min_fee`), `value` (numeric), `label` (text), `updated_at`
+- Create `pricing_addons` table: `id`, `name` (text), `price` (numeric), `is_active` (boolean), `display_order` (int)
+- Create `pricing_zones` table: `id`, `name` (text), `center_lat` (float), `center_lng` (float), `radius_km` (float), `multiplier` (numeric, default 1.0), `color` (text), `is_active` (boolean)
+- All tables: RLS admin-only for management, public read for pricing display
+- Seed default pricing values (base_fee=30, per_km_rate=10, per_kg_rate=5, min_fee=20)
 
-- **Update `useAdminData.ts`:** Add hooks:
-  - `useAdminCustomerDetail(userId)` — fetches profile + deliveries + points log + spin results + badges + location for one user
-  - `useUpdateCustomerProfile()` — mutation to update profile fields
+**New component: `src/components/admin/AdminPricing.tsx`**
+- **Rate Settings tab:** Edit base fee, per-km rate, per-kg rate, minimum fee
+- **Add-ons tab:** CRUD list of extra add-on charges (e.g. "Fragile handling", "Express", "Insurance")
+- **Zone Pricing tab:** Embedded Ukhrul Google Maps iframe (using the provided embed URL). Display zones as a list with name, radius, multiplier. Admin can add/edit/delete zones. Show zone details alongside the map. The map serves as a visual reference — zone circles are rendered as an overlay description (since we can't draw on an iframe, we'll show zone info cards next to the map)
 
-- **New route:** `/admin/customers/:id` in `App.tsx`
+**Route:** `/admin/pricing` in `App.tsx`
+**Nav:** Add "Pricing" item under Management in `AdminLayout.tsx`
 
----
+### 3. Admin Services Management (Real-time Order Processing)
 
-### 2. Admin Spin Win Configuration (Preset Wins)
+**Database:**
+- Create `service_types` table: `id`, `name` (text), `description` (text), `icon` (text), `base_price` (numeric), `is_active` (boolean), `display_order` (int), `created_at`
+- Create `live_orders` table: `id`, `user_id` (uuid), `service_type_id` (uuid), `pickup` (text), `dropoff` (text), `status` (text — `new`, `accepted`, `in_progress`, `completed`, `cancelled`), `notes` (text), `estimated_fee` (numeric), `assigned_to` (text), `created_at`, `updated_at`
+- Enable realtime on `live_orders` via `ALTER PUBLICATION supabase_realtime ADD TABLE public.live_orders`
+- RLS: admin manages all, users can read/insert own
 
-**Current state:** Admin can configure spin slots with probability weights. The spin result is determined client-side via weighted random. Admin wants to "set spin wins" — meaning the admin can predetermine what a specific user wins.
+**New component: `src/components/admin/AdminServices.tsx`**
+- **Service Types tab:** CRUD for service types (name, description, icon, base price, active toggle). These feed into the public Services page dynamically.
+- **Live Orders tab:** Real-time view of incoming orders using Supabase realtime subscription. Shows new orders with accept/reject buttons. Admin can change status, assign driver name, update notes. Orders auto-refresh via realtime channel. Color-coded status cards (Kanban-style or table view).
 
-**Changes:**
+**Update `src/pages/Services.tsx`:** Fetch service types from DB instead of hardcoded array.
 
-- **Database migration:** Create `spin_preset_wins` table:
-  - `id`, `user_id` (uuid), `spin_type` (text), `slot_id` (uuid, references spin_slots), `used` (boolean, default false), `created_at`
-  - RLS: admin-only management
+**Route:** `/admin/services` in `App.tsx`
+**Nav:** Add "Services" item under Management in `AdminLayout.tsx`
 
-- **Update `AdminSpin.tsx`:** Add a "Preset Wins" section where admin can:
-  - Select a user from dropdown
-  - Select a spin type (daily/weekly)
-  - Select a slot (prize)
-  - Save — this guarantees that user's next spin lands on that prize
+### 4. Updated useAdminData.ts
 
-- **Update `useSpinWheel.ts`:** Before doing weighted random, check `spin_preset_wins` for a pending preset for the current user. If found, use that slot and mark it as `used`.
-
-- **Update `useAdminData.ts`:** Add `useAdminPresetWins()`, `useCreatePresetWin()`, `useDeletePresetWin()` hooks
-
----
-
-### 3. API Integration Feature — External Order Tracking
-
-**Current state:** No API integration capability exists.
-
-**Changes:**
-
-- **Database migration:** Create `api_integrations` table:
-  - `id`, `name` (text), `base_url` (text), `api_key_encrypted` (text), `headers_json` (jsonb), `is_active` (boolean), `created_at`, `updated_at`
-  - RLS: admin-only
-
-- Create `tracked_orders` table:
-  - `id`, `integration_id` (uuid, references api_integrations), `user_id` (uuid), `external_order_id` (text), `status` (text), `last_response` (jsonb), `tracking_url` (text), `last_checked_at` (timestamptz), `created_at`
-  - RLS: admin can manage all, users can read own
-
-- **New admin component: `src/components/admin/AdminApiIntegrations.tsx`**
-  - Admin can add/edit/delete API integrations (name, base URL, API key, custom headers)
-  - Admin can create tracked orders: select integration, select user, enter external order ID and tracking endpoint path
-  - "Check Status" button that calls an edge function to fetch the external API and update `last_response`
-  - Display tracked orders table with status, last checked time, raw response preview
-
-- **New edge function: `supabase/functions/track-order/index.ts`**
-  - Accepts `integration_id` and `order_id`
-  - Fetches the integration config from DB (using service role)
-  - Makes GET request to `{base_url}/{endpoint}` with stored API key/headers
-  - Updates `tracked_orders.last_response` and `status`
-  - Returns the result
-
-- **User dashboard update:** Add a small "My Orders" section in `DashboardOverview.tsx` showing tracked orders for the logged-in user with status and tracking link
-
-- **New route:** `/admin/api-integrations` in `App.tsx`
-- **Update `AdminLayout.tsx`:** Add "API Tracking" nav item under Management section
-
----
+Add hooks for:
+- `useAdminPricingConfig()`, `useUpdatePricingConfig()` — pricing rates
+- `useAdminPricingAddons()`, `useUpsertPricingAddon()`, `useDeletePricingAddon()`
+- `useAdminPricingZones()`, `useUpsertPricingZone()`, `useDeletePricingZone()`
+- `useAdminServiceTypes()`, `useUpsertServiceType()`, `useDeleteServiceType()`
+- `useAdminLiveOrders()` — with realtime subscription
+- `useUpdateLiveOrder()` 
 
 ### Files Summary
 
 **New files:**
-- `src/components/admin/AdminCustomerDetail.tsx`
-- `src/components/admin/AdminApiIntegrations.tsx`
-- `supabase/functions/track-order/index.ts`
+- `src/components/admin/AdminPricing.tsx`
+- `src/components/admin/AdminServices.tsx`
 
 **Edited files:**
-- `src/components/admin/AdminCustomers.tsx` — add View button per row
-- `src/components/admin/AdminSpin.tsx` — add preset wins section
-- `src/components/admin/AdminLayout.tsx` — add nav items
-- `src/components/dashboard/DashboardOverview.tsx` — add tracked orders section
-- `src/hooks/useAdminData.ts` — add customer detail, preset wins, API integration hooks
-- `src/hooks/useSpinWheel.ts` — check preset wins before random
-- `src/App.tsx` — add new routes
+- `src/components/admin/AdminLayout.tsx` — add Pricing + Services nav items
+- `src/components/admin/AdminCustomerDetail.tsx` — add Plus Code field
+- `src/pages/CompleteProfile.tsx` — add optional Plus Code input
+- `src/pages/Services.tsx` — fetch service types from DB
+- `src/hooks/useAdminData.ts` — add all new hooks
+- `src/App.tsx` — add `/admin/pricing` and `/admin/services` routes
 
 **Database migration:**
-- Create `spin_preset_wins`, `api_integrations`, `tracked_orders` tables with RLS
-- Enable realtime on `tracked_orders` for live status updates
+- Add `plus_code` to `profiles`
+- Create `pricing_config`, `pricing_addons`, `pricing_zones`, `service_types`, `live_orders` tables with RLS
+- Seed default pricing config values
+- Enable realtime on `live_orders`
 
