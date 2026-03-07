@@ -44,6 +44,8 @@ import AdminPartners from "./components/admin/AdminPartners";
 import AdminContent from "./components/admin/AdminContent";
 import AdminCustomerDetail from "./components/admin/AdminCustomerDetail";
 import AdminApiIntegrations from "./components/admin/AdminApiIntegrations";
+import AdminPricing from "./components/admin/AdminPricing";
+import AdminServices from "./components/admin/AdminServices";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -107,6 +109,8 @@ const App = () => (
                 <Route path="/admin/blog" element={<AdminBlog />} />
                 <Route path="/admin/partners" element={<AdminPartners />} />
                 <Route path="/admin/content" element={<AdminContent />} />
+                <Route path="/admin/pricing" element={<AdminPricing />} />
+                <Route path="/admin/services" element={<AdminServices />} />
               </Route>
             </Route>
 

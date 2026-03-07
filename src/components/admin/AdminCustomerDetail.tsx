@@ -103,7 +103,7 @@ const AdminCustomerDetail = () => {
   const qc = useQueryClient();
   const { profile, deliveries, pointsLog, spinHistory, badges, location, pointsBalance, tier } = useAdminCustomerDetail(userId!);
 
-  const [editForm, setEditForm] = useState({ full_name: "", phone: "", date_of_birth: "", address: "" });
+  const [editForm, setEditForm] = useState({ full_name: "", phone: "", date_of_birth: "", address: "", plus_code: "" });
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
@@ -113,6 +113,7 @@ const AdminCustomerDetail = () => {
         phone: profile.data.phone || "",
         date_of_birth: profile.data.date_of_birth || "",
         address: profile.data.address || "",
+        plus_code: (profile.data as any)?.plus_code || "",
       });
     }
   }, [profile.data]);
@@ -167,6 +168,7 @@ const AdminCustomerDetail = () => {
               { label: "Phone", key: "phone" as const },
               { label: "Date of Birth", key: "date_of_birth" as const },
               { label: "Address", key: "address" as const },
+              { label: "Plus Code", key: "plus_code" as const },
             ].map(({ label, key }) => (
               <div key={key}>
                 <Label className="text-[10px] text-muted-foreground uppercase">{label}</Label>

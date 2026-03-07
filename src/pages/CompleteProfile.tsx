@@ -11,7 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 const CompleteProfile = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [form, setForm] = useState({ fullName: "", phone: "", dateOfBirth: "", address: "" });
+  const [form, setForm] = useState({ fullName: "", phone: "", dateOfBirth: "", address: "", plusCode: "" });
   const [loading, setLoading] = useState(false);
 
   const update = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -31,6 +31,7 @@ const CompleteProfile = () => {
         phone: form.phone.trim(),
         date_of_birth: form.dateOfBirth,
         address: form.address.trim(),
+        plus_code: form.plusCode.trim() || null,
         profile_completed: true,
       })
       .eq("user_id", user!.id);

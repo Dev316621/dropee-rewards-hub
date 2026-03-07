@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import AnimatedSection from "@/components/AnimatedSection";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
@@ -5,7 +7,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Package, Truck, ShoppingBag, Zap, Handshake, ArrowRight } from "lucide-react";
 
-const services = [
+const iconMap: Record<string, any> = { Package, Truck, ShoppingBag, Zap, Handshake };
+
+const fallbackServices = [
   { icon: Package, title: "Pick & Drop", description: "From documents to parcels, DROPEE picks up from any location in Ukhrul and drops it where you need." },
   { icon: Truck, title: "Custom Delivery", description: "Fragile items, timed deliveries, or special handling — we customize the delivery experience." },
   { icon: ShoppingBag, title: "Food & Grocery", description: "Fresh food and daily essentials from restaurants and local stores, right to your doorstep." },
@@ -14,6 +18,19 @@ const services = [
 ];
 
 const Services = () => {
+  const { data: dbServices } = useQuery({
+    queryKey: ["public-service-types"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("service_types").select("*").order("display_order");
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  const services = (dbServices && dbServices.length > 0)
+    ? dbServices.map(s => ({ icon: iconMap[s.icon || "Package"] || Package, title: s.name, description: s.description || "" }))
+    : fallbackServices;
+
   return (
     <>
       <SEOHead title="Services" description="DROPEE delivery services in Ukhrul — Pick & Drop, Custom Delivery, Food & Grocery, Instant Delivery, and Business Partnerships." path="/services" />
