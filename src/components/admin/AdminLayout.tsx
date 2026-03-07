@@ -2,7 +2,7 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import { 
   BarChart3, Users, Truck, Gift, Settings, FileText, 
   Handshake, Ticket, LogOut, Package, ChevronLeft, ChevronRight,
-  LayoutDashboard, Disc3, Home, ScrollText
+  LayoutDashboard, Disc3, Home, ScrollText, DollarSign
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -24,6 +24,8 @@ const navSections = [
       { icon: Truck, label: "Deliveries", path: "/admin/deliveries" },
       { icon: Ticket, label: "Coupons", path: "/admin/coupons" },
       { icon: Package, label: "API Tracking", path: "/admin/api-integrations" },
+      { icon: Settings, label: "Pricing", path: "/admin/pricing" },
+      { icon: ScrollText, label: "Services", path: "/admin/services" },
     ],
   },
   {

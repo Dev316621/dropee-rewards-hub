@@ -11,7 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 const CompleteProfile = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [form, setForm] = useState({ fullName: "", phone: "", dateOfBirth: "", address: "" });
+  const [form, setForm] = useState({ fullName: "", phone: "", dateOfBirth: "", address: "", plusCode: "" });
   const [loading, setLoading] = useState(false);
 
   const update = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -31,6 +31,7 @@ const CompleteProfile = () => {
         phone: form.phone.trim(),
         date_of_birth: form.dateOfBirth,
         address: form.address.trim(),
+        plus_code: form.plusCode.trim() || null,
         profile_completed: true,
       })
       .eq("user_id", user!.id);
@@ -72,6 +73,10 @@ const CompleteProfile = () => {
             <div className="space-y-1.5">
               <Label htmlFor="address" className="text-sm">Home Address</Label>
               <Input id="address" value={form.address} onChange={update("address")} placeholder="Your home address" required className="h-11 sm:h-10" />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="plusCode" className="text-sm">Plus Code <span className="text-muted-foreground">(optional)</span></Label>
+              <Input id="plusCode" value={form.plusCode} onChange={update("plusCode")} placeholder="e.g. 7MJ7+QH Ukhrul" className="h-11 sm:h-10" />
             </div>
             <Button type="submit" className="w-full h-11 sm:h-10 text-sm" size="lg" disabled={loading}>
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save & Continue"}
