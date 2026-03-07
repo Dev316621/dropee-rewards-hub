@@ -74,6 +74,10 @@ const CompleteProfile = () => {
               <Label htmlFor="address" className="text-sm">Home Address</Label>
               <Input id="address" value={form.address} onChange={update("address")} placeholder="Your home address" required className="h-11 sm:h-10" />
             </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="plusCode" className="text-sm">Plus Code <span className="text-muted-foreground">(optional)</span></Label>
+              <Input id="plusCode" value={form.plusCode} onChange={update("plusCode")} placeholder="e.g. 7MJ7+QH Ukhrul" className="h-11 sm:h-10" />
+            </div>
             <Button type="submit" className="w-full h-11 sm:h-10 text-sm" size="lg" disabled={loading}>
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save & Continue"}
             </Button>
