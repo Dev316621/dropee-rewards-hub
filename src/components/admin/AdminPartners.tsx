@@ -49,7 +49,7 @@ const AdminPartners = () => {
                 <div><Label className="text-xs text-muted-foreground">Link</Label><Input value={form.link} onChange={e => setForm({ ...form, link: e.target.value })} className="bg-dashboard-bg border-dashboard-border" /></div>
                 <div><Label className="text-xs text-muted-foreground">Discount Code</Label><Input value={form.discount_code} onChange={e => setForm({ ...form, discount_code: e.target.value })} className="bg-dashboard-bg border-dashboard-border font-mono" /></div>
               </div>
-              <div><Label className="text-xs text-muted-foreground">Logo URL</Label><Input value={form.logo_url} onChange={e => setForm({ ...form, logo_url: e.target.value })} className="bg-dashboard-bg border-dashboard-border" /></div>
+              <ImageUpload value={form.logo_url} onChange={url => setForm({ ...form, logo_url: url })} label="Logo" folder="partners" />
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2"><Switch checked={form.is_featured} onCheckedChange={v => setForm({ ...form, is_featured: v })} /><Label className="text-xs">Featured</Label></div>
                 <div className="flex items-center gap-2"><Label className="text-xs text-muted-foreground">Order:</Label><Input type="number" value={form.display_order} onChange={e => setForm({ ...form, display_order: +e.target.value })} className="w-16 h-7 bg-dashboard-bg border-dashboard-border text-xs" /></div>
