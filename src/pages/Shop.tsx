@@ -151,15 +151,37 @@ const Shop = () => {
 
   const placeMutation = useMutation({
     mutationFn: async () => {
-      const { error } = await supabase.from("shop_orders").insert({
+      const orderItems = cart.map(i => ({ product_id: i.id, name: i.name, price: i.price, qty: i.qty, product_type: i.product_type }));
+      const { data: shopOrder, error } = await supabase.from("shop_orders").insert({
         user_id: user!.id,
         total: finalTotal,
-        items: cart.map(i => ({ product_id: i.id, name: i.name, price: i.price, qty: i.qty, product_type: i.product_type })),
+        items: orderItems,
         delivery_address: address,
         phone,
         notes: orderNotes + (couponApplied ? ` [Coupon: ${couponCode}]` : ""),
-      });
+      }).select("id").single();
       if (error) throw error;
+
+      // Also forward to the Order Hub for centralized tracking
+      const profile = await supabase.from("profiles").select("full_name, phone").eq("user_id", user!.id).single();
+      try {
+        await supabase.functions.invoke("hub-receive-order", {
+          body: {
+            _internal: true,
+            website_name: "Dropee",
+            external_order_id: shopOrder.id,
+            customer_name: profile.data?.full_name || "Customer",
+            customer_phone: profile.data?.phone || phone,
+            customer_address: address,
+            items: orderItems.map(i => ({ name: i.name, qty: i.qty, price: i.price })),
+            total: finalTotal,
+            notes: orderNotes,
+          },
+        });
+      } catch {
+        // Hub forwarding is non-critical — don't block the order
+        console.warn("Hub forwarding failed, order still placed");
+      }
     },
     onSuccess: () => {
       setOrderPlaced(true);
