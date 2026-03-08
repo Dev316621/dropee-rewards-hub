@@ -1,0 +1,7 @@
+
+ALTER TABLE public.products
+  ADD COLUMN original_price NUMERIC DEFAULT NULL,
+  ADD COLUMN discount_percent NUMERIC DEFAULT 0,
+  ADD COLUMN discount_expires_at TIMESTAMPTZ DEFAULT NULL,
+  ADD COLUMN external_url TEXT DEFAULT NULL,
+  ADD COLUMN is_featured BOOLEAN NOT NULL DEFAULT false;
