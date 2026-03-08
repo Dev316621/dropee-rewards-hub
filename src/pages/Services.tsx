@@ -71,8 +71,8 @@ const Services = () => {
                 </div>
                 <h3 className="font-display text-lg sm:text-xl font-bold mb-2 sm:mb-3">{service.title}</h3>
                 <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-4 sm:mb-5">{service.description}</p>
-                <Link to="/login" className="inline-flex items-center gap-1 text-xs sm:text-sm font-medium text-primary hover:gap-2 transition-all">
-                  Get Started <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <Link to="/book" className="inline-flex items-center gap-1 text-xs sm:text-sm font-medium text-primary hover:gap-2 transition-all">
+                  Book Now <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </Link>
               </motion.div>
             ))}
