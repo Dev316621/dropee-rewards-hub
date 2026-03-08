@@ -216,6 +216,11 @@ const ProductForm = ({ product, onSave, isPending }: { product: any; onSave: (p:
   const [name, setName] = useState(product?.name ?? "");
   const [description, setDescription] = useState(product?.description ?? "");
   const [price, setPrice] = useState(product?.price ?? 0);
+  const [originalPrice, setOriginalPrice] = useState(product?.original_price ?? "");
+  const [discountPercent, setDiscountPercent] = useState(product?.discount_percent ?? 0);
+  const [discountExpiresAt, setDiscountExpiresAt] = useState(product?.discount_expires_at ? product.discount_expires_at.slice(0, 16) : "");
+  const [externalUrl, setExternalUrl] = useState(product?.external_url ?? "");
+  const [isFeatured, setIsFeatured] = useState(product?.is_featured ?? false);
   const [category, setCategory] = useState(product?.category ?? "general");
   const [productType, setProductType] = useState(product?.product_type ?? "physical");
   const [stock, setStock] = useState(product?.stock ?? 0);
@@ -225,15 +230,31 @@ const ProductForm = ({ product, onSave, isPending }: { product: any; onSave: (p:
 
   const handleSave = () => {
     if (!name) { toast.error("Name is required"); return; }
-    onSave({ ...(product?.id ? { id: product.id } : {}), name, description, price: Number(price), category, product_type: productType, stock: Number(stock), image_url: imageUrl || null, is_active: isActive, display_order: displayOrder });
+    onSave({
+      ...(product?.id ? { id: product.id } : {}),
+      name, description,
+      price: Number(price),
+      original_price: originalPrice ? Number(originalPrice) : null,
+      discount_percent: Number(discountPercent),
+      discount_expires_at: discountExpiresAt ? new Date(discountExpiresAt).toISOString() : null,
+      external_url: externalUrl || null,
+      is_featured: isFeatured,
+      category, product_type: productType,
+      stock: Number(stock),
+      image_url: imageUrl || null,
+      is_active: isActive, display_order: displayOrder,
+    });
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1 col-span-2"><Label>Name</Label><Input value={name} onChange={e => setName(e.target.value)} /></div>
         <div className="space-y-1 col-span-2"><Label>Description</Label><Textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} /></div>
-        <div className="space-y-1"><Label>Price (₹)</Label><Input type="number" value={price} onChange={e => setPrice(e.target.value)} /></div>
+        <div className="space-y-1"><Label>Sale Price (₹)</Label><Input type="number" value={price} onChange={e => setPrice(e.target.value)} /></div>
+        <div className="space-y-1"><Label>Original Price (₹)</Label><Input type="number" value={originalPrice} onChange={e => setOriginalPrice(e.target.value)} placeholder="For compare pricing" /></div>
+        <div className="space-y-1"><Label>Discount %</Label><Input type="number" min={0} max={100} value={discountPercent} onChange={e => setDiscountPercent(e.target.value)} /></div>
+        <div className="space-y-1"><Label>Discount Expires</Label><Input type="datetime-local" value={discountExpiresAt} onChange={e => setDiscountExpiresAt(e.target.value)} /></div>
         <div className="space-y-1"><Label>Stock</Label><Input type="number" value={stock} onChange={e => setStock(e.target.value)} /></div>
         <div className="space-y-1"><Label>Category</Label><Input value={category} onChange={e => setCategory(e.target.value)} /></div>
         <div className="space-y-1">
@@ -246,9 +267,11 @@ const ProductForm = ({ product, onSave, isPending }: { product: any; onSave: (p:
             </SelectContent>
           </Select>
         </div>
-        <div className="col-span-2"><ImageUpload value={imageUrl} onChange={setImageUrl} label="Product Image" folder="products" /></div>
         <div className="space-y-1"><Label>Display Order</Label><Input type="number" value={displayOrder} onChange={e => setDisplayOrder(Number(e.target.value))} /></div>
-        <div className="flex items-center gap-2 pt-5"><Switch checked={isActive} onCheckedChange={setIsActive} /><Label>Active</Label></div>
+        <div className="space-y-1 col-span-2"><Label>External / Partner URL</Label><Input value={externalUrl} onChange={e => setExternalUrl(e.target.value)} placeholder="https://partner-site.com/product" /></div>
+        <div className="col-span-2"><ImageUpload value={imageUrl} onChange={setImageUrl} label="Product Image" folder="products" /></div>
+        <div className="flex items-center gap-2 pt-2"><Switch checked={isActive} onCheckedChange={setIsActive} /><Label>Active</Label></div>
+        <div className="flex items-center gap-2 pt-2"><Switch checked={isFeatured} onCheckedChange={setIsFeatured} /><Label>Featured ⭐</Label></div>
       </div>
       <Button className="w-full" onClick={handleSave} disabled={isPending}>{isPending ? "Saving..." : "Save Product"}</Button>
     </div>
