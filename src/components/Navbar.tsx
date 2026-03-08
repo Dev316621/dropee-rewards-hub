@@ -1,21 +1,31 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Package, ArrowLeft } from "lucide-react";
+import { Menu, X, Package, ArrowLeft, MoreHorizontal, Info, Handshake, Gift, FileText, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-const navLinks = [
+const mainLinks = [
   { to: "/", label: "Home" },
-  { to: "/about", label: "About" },
   { to: "/services", label: "Services" },
   { to: "/shop", label: "Shop" },
-  { to: "/book", label: "Book Now" },
-  { to: "/tiers", label: "Tiers" },
-  { to: "/offers", label: "Offers" },
-  { to: "/partners", label: "Partners" },
   { to: "/blog", label: "Blog" },
-  { to: "/policies", label: "Policies" },
+  { to: "/tiers", label: "Tiers" },
+  { to: "/donate", label: "Donate" },
+];
+
+const moreLinks = [
+  { to: "/about", label: "About", icon: Info },
+  { to: "/partners", label: "Partners", icon: Handshake },
+  { to: "/offers", label: "Offers", icon: Gift },
+  { to: "/policies", label: "Policies", icon: FileText },
+  { to: "/book", label: "Book a Service", icon: Package },
+];
+
+const allLinks = [
+  ...mainLinks,
+  ...moreLinks.map(l => ({ to: l.to, label: l.label })),
 ];
 
 const Navbar = () => {
@@ -36,16 +46,16 @@ const Navbar = () => {
               </button>
             )}
             <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-primary flex items-center justify-center">
-              <Package className="w-4 h-4 md:w-5 md:h-5 text-primary-foreground" />
-            </div>
-            <span className="font-display text-lg md:text-xl font-bold tracking-tight">DROPEE</span>
-          </Link>
+              <div className="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-primary flex items-center justify-center">
+                <Package className="w-4 h-4 md:w-5 md:h-5 text-primary-foreground" />
+              </div>
+              <span className="font-display text-lg md:text-xl font-bold tracking-tight">DROPEE</span>
+            </Link>
           </div>
 
           {/* Desktop nav */}
           <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
+            {mainLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
@@ -58,6 +68,23 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex items-center gap-1">
+                  More <MoreHorizontal className="w-4 h-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                {moreLinks.map((link) => (
+                  <DropdownMenuItem key={link.to} asChild>
+                    <Link to={link.to} className="flex items-center gap-2 cursor-pointer">
+                      <link.icon className="w-4 h-4" />
+                      {link.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           <div className="hidden lg:flex items-center gap-3">
@@ -98,7 +125,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu — full-screen overlay */}
+      {/* Mobile menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -109,7 +136,7 @@ const Navbar = () => {
             className="lg:hidden fixed inset-0 top-14 bg-background z-40 overflow-y-auto"
           >
             <div className="container mx-auto px-4 py-6 space-y-1">
-              {navLinks.map((link) => (
+              {allLinks.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}

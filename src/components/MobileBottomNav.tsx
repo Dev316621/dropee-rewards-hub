@@ -1,12 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Gift, Star, ShoppingBag, CalendarCheck } from "lucide-react";
+import { Home, Star, ShoppingBag, FileText, Heart } from "lucide-react";
 
 const navItems = [
   { to: "/", icon: Home, label: "Home" },
   { to: "/services", icon: Star, label: "Services" },
   { to: "/shop", icon: ShoppingBag, label: "Shop" },
-  { to: "/book", icon: CalendarCheck, label: "Book" },
-  { to: "/offers", icon: Gift, label: "Offers" },
+  { to: "/blog", icon: FileText, label: "Blog" },
+  { to: "/donate", icon: Heart, label: "Donate" },
 ];
 
 const MobileBottomNav = () => {
