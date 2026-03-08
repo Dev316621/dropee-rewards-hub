@@ -13,6 +13,8 @@ import AdminLayout from "./components/admin/AdminLayout";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Services from "./pages/Services";
+import BookService from "./pages/BookService";
+import Shop from "./pages/Shop";
 import Policies from "./pages/Policies";
 import Tiers from "./pages/Tiers";
 import Offers from "./pages/Offers";
@@ -46,6 +48,8 @@ import AdminCustomerDetail from "./components/admin/AdminCustomerDetail";
 import AdminApiIntegrations from "./components/admin/AdminApiIntegrations";
 import AdminPricing from "./components/admin/AdminPricing";
 import AdminServices from "./components/admin/AdminServices";
+import AdminShop from "./components/admin/AdminShop";
+import AdminServiceBookings from "./components/admin/AdminServiceBookings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -70,6 +74,8 @@ const App = () => (
               <Route path="/partners" element={<Partners />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/book" element={<BookService />} />
+              <Route path="/shop" element={<Shop />} />
             </Route>
 
             {/* Auth pages */}
@@ -111,6 +117,8 @@ const App = () => (
                 <Route path="/admin/content" element={<AdminContent />} />
                 <Route path="/admin/pricing" element={<AdminPricing />} />
                 <Route path="/admin/services" element={<AdminServices />} />
+                <Route path="/admin/shop" element={<AdminShop />} />
+                <Route path="/admin/bookings" element={<AdminServiceBookings />} />
               </Route>
             </Route>
 

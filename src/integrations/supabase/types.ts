@@ -712,6 +712,54 @@ export type Database = {
         }
         Relationships: []
       }
+      products: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          digital_file_url: string | null
+          display_order: number
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          price: number
+          product_type: string
+          stock: number | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          digital_file_url?: string | null
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          price?: number
+          product_type?: string
+          stock?: number | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          digital_file_url?: string | null
+          display_order?: number
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          price?: number
+          product_type?: string
+          stock?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string | null
@@ -781,6 +829,59 @@ export type Database = {
         }
         Relationships: []
       }
+      service_bookings: {
+        Row: {
+          addons: Json | null
+          created_at: string
+          dropoff: string
+          estimated_fee: number | null
+          id: string
+          notes: string | null
+          pickup: string
+          service_type_id: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          weight: number | null
+        }
+        Insert: {
+          addons?: Json | null
+          created_at?: string
+          dropoff: string
+          estimated_fee?: number | null
+          id?: string
+          notes?: string | null
+          pickup: string
+          service_type_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          weight?: number | null
+        }
+        Update: {
+          addons?: Json | null
+          created_at?: string
+          dropoff?: string
+          estimated_fee?: number | null
+          id?: string
+          notes?: string | null
+          pickup?: string
+          service_type_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          weight?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_bookings_service_type_id_fkey"
+            columns: ["service_type_id"]
+            isOneToOne: false
+            referencedRelation: "service_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       service_types: {
         Row: {
           base_price: number
@@ -811,6 +912,48 @@ export type Database = {
           id?: string
           is_active?: boolean
           name?: string
+        }
+        Relationships: []
+      }
+      shop_orders: {
+        Row: {
+          created_at: string
+          delivery_address: string | null
+          id: string
+          items: Json
+          notes: string | null
+          phone: string | null
+          plus_code: string | null
+          status: string
+          total: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          delivery_address?: string | null
+          id?: string
+          items?: Json
+          notes?: string | null
+          phone?: string | null
+          plus_code?: string | null
+          status?: string
+          total?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          delivery_address?: string | null
+          id?: string
+          items?: Json
+          notes?: string | null
+          phone?: string | null
+          plus_code?: string | null
+          status?: string
+          total?: number
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
