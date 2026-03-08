@@ -3,8 +3,10 @@ import { ArrowLeft, Home } from "lucide-react";
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardBottomNav from "./DashboardBottomNav";
 import NotificationOptIn from "./NotificationOptIn";
+import { useDeliveryNotifications } from "@/hooks/useDeliveryNotifications";
 
 const DashboardLayout = () => {
+  useDeliveryNotifications();
   const location = useLocation();
   const navigate = useNavigate();
   const isOverview = location.pathname === "/dashboard";
