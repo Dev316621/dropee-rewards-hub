@@ -75,6 +75,7 @@ const Shop = () => {
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponApplied, setCouponApplied] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [iframeUrl, setIframeUrl] = useState<string | null>(null);
 
   const { data: products } = useQuery({
     queryKey: ["public-products"],
@@ -240,10 +241,8 @@ const Shop = () => {
               <Plus className="w-3.5 h-3.5" /> Add
             </Button>
             {product.external_url && (
-              <Button size="sm" variant="outline" className="h-8 gap-1" asChild>
-                <a href={product.external_url} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
+              <Button size="sm" variant="outline" className="h-8 gap-1" onClick={() => setIframeUrl(product.external_url)}>
+                <ExternalLink className="w-3.5 h-3.5" />
               </Button>
             )}
           </div>
@@ -460,6 +459,41 @@ const Shop = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* External Site Iframe Modal */}
+      <AnimatePresence>
+        {iframeUrl && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-background/95 flex flex-col"
+          >
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card">
+              <div className="flex items-center gap-2 min-w-0">
+                <ShoppingBag className="w-4 h-4 text-primary shrink-0" />
+                <span className="text-sm font-medium truncate">{iframeUrl}</span>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <Button size="sm" variant="ghost" asChild>
+                  <a href={iframeUrl} target="_blank" rel="noopener noreferrer" className="gap-1">
+                    <ExternalLink className="w-3.5 h-3.5" /> Open
+                  </a>
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => setIframeUrl(null)}>
+                  ✕ Close
+                </Button>
+              </div>
+            </div>
+            <iframe
+              src={iframeUrl}
+              className="flex-1 w-full border-0"
+              sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+              title="External shop"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
