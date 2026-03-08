@@ -241,10 +241,8 @@ const Shop = () => {
               <Plus className="w-3.5 h-3.5" /> Add
             </Button>
             {product.external_url && (
-              <Button size="sm" variant="outline" className="h-8 gap-1" asChild>
-                <a href={product.external_url} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
+              <Button size="sm" variant="outline" className="h-8 gap-1" onClick={() => setIframeUrl(product.external_url)}>
+                <ExternalLink className="w-3.5 h-3.5" />
               </Button>
             )}
           </div>
