@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
+import ImageUpload from "./ImageUpload";
 
 const emptyForm = { title: "", slug: "", content: "", excerpt: "", category: "general", status: "draft", image_url: "", is_pinned: false };
 
