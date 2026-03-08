@@ -16,6 +16,9 @@ export interface HubAgent {
   id: string;
   name: string;
   phone: string;
+  email: string;
+  status: string;
+  user_id: string | null;
   is_active: boolean;
   created_at: string;
 }
