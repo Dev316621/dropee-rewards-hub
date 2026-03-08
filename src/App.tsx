@@ -51,6 +51,7 @@ import AdminPricing from "./components/admin/AdminPricing";
 import AdminServices from "./components/admin/AdminServices";
 import AdminShop from "./components/admin/AdminShop";
 import AdminServiceBookings from "./components/admin/AdminServiceBookings";
+import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
