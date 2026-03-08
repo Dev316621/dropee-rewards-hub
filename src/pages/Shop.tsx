@@ -75,6 +75,7 @@ const Shop = () => {
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponApplied, setCouponApplied] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [iframeUrl, setIframeUrl] = useState<string | null>(null);
 
   const { data: products } = useQuery({
     queryKey: ["public-products"],
