@@ -8,13 +8,14 @@ export const requestPushPermission = async (): Promise<boolean> => {
 export const sendLocalNotification = (title: string, body: string, tag?: string) => {
   if (!("Notification" in window) || Notification.permission !== "granted") return;
 
-  new Notification(title, {
+  const options: NotificationOptions & { vibrate?: number[] } = {
     body,
     icon: "/pwa-192x192.png",
     badge: "/pwa-192x192.png",
     tag: tag || "dropee-notification",
-    vibrate: [200, 100, 200],
-  });
+  };
+
+  new Notification(title, options);
 };
 
 export const notifyDeliveryUpdate = (status: string, deliveryId: string) => {
