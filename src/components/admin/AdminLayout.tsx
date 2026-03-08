@@ -26,6 +26,8 @@ const navSections = [
       { icon: Package, label: "API Tracking", path: "/admin/api-integrations" },
       { icon: Settings, label: "Pricing", path: "/admin/pricing" },
       { icon: ScrollText, label: "Services", path: "/admin/services" },
+      { icon: ShoppingBag, label: "Shop", path: "/admin/shop" },
+      { icon: CalendarCheck, label: "Bookings", path: "/admin/bookings" },
     ],
   },
   {
