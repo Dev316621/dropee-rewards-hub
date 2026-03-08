@@ -126,6 +126,9 @@ const App = () => (
                 <Route path="/admin/services" element={<AdminServices />} />
                 <Route path="/admin/shop" element={<AdminShop />} />
                 <Route path="/admin/bookings" element={<AdminServiceBookings />} />
+                <Route path="/admin/hub" element={<AdminHubOrders />} />
+                <Route path="/admin/hub-websites" element={<AdminHubWebsites />} />
+                <Route path="/admin/hub-agents" element={<AdminHubAgents />} />
               </Route>
             </Route>
 

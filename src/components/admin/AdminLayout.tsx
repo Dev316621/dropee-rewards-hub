@@ -19,6 +19,14 @@ const navSections = [
     ],
   },
   {
+    label: "Order Hub",
+    items: [
+      { icon: Network, label: "Hub Orders", path: "/admin/hub" },
+      { icon: Globe, label: "Websites", path: "/admin/hub-websites" },
+      { icon: UserCheck, label: "Agents", path: "/admin/hub-agents" },
+    ],
+  },
+  {
     label: "Management",
     items: [
       { icon: Users, label: "Customers", path: "/admin/customers" },
