@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { FileText, Plus, Trash2, Edit, Eye } from "lucide-react";
+import { FileText, Plus, Trash2, Edit, Ticket } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
@@ -15,7 +15,7 @@ import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
 import ImageUpload from "./ImageUpload";
 
-const emptyForm = { title: "", slug: "", content: "", excerpt: "", category: "general", status: "draft", image_url: "", is_pinned: false };
+const emptyForm = { title: "", slug: "", content: "", excerpt: "", category: "general", status: "draft", image_url: "", is_pinned: false, booking_enabled: false, booking_label: "" };
 
 const AdminBlog = () => {
   const { data: posts, isLoading } = useAdminBlogPosts();
@@ -25,7 +25,11 @@ const AdminBlog = () => {
   const [form, setForm] = useState<typeof emptyForm & { id?: string }>(emptyForm);
 
   const openEdit = (post: any) => {
-    setForm({ id: post.id, title: post.title, slug: post.slug, content: post.content ?? "", excerpt: post.excerpt ?? "", category: post.category ?? "general", status: post.status, image_url: post.image_url ?? "", is_pinned: post.is_pinned ?? false });
+    setForm({
+      id: post.id, title: post.title, slug: post.slug, content: post.content ?? "", excerpt: post.excerpt ?? "",
+      category: post.category ?? "general", status: post.status, image_url: post.image_url ?? "", is_pinned: post.is_pinned ?? false,
+      booking_enabled: post.booking_enabled ?? false, booking_label: post.booking_label ?? "",
+    });
     setDialogOpen(true);
   };
 
@@ -90,6 +94,21 @@ const AdminBlog = () => {
               </div>
               <ImageUpload value={form.image_url} onChange={url => setForm({ ...form, image_url: url })} label="Cover Image" folder="blog" />
               <div className="flex items-center gap-2"><Switch checked={form.is_pinned} onCheckedChange={v => setForm({ ...form, is_pinned: v })} /><Label className="text-xs">Pinned</Label></div>
+
+              {/* Booking CTA */}
+              <div className="border border-dashboard-border rounded-lg p-3 space-y-2">
+                <div className="flex items-center gap-2">
+                  <Switch checked={form.booking_enabled} onCheckedChange={v => setForm({ ...form, booking_enabled: v })} />
+                  <Label className="text-xs flex items-center gap-1"><Ticket className="w-3 h-3 text-primary" /> Enable Booking CTA</Label>
+                </div>
+                {form.booking_enabled && (
+                  <div>
+                    <Label className="text-[10px] text-muted-foreground">Button Label (optional)</Label>
+                    <Input value={form.booking_label} onChange={e => setForm({ ...form, booking_label: e.target.value })} placeholder="e.g. Register for Event" className="bg-dashboard-bg border-dashboard-border text-xs h-8" />
+                  </div>
+                )}
+              </div>
+
               <Button onClick={handleSave} disabled={upsertPost.isPending} className="w-full">{upsertPost.isPending ? "Saving…" : "Save Post"}</Button>
             </div>
           </DialogContent>
@@ -107,6 +126,7 @@ const AdminBlog = () => {
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="text-sm font-medium text-dashboard-card-foreground truncate">{post.title}</p>
                     {post.is_pinned && <Badge variant="secondary" className="text-[10px] bg-amber-500/20 text-amber-400">📌 Pinned</Badge>}
+                    {(post as any).booking_enabled && <Badge variant="secondary" className="text-[10px] bg-emerald-500/20 text-emerald-400"><Ticket className="w-2.5 h-2.5 mr-0.5" /> Booking</Badge>}
                   </div>
                   <div className="flex items-center gap-2 mt-1">
                     <Badge className={post.status === "published" ? "bg-emerald-500/20 text-emerald-400" : "bg-muted text-muted-foreground"} variant="secondary">

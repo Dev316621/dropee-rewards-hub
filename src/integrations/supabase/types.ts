@@ -79,6 +79,8 @@ export type Database = {
       }
       blog_posts: {
         Row: {
+          booking_enabled: boolean
+          booking_label: string | null
           category: string | null
           content: string | null
           created_at: string
@@ -95,6 +97,8 @@ export type Database = {
           video_url: string | null
         }
         Insert: {
+          booking_enabled?: boolean
+          booking_label?: string | null
           category?: string | null
           content?: string | null
           created_at?: string
@@ -111,6 +115,8 @@ export type Database = {
           video_url?: string | null
         }
         Update: {
+          booking_enabled?: boolean
+          booking_label?: string | null
           category?: string | null
           content?: string | null
           created_at?: string

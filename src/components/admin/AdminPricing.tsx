@@ -216,6 +216,48 @@ const AddonsTab = () => {
 };
 
 // ── Zone Pricing Tab ──
+import { useEffect, useRef } from "react";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+
+const AdminZoneMap = ({ zones, onMapClick }: { zones: any[]; onMapClick?: (lat: number, lng: number) => void }) => {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstance = useRef<L.Map | null>(null);
+
+  useEffect(() => {
+    if (!mapRef.current) return;
+    if (mapInstance.current) { mapInstance.current.remove(); mapInstance.current = null; }
+
+    const map = L.map(mapRef.current).setView([25.097, 94.361], 13);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+
+    zones.forEach(z => {
+      L.circle([z.center_lat, z.center_lng], {
+        radius: z.radius_km * 1000,
+        color: z.color || "#FF6B35",
+        fillColor: z.color || "#FF6B35",
+        fillOpacity: 0.15,
+        weight: 2,
+      })
+        .bindPopup(`<strong>${z.name}</strong><br>${Number(z.multiplier)}× rate<br>${z.radius_km}km radius`)
+        .addTo(map);
+    });
+
+    if (onMapClick) {
+      map.on("click", (e: L.LeafletMouseEvent) => {
+        onMapClick(parseFloat(e.latlng.lat.toFixed(6)), parseFloat(e.latlng.lng.toFixed(6)));
+      });
+    }
+
+    mapInstance.current = map;
+    return () => { map.remove(); mapInstance.current = null; };
+  }, [zones, onMapClick]);
+
+  return <div ref={mapRef} className="w-full h-72 sm:h-96 rounded-lg" />;
+};
+
 const ZonePricingTab = () => {
   const { data: zones } = usePricingZones();
   const upsert = useUpsertZone();
@@ -237,24 +279,27 @@ const ZonePricingTab = () => {
     setOpen(true);
   };
 
+  const handleMapClick = (lat: number, lng: number) => {
+    if (open) {
+      setForm(f => ({ ...f, center_lat: lat, center_lng: lng }));
+      toast.info(`Coordinates set: ${lat}, ${lng}`);
+    }
+  };
+
   return (
     <div className="space-y-4">
-      {/* Ukhrul Map */}
+      {/* Interactive Map */}
       <Card className="bg-dashboard-card border-dashboard-border">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm text-dashboard-card-foreground flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-primary" /> Ukhrul Service Area Map
+            <MapPin className="h-4 w-4 text-primary" /> Ukhrul Zone Map
           </CardTitle>
+          <p className="text-[10px] text-muted-foreground">
+            {open ? "Click on map to set zone center" : "Interactive map showing all pricing zones"}
+          </p>
         </CardHeader>
         <CardContent>
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d54949.89393899209!2d94.32023729643124!3d25.096996160274486!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3748f67980a6a29f%3A0xcaf347eb55461da0!2sUkhrul%2C%20Manipur%20795142!5e1!3m2!1sen!2sin!4v1772904502845!5m2!1sen!2sin"
-            className="w-full h-64 sm:h-80 rounded-lg border border-dashboard-border"
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title="Ukhrul Map"
-          />
+          <AdminZoneMap zones={zones ?? []} onMapClick={open ? handleMapClick : undefined} />
         </CardContent>
       </Card>
 
@@ -273,6 +318,7 @@ const ZonePricingTab = () => {
                 <div><Label className="text-xs">Center Lat</Label><Input type="number" step="0.001" value={form.center_lat} onChange={e => setForm({ ...form, center_lat: Number(e.target.value) })} className="bg-dashboard-bg border-dashboard-border" /></div>
                 <div><Label className="text-xs">Center Lng</Label><Input type="number" step="0.001" value={form.center_lng} onChange={e => setForm({ ...form, center_lng: Number(e.target.value) })} className="bg-dashboard-bg border-dashboard-border" /></div>
               </div>
+              <p className="text-[10px] text-muted-foreground">💡 Click on the map above to set coordinates</p>
               <div className="grid grid-cols-2 gap-2">
                 <div><Label className="text-xs">Radius (km)</Label><Input type="number" step="0.5" value={form.radius_km} onChange={e => setForm({ ...form, radius_km: Number(e.target.value) })} className="bg-dashboard-bg border-dashboard-border" /></div>
                 <div><Label className="text-xs">Price Multiplier</Label><Input type="number" step="0.1" value={form.multiplier} onChange={e => setForm({ ...form, multiplier: Number(e.target.value) })} className="bg-dashboard-bg border-dashboard-border" /></div>
