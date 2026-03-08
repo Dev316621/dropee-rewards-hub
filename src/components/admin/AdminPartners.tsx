@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
+import ImageUpload from "./ImageUpload";
 
 const emptyForm = { name: "", description: "", link: "", logo_url: "", discount_code: "", is_featured: false, display_order: 0 };
 
