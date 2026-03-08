@@ -21,6 +21,7 @@ import Offers from "./pages/Offers";
 import Partners from "./pages/Partners";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import Donate from "./pages/Donate";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminLogin from "./pages/AdminLogin";
@@ -76,6 +77,7 @@ const App = () => (
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/book" element={<BookService />} />
               <Route path="/shop" element={<Shop />} />
+              <Route path="/donate" element={<Donate />} />
             </Route>
 
             {/* Auth pages */}
