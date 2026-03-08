@@ -154,6 +154,34 @@ export const useDeleteHubAgent = () => {
   });
 };
 
+export const useApproveAgent = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ agent_id, email, password, action }: { agent_id: string; email?: string; password?: string; action: "approve" | "reject" }) => {
+      const res = await supabase.functions.invoke("hub-agent-approve", {
+        body: { agent_id, email, password, action },
+      });
+      if (res.error) throw new Error(res.error.message || "Failed");
+      if (res.data?.error) throw new Error(res.data.error);
+      return res.data;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["hub-agents"] }),
+  });
+};
+
+export const useCreateAgentWithAccount = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (values: { name: string; phone: string; email: string; password: string }) => {
+      const res = await supabase.functions.invoke("hub-agent-create", { body: values });
+      if (res.error) throw new Error(res.error.message || "Failed");
+      if (res.data?.error) throw new Error(res.data.error);
+      return res.data;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["hub-agents"] }),
+  });
+};
+
 // ---- Orders ----
 export const useHubOrders = () => {
   const qc = useQueryClient();
