@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import ImageUpload from "./ImageUpload";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -245,7 +246,7 @@ const ProductForm = ({ product, onSave, isPending }: { product: any; onSave: (p:
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-1 col-span-2"><Label>Image URL</Label><Input value={imageUrl} onChange={e => setImageUrl(e.target.value)} placeholder="https://..." /></div>
+        <div className="col-span-2"><ImageUpload value={imageUrl} onChange={setImageUrl} label="Product Image" folder="products" /></div>
         <div className="space-y-1"><Label>Display Order</Label><Input type="number" value={displayOrder} onChange={e => setDisplayOrder(Number(e.target.value))} /></div>
         <div className="flex items-center gap-2 pt-5"><Switch checked={isActive} onCheckedChange={setIsActive} /><Label>Active</Label></div>
       </div>

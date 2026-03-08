@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
+import ImageUpload from "./ImageUpload";
 
 const emptyForm = { title: "", slug: "", content: "", excerpt: "", category: "general", status: "draft", image_url: "", is_pinned: false };
 
@@ -87,7 +88,7 @@ const AdminBlog = () => {
                   </Select>
                 </div>
               </div>
-              <div><Label className="text-xs text-muted-foreground">Image URL</Label><Input value={form.image_url} onChange={e => setForm({ ...form, image_url: e.target.value })} className="bg-dashboard-bg border-dashboard-border" /></div>
+              <ImageUpload value={form.image_url} onChange={url => setForm({ ...form, image_url: url })} label="Cover Image" folder="blog" />
               <div className="flex items-center gap-2"><Switch checked={form.is_pinned} onCheckedChange={v => setForm({ ...form, is_pinned: v })} /><Label className="text-xs">Pinned</Label></div>
               <Button onClick={handleSave} disabled={upsertPost.isPending} className="w-full">{upsertPost.isPending ? "Saving…" : "Save Post"}</Button>
             </div>
