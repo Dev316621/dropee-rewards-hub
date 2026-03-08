@@ -343,6 +343,155 @@ export type Database = {
         }
         Relationships: []
       }
+      hub_delivery_agents: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          phone: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          phone?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          phone?: string
+        }
+        Relationships: []
+      }
+      hub_order_status_log: {
+        Row: {
+          changed_at: string
+          changed_by: string
+          id: string
+          new_status: string
+          old_status: string | null
+          order_id: string
+        }
+        Insert: {
+          changed_at?: string
+          changed_by?: string
+          id?: string
+          new_status: string
+          old_status?: string | null
+          order_id: string
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: string
+          id?: string
+          new_status?: string
+          old_status?: string | null
+          order_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hub_order_status_log_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "hub_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hub_orders: {
+        Row: {
+          assigned_agent_id: string | null
+          created_at: string
+          customer_address: string
+          customer_name: string
+          customer_phone: string
+          external_order_id: string
+          id: string
+          items: Json
+          notes: string | null
+          status: string
+          total: number
+          updated_at: string
+          website_id: string
+        }
+        Insert: {
+          assigned_agent_id?: string | null
+          created_at?: string
+          customer_address?: string
+          customer_name?: string
+          customer_phone?: string
+          external_order_id?: string
+          id?: string
+          items?: Json
+          notes?: string | null
+          status?: string
+          total?: number
+          updated_at?: string
+          website_id: string
+        }
+        Update: {
+          assigned_agent_id?: string | null
+          created_at?: string
+          customer_address?: string
+          customer_name?: string
+          customer_phone?: string
+          external_order_id?: string
+          id?: string
+          items?: Json
+          notes?: string | null
+          status?: string
+          total?: number
+          updated_at?: string
+          website_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hub_orders_assigned_agent_id_fkey"
+            columns: ["assigned_agent_id"]
+            isOneToOne: false
+            referencedRelation: "hub_delivery_agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hub_orders_website_id_fkey"
+            columns: ["website_id"]
+            isOneToOne: false
+            referencedRelation: "hub_websites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hub_websites: {
+        Row: {
+          api_key: string
+          created_at: string
+          id: string
+          is_active: boolean
+          label_color: string
+          name: string
+        }
+        Insert: {
+          api_key?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          label_color?: string
+          name: string
+        }
+        Update: {
+          api_key?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          label_color?: string
+          name?: string
+        }
+        Relationships: []
+      }
       live_orders: {
         Row: {
           assigned_to: string | null
