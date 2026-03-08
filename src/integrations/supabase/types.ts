@@ -718,11 +718,16 @@ export type Database = {
           created_at: string
           description: string | null
           digital_file_url: string | null
+          discount_expires_at: string | null
+          discount_percent: number | null
           display_order: number
+          external_url: string | null
           id: string
           image_url: string | null
           is_active: boolean
+          is_featured: boolean
           name: string
+          original_price: number | null
           price: number
           product_type: string
           stock: number | null
@@ -733,11 +738,16 @@ export type Database = {
           created_at?: string
           description?: string | null
           digital_file_url?: string | null
+          discount_expires_at?: string | null
+          discount_percent?: number | null
           display_order?: number
+          external_url?: string | null
           id?: string
           image_url?: string | null
           is_active?: boolean
+          is_featured?: boolean
           name: string
+          original_price?: number | null
           price?: number
           product_type?: string
           stock?: number | null
@@ -748,11 +758,16 @@ export type Database = {
           created_at?: string
           description?: string | null
           digital_file_url?: string | null
+          discount_expires_at?: string | null
+          discount_percent?: number | null
           display_order?: number
+          external_url?: string | null
           id?: string
           image_url?: string | null
           is_active?: boolean
+          is_featured?: boolean
           name?: string
+          original_price?: number | null
           price?: number
           product_type?: string
           stock?: number | null
