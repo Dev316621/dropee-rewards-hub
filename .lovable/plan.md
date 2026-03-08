@@ -1,110 +1,122 @@
 
 
-## Plan: Enhanced Admin Customer Profiles, Spin Win Config, and API Order Tracking
+## Central Order Hub — Implementation Plan
 
-Three feature areas to implement:
-
----
-
-### 1. Admin Customer Detail Page with Full Activity View
-
-**Current state:** AdminCustomers shows a flat table with name, phone, referral code, and join date. No way to view a customer's full profile or activity.
-
-**Changes:**
-
-- **New component: `src/components/admin/AdminCustomerDetail.tsx`**
-  - Expandable detail view (dialog or dedicated page at `/admin/customers/:id`)
-  - Shows: full name, email, phone, DOB, address, referral code, join date, profile photo
-  - **Map section:** OpenStreetMap embed showing the customer's saved address (geocoded) or last known location from `location_requests`
-  - **Activity summary cards:** total deliveries, completed deliveries, points balance, current tier, badges earned
-  - **Delivery history table:** all deliveries for that user with status, date, fee
-  - **Spin history:** recent spin results
-  - **Points log:** recent loyalty points transactions
-  - Admin can edit customer profile fields (name, phone, DOB, address) directly
-
-- **Update `AdminCustomers.tsx`:** Add a "View" button per row that opens the detail view
-
-- **Update `useAdminData.ts`:** Add hooks:
-  - `useAdminCustomerDetail(userId)` — fetches profile + deliveries + points log + spin results + badges + location for one user
-  - `useUpdateCustomerProfile()` — mutation to update profile fields
-
-- **New route:** `/admin/customers/:id` in `App.tsx`
+This is a significant feature set. Since Lovable runs React + Supabase (not Node.js/Express), we'll adapt the architecture to use **Supabase Edge Functions** as the API backend, **Supabase Realtime** for live updates (equivalent to Socket.io), and the existing **React admin panel** for the dashboard. This delivers identical functionality with the available stack.
 
 ---
 
-### 2. Admin Spin Win Configuration (Preset Wins)
+### Architecture Overview
 
-**Current state:** Admin can configure spin slots with probability weights. The spin result is determined client-side via weighted random. Admin wants to "set spin wins" — meaning the admin can predetermine what a specific user wins.
-
-**Changes:**
-
-- **Database migration:** Create `spin_preset_wins` table:
-  - `id`, `user_id` (uuid), `spin_type` (text), `slot_id` (uuid, references spin_slots), `used` (boolean, default false), `created_at`
-  - RLS: admin-only management
-
-- **Update `AdminSpin.tsx`:** Add a "Preset Wins" section where admin can:
-  - Select a user from dropdown
-  - Select a spin type (daily/weekly)
-  - Select a slot (prize)
-  - Save — this guarantees that user's next spin lands on that prize
-
-- **Update `useSpinWheel.ts`:** Before doing weighted random, check `spin_preset_wins` for a pending preset for the current user. If found, use that slot and mark it as `used`.
-
-- **Update `useAdminData.ts`:** Add `useAdminPresetWins()`, `useCreatePresetWin()`, `useDeletePresetWin()` hooks
+```text
+External Websites ──(POST + API key)──► Edge Function "hub-receive-order"
+                                              │
+                                              ▼
+                                    Supabase DB (hub_orders, hub_order_status_log)
+                                              │
+                                     Realtime subscription
+                                              │
+                    ┌─────────────────────────┼────────────────────┐
+                    ▼                         ▼                    ▼
+           Admin Dashboard           External site              Agent app
+           (/admin/hub)              (listens via               (future)
+                                      Realtime channel)
+```
 
 ---
 
-### 3. API Integration Feature — External Order Tracking
+### 1. Database Tables (Migration)
 
-**Current state:** No API integration capability exists.
+**`hub_websites`** — registered external websites
+- `id`, `name`, `label_color`, `api_key` (unique, generated UUID), `is_active`, `created_at`
+- RLS: admin-only management
 
-**Changes:**
+**`hub_delivery_agents`** — delivery agents
+- `id`, `name`, `phone`, `is_active`, `created_at`
+- RLS: admin-only management
 
-- **Database migration:** Create `api_integrations` table:
-  - `id`, `name` (text), `base_url` (text), `api_key_encrypted` (text), `headers_json` (jsonb), `is_active` (boolean), `created_at`, `updated_at`
-  - RLS: admin-only
+**`hub_orders`** — all inbound orders
+- `id` (Hub Order ID), `website_id` (FK → hub_websites), `external_order_id`, `customer_name`, `customer_phone`, `customer_address`, `items` (jsonb — array of {name, qty, price}), `total`, `notes`, `status` (default 'pending'), `assigned_agent_id` (FK → hub_delivery_agents, nullable), `created_at`, `updated_at`
+- RLS: admin-only full access; read via edge function for external sites
+- Enable Realtime publication
 
-- Create `tracked_orders` table:
-  - `id`, `integration_id` (uuid, references api_integrations), `user_id` (uuid), `external_order_id` (text), `status` (text), `last_response` (jsonb), `tracking_url` (text), `last_checked_at` (timestamptz), `created_at`
-  - RLS: admin can manage all, users can read own
+**`hub_order_status_log`** — audit trail
+- `id`, `order_id` (FK → hub_orders), `old_status`, `new_status`, `changed_by` (text — admin email or 'system'), `changed_at`
+- RLS: admin-only
 
-- **New admin component: `src/components/admin/AdminApiIntegrations.tsx`**
-  - Admin can add/edit/delete API integrations (name, base URL, API key, custom headers)
-  - Admin can create tracked orders: select integration, select user, enter external order ID and tracking endpoint path
-  - "Check Status" button that calls an edge function to fetch the external API and update `last_response`
-  - Display tracked orders table with status, last checked time, raw response preview
+**Status enum values**: pending, confirmed, preparing, picked_up, on_the_way, delivered, cancelled
 
-- **New edge function: `supabase/functions/track-order/index.ts`**
-  - Accepts `integration_id` and `order_id`
-  - Fetches the integration config from DB (using service role)
-  - Makes GET request to `{base_url}/{endpoint}` with stored API key/headers
-  - Updates `tracked_orders.last_response` and `status`
-  - Returns the result
+### 2. Edge Function: `hub-receive-order`
 
-- **User dashboard update:** Add a small "My Orders" section in `DashboardOverview.tsx` showing tracked orders for the logged-in user with status and tracking link
+- `verify_jwt = false` (external sites won't have Supabase auth)
+- Validates `x-api-key` header against `hub_websites.api_key`
+- Accepts POST body: `{ external_order_id, customer_name, customer_phone, customer_address, items, total, notes }`
+- Inserts into `hub_orders`, returns `{ hub_order_id }`
+- Also supports GET with `?hub_order_id=...` for status polling
 
-- **New route:** `/admin/api-integrations` in `App.tsx`
-- **Update `AdminLayout.tsx`:** Add "API Tracking" nav item under Management section
+### 3. Edge Function: `hub-update-status`
+
+- Admin-authenticated (JWT verified)
+- Accepts `{ order_id, new_status }`
+- Updates `hub_orders.status`, inserts into `hub_order_status_log`
+- Realtime automatically pushes the change to all subscribers
+
+### 4. Admin UI: API Key Management (`/admin/hub-websites`)
+
+- Table of registered websites with name, colored label preview, API key (masked), active toggle
+- Generate new website + API key (random UUID)
+- Revoke (deactivate) or regenerate key
+- Added to admin sidebar under "Management"
+
+### 5. Admin UI: Hub Orders Dashboard (`/admin/hub`)
+
+- Real-time table of all hub orders using Supabase Realtime subscription on `hub_orders`
+- Columns: website source (colored badge), Hub Order ID, customer name, items summary, total, status, assigned agent, time
+- **Filters**: website source dropdown, status dropdown, date range
+- **Order detail dialog**: full item list, customer address, status change buttons, full status history from `hub_order_status_log`
+- **Assign agent**: dropdown of `hub_delivery_agents`
+- **Change status**: dropdown with all valid statuses, triggers edge function
+
+### 6. Admin UI: Delivery Agents (`/admin/hub-agents`)
+
+- CRUD table for agents (name, phone, active toggle)
+- Simple add/edit/delete dialog
+
+### 7. Realtime for External Sites
+
+External websites can subscribe to order updates via Supabase Realtime JS client using the anon key, filtered by their `website_id`. The hub_orders table will be added to `supabase_realtime` publication. External sites would use:
+```js
+supabase.channel('hub-orders')
+  .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'hub_orders', filter: `website_id=eq.THEIR_WEBSITE_ID` }, callback)
+  .subscribe()
+```
+
+RLS policy will allow SELECT on `hub_orders` for anon role filtered by website_id (using a simple policy or the API key approach via an RPC).
 
 ---
 
-### Files Summary
+### Files to Create/Edit
 
-**New files:**
-- `src/components/admin/AdminCustomerDetail.tsx`
-- `src/components/admin/AdminApiIntegrations.tsx`
-- `supabase/functions/track-order/index.ts`
+| File | Action |
+|---|---|
+| Migration SQL | Create 4 tables, enable realtime |
+| `supabase/functions/hub-receive-order/index.ts` | New edge function |
+| `supabase/functions/hub-update-status/index.ts` | New edge function |
+| `supabase/config.toml` | Add function configs |
+| `src/components/admin/AdminHubOrders.tsx` | New — main hub dashboard |
+| `src/components/admin/AdminHubWebsites.tsx` | New — API key management |
+| `src/components/admin/AdminHubAgents.tsx` | New — agent management |
+| `src/hooks/useHubData.ts` | New — queries + realtime hooks |
+| `src/App.tsx` | Add 3 new admin routes |
+| `src/components/admin/AdminLayout.tsx` | Add hub nav items |
 
-**Edited files:**
-- `src/components/admin/AdminCustomers.tsx` — add View button per row
-- `src/components/admin/AdminSpin.tsx` — add preset wins section
-- `src/components/admin/AdminLayout.tsx` — add nav items
-- `src/components/dashboard/DashboardOverview.tsx` — add tracked orders section
-- `src/hooks/useAdminData.ts` — add customer detail, preset wins, API integration hooks
-- `src/hooks/useSpinWheel.ts` — check preset wins before random
-- `src/App.tsx` — add new routes
+### Implementation Order
 
-**Database migration:**
-- Create `spin_preset_wins`, `api_integrations`, `tracked_orders` tables with RLS
-- Enable realtime on `tracked_orders` for live status updates
+1. Database migration (4 tables + realtime)
+2. Edge functions (receive-order, update-status)
+3. Hub data hooks with realtime subscriptions
+4. Admin hub orders dashboard with filters and detail view
+5. API key management page
+6. Delivery agents page
+7. Wire up routes and navigation
 
