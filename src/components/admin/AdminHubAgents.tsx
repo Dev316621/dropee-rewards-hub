@@ -78,9 +78,9 @@ const AdminHubAgents = () => {
 
   const statusBadge = (status: string) => {
     switch (status) {
-      case "pending": return <Badge variant="outline" className="bg-yellow-500/10 text-yellow-700 border-yellow-300">Pending</Badge>;
-      case "approved": return <Badge variant="outline" className="bg-green-500/10 text-green-700 border-green-300">Approved</Badge>;
-      case "rejected": return <Badge variant="outline" className="bg-red-500/10 text-red-700 border-red-300">Rejected</Badge>;
+      case "pending": return <Badge variant="outline" className="bg-warning/10 text-warning border-warning/30">Pending</Badge>;
+      case "approved": return <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">Approved</Badge>;
+      case "rejected": return <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/30">Rejected</Badge>;
       default: return <Badge variant="outline">{status}</Badge>;
     }
   };
