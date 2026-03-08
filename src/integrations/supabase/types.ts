@@ -346,24 +346,33 @@ export type Database = {
       hub_delivery_agents: {
         Row: {
           created_at: string
+          email: string | null
           id: string
           is_active: boolean
           name: string
           phone: string
+          status: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
+          email?: string | null
           id?: string
           is_active?: boolean
           name: string
           phone?: string
+          status?: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
+          email?: string | null
           id?: string
           is_active?: boolean
           name?: string
           phone?: string
+          status?: string
+          user_id?: string | null
         }
         Relationships: []
       }
