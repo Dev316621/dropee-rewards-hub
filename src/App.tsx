@@ -89,6 +89,7 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/complete-profile" element={<CompleteProfile />} />
             <Route path="/share-location/:token" element={<ShareLocation />} />
+            <Route path="/install" element={<Install />} />
 
             {/* Protected dashboard routes */}
             <Route element={<ProtectedRoute />}>
