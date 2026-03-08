@@ -2,3 +2,12 @@ project_id = "kvlggkrxcrjpmbydljtz"
 
 [functions.track-order]
 verify_jwt = false
+
+[functions.hub-agent-apply]
+verify_jwt = false
+
+[functions.hub-agent-approve]
+verify_jwt = false
+
+[functions.hub-agent-create]
+verify_jwt = false

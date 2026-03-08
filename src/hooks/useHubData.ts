@@ -16,6 +16,9 @@ export interface HubAgent {
   id: string;
   name: string;
   phone: string;
+  email: string;
+  status: string;
+  user_id: string | null;
   is_active: boolean;
   created_at: string;
 }
@@ -146,6 +149,34 @@ export const useDeleteHubAgent = () => {
     mutationFn: async (id: string) => {
       const { error } = await supabase.from("hub_delivery_agents").delete().eq("id", id);
       if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["hub-agents"] }),
+  });
+};
+
+export const useApproveAgent = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ agent_id, email, password, action }: { agent_id: string; email?: string; password?: string; action: "approve" | "reject" }) => {
+      const res = await supabase.functions.invoke("hub-agent-approve", {
+        body: { agent_id, email, password, action },
+      });
+      if (res.error) throw new Error(res.error.message || "Failed");
+      if (res.data?.error) throw new Error(res.data.error);
+      return res.data;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["hub-agents"] }),
+  });
+};
+
+export const useCreateAgentWithAccount = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (values: { name: string; phone: string; email: string; password: string }) => {
+      const res = await supabase.functions.invoke("hub-agent-create", { body: values });
+      if (res.error) throw new Error(res.error.message || "Failed");
+      if (res.data?.error) throw new Error(res.data.error);
+      return res.data;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["hub-agents"] }),
   });
