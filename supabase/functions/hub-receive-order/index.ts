@@ -95,7 +95,6 @@ Deno.serve(async (req) => {
         websiteName = website.name;
       }
 
-      const body = await req.json();
       const { external_order_id, customer_name, customer_phone, customer_address, items, total, notes } = body;
 
       if (!customer_name || !items || !Array.isArray(items)) {
@@ -107,7 +106,7 @@ Deno.serve(async (req) => {
       const { data: order, error: insertErr } = await supabase
         .from("hub_orders")
         .insert({
-          website_id: website.id,
+          website_id: websiteId,
           external_order_id: external_order_id || "",
           customer_name: customer_name || "",
           customer_phone: customer_phone || "",
