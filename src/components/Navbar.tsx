@@ -133,7 +133,7 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="lg:hidden fixed inset-0 top-14 bg-background z-40 overflow-y-auto"
+            className="lg:hidden fixed inset-0 top-14 bg-background z-[60] overflow-y-auto"
           >
             <div className="container mx-auto px-4 py-6 space-y-1">
               {allLinks.map((link) => (
