@@ -54,6 +54,7 @@ import AdminServiceBookings from "./components/admin/AdminServiceBookings";
 import AdminHubOrders from "./components/admin/AdminHubOrders";
 import AdminHubWebsites from "./components/admin/AdminHubWebsites";
 import AdminHubAgents from "./components/admin/AdminHubAgents";
+import AdminApiDocs from "./components/admin/AdminApiDocs";
 import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
 
@@ -129,6 +130,7 @@ const App = () => (
                 <Route path="/admin/hub" element={<AdminHubOrders />} />
                 <Route path="/admin/hub-websites" element={<AdminHubWebsites />} />
                 <Route path="/admin/hub-agents" element={<AdminHubAgents />} />
+                <Route path="/admin/hub-docs" element={<AdminApiDocs />} />
               </Route>
             </Route>
 
