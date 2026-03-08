@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Package, ArrowLeft, MoreHorizontal, Info, Handshake, Gift, FileText, Heart } from "lucide-react";
+import { Menu, X, Package, ArrowLeft, MoreHorizontal, Info, Handshake, Gift, FileText, Heart, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -152,6 +152,14 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
+            <Link
+              to="/install"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-base font-medium text-primary bg-primary/10 hover:bg-primary/15 transition-colors touch-manipulation"
+            >
+              <Download className="w-5 h-5" />
+              Install App
+            </Link>
             <div className="pt-4 space-y-3">
               {user ? (
                 <Link to="/dashboard" onClick={() => setIsOpen(false)} className="block">
