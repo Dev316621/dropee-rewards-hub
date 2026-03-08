@@ -24,6 +24,7 @@ const navSections = [
       { icon: Network, label: "Hub Orders", path: "/admin/hub" },
       { icon: Globe, label: "Websites", path: "/admin/hub-websites" },
       { icon: UserCheck, label: "Agents", path: "/admin/hub-agents" },
+      { icon: BookOpen, label: "API Docs", path: "/admin/hub-docs" },
     ],
   },
   {
