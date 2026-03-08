@@ -2,7 +2,8 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import { 
   BarChart3, Users, Truck, Gift, Settings, FileText, 
   Handshake, Ticket, LogOut, Package, ChevronLeft, ChevronRight,
-  LayoutDashboard, Disc3, Home, ScrollText, DollarSign, ShoppingBag, CalendarCheck
+  LayoutDashboard, Disc3, Home, ScrollText, DollarSign, ShoppingBag, CalendarCheck,
+  Globe, Network, UserCheck
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -15,6 +16,14 @@ const navSections = [
     items: [
       { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
       { icon: BarChart3, label: "Analytics", path: "/admin/analytics" },
+    ],
+  },
+  {
+    label: "Order Hub",
+    items: [
+      { icon: Network, label: "Hub Orders", path: "/admin/hub" },
+      { icon: Globe, label: "Websites", path: "/admin/hub-websites" },
+      { icon: UserCheck, label: "Agents", path: "/admin/hub-agents" },
     ],
   },
   {
