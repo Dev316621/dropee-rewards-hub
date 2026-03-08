@@ -13,6 +13,8 @@ import AdminLayout from "./components/admin/AdminLayout";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Services from "./pages/Services";
+import BookService from "./pages/BookService";
+import Shop from "./pages/Shop";
 import Policies from "./pages/Policies";
 import Tiers from "./pages/Tiers";
 import Offers from "./pages/Offers";
