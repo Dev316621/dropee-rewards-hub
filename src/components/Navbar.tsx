@@ -125,47 +125,47 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="lg:hidden fixed inset-0 top-14 bg-background z-[60] overflow-y-auto"
-          >
-            <div className="container mx-auto px-4 py-6 space-y-1">
-              {allLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  onClick={() => setIsOpen(false)}
-                  className={`flex items-center px-4 py-3.5 rounded-xl text-base font-medium transition-colors touch-manipulation ${
-                    location.pathname === link.to
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted active:bg-muted/80"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <div className="pt-4 space-y-3">
-                {user ? (
-                  <Link to="/dashboard" onClick={() => setIsOpen(false)} className="block">
-                    <Button className="w-full h-12 text-base" size="lg">Dashboard</Button>
-                  </Link>
-                ) : (
-                  <Link to="/login" onClick={() => setIsOpen(false)} className="block">
-                    <Button className="w-full h-12 text-base" size="lg">Track Deliveries</Button>
-                  </Link>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Mobile menu - rendered as sibling portal-like element */}
     </nav>
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.2 }}
+          className="lg:hidden fixed inset-0 top-14 bg-background z-[60] overflow-y-auto"
+        >
+          <div className="container mx-auto px-4 py-6 space-y-1">
+            {allLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                onClick={() => setIsOpen(false)}
+                className={`flex items-center px-4 py-3.5 rounded-xl text-base font-medium transition-colors touch-manipulation ${
+                  location.pathname === link.to
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted active:bg-muted/80"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <div className="pt-4 space-y-3">
+              {user ? (
+                <Link to="/dashboard" onClick={() => setIsOpen(false)} className="block">
+                  <Button className="w-full h-12 text-base" size="lg">Dashboard</Button>
+                </Link>
+              ) : (
+                <Link to="/login" onClick={() => setIsOpen(false)} className="block">
+                  <Button className="w-full h-12 text-base" size="lg">Track Deliveries</Button>
+                </Link>
+              )}
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 
