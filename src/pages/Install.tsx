@@ -1,50 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Download, Share, Smartphone, CheckCircle, ArrowLeft, Bell } from "lucide-react";
+import { Download, Smartphone, CheckCircle, ArrowLeft, Bell, ExternalLink, Chrome } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
-}
-
 const Install = () => {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [isInstalled, setIsInstalled] = useState(false);
-  const [isIOS, setIsIOS] = useState(false);
-  const [notifPermission, setNotifPermission] = useState<string>("default");
-
-  useEffect(() => {
-    const ua = navigator.userAgent;
-    setIsIOS(/iPad|iPhone|iPod/.test(ua));
-
-    if (window.matchMedia("(display-mode: standalone)").matches) {
-      setIsInstalled(true);
-    }
-
-    if ("Notification" in window) {
-      setNotifPermission(Notification.permission);
-    }
-
-    const handler = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-    };
-
-    window.addEventListener("beforeinstallprompt", handler);
-    window.addEventListener("appinstalled", () => setIsInstalled(true));
-
-    return () => window.removeEventListener("beforeinstallprompt", handler);
-  }, []);
-
-  const handleInstall = async () => {
-    if (!deferredPrompt) return;
-    await deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === "accepted") setIsInstalled(true);
-    setDeferredPrompt(null);
-  };
+  const [notifPermission, setNotifPermission] = useState<string>(
+    "Notification" in window ? Notification.permission : "denied"
+  );
 
   const enableNotifications = async () => {
     if (!("Notification" in window)) return;
@@ -58,118 +21,131 @@ const Install = () => {
     }
   };
 
+  // Placeholder — replace with actual APK URL once built
+  const APK_URL = "";
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-12">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-md w-full text-center space-y-8"
+        className="max-w-md w-full space-y-8"
       >
         {/* Header */}
-        <div className="space-y-4">
-          <div className="w-24 h-24 mx-auto rounded-2xl bg-primary/10 flex items-center justify-center">
-            <Smartphone className="w-12 h-12 text-primary" />
+        <div className="text-center space-y-4">
+          <div className="w-24 h-24 mx-auto rounded-2xl overflow-hidden bg-primary/10 flex items-center justify-center">
+            <img src="/pwa-512x512.png" alt="DROPEE" className="w-full h-full object-cover" />
           </div>
-          <h1 className="text-3xl font-bold text-foreground">Install DROPEE</h1>
-          <p className="text-muted-foreground">
-            Get the full app experience — fast, offline-ready, and always one tap away.
-          </p>
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Get DROPEE</h1>
+            <p className="text-muted-foreground mt-1">
+              Download the app for the fastest delivery experience in Ukhrul.
+            </p>
+          </div>
         </div>
 
-        {/* Install Section */}
-        {isInstalled ? (
-          <div className="bg-primary/10 rounded-xl p-6 space-y-3">
-            <CheckCircle className="w-12 h-12 text-primary mx-auto" />
-            <p className="font-semibold text-foreground">DROPEE is installed!</p>
-            <p className="text-sm text-muted-foreground">Open it from your home screen.</p>
-          </div>
-        ) : deferredPrompt ? (
-          <Button onClick={handleInstall} size="lg" className="w-full gap-2 text-lg py-6">
-            <Download className="w-5 h-5" />
-            Install DROPEE
-          </Button>
-        ) : isIOS ? (
-          <div className="bg-muted rounded-xl p-6 space-y-4 text-left">
-            <p className="font-semibold text-foreground text-center">Install on iPhone / iPad</p>
-            <ol className="space-y-3 text-sm text-muted-foreground">
-              <li className="flex gap-3 items-start">
-                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0">1</span>
-                <span>Tap the <Share className="inline w-4 h-4 -mt-0.5" /> <strong>Share</strong> button in Safari</span>
-              </li>
-              <li className="flex gap-3 items-start">
-                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0">2</span>
-                <span>Scroll down and tap <strong>"Add to Home Screen"</strong></span>
-              </li>
-              <li className="flex gap-3 items-start">
-                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0">3</span>
-                <span>Tap <strong>"Add"</strong> to confirm</span>
-              </li>
-            </ol>
-          </div>
-        ) : (
-          <div className="bg-muted rounded-xl p-6 space-y-4 text-left">
-            <p className="font-semibold text-foreground text-center">Install on Android</p>
-            <ol className="space-y-3 text-sm text-muted-foreground">
-              <li className="flex gap-3 items-start">
-                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0">1</span>
-                <span>Tap the <strong>⋮ menu</strong> in your browser</span>
-              </li>
-              <li className="flex gap-3 items-start">
-                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0">2</span>
-                <span>Tap <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong></span>
-              </li>
-              <li className="flex gap-3 items-start">
-                <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0">3</span>
-                <span>Tap <strong>"Install"</strong> to confirm</span>
-              </li>
-            </ol>
-          </div>
-        )}
-
-        {/* Push Notifications Section */}
-        <div className="bg-muted rounded-xl p-6 space-y-4">
-          <div className="flex items-center justify-center gap-2">
-            <Bell className="w-5 h-5 text-primary" />
-            <p className="font-semibold text-foreground">Push Notifications</p>
-          </div>
-          {notifPermission === "granted" ? (
-            <div className="flex items-center justify-center gap-2 text-sm text-primary">
-              <CheckCircle className="w-4 h-4" />
-              <span>Notifications enabled — you'll get delivery updates!</span>
+        {/* Download APK */}
+        <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+              <Download className="w-5 h-5 text-primary" />
             </div>
-          ) : notifPermission === "denied" ? (
-            <p className="text-sm text-muted-foreground">
-              Notifications are blocked. Enable them in your browser settings to get delivery updates.
-            </p>
-          ) : (
-            <>
-              <p className="text-sm text-muted-foreground">
-                Get real-time alerts for delivery status, rewards, and spin wheel availability.
-              </p>
-              <Button onClick={enableNotifications} variant="outline" className="w-full gap-2">
-                <Bell className="w-4 h-4" />
-                Enable Notifications
+            <div>
+              <h2 className="font-semibold text-foreground">Download for Android</h2>
+              <p className="text-xs text-muted-foreground">APK • v1.0 • ~3 MB</p>
+            </div>
+          </div>
+
+          {APK_URL ? (
+            <a href={APK_URL} download>
+              <Button size="lg" className="w-full gap-2 text-base py-6">
+                <Download className="w-5 h-5" />
+                Download APK
               </Button>
-            </>
+            </a>
+          ) : (
+            <div className="space-y-3">
+              <Button size="lg" className="w-full gap-2 text-base py-6" disabled>
+                <Download className="w-5 h-5" />
+                APK Coming Soon
+              </Button>
+              <p className="text-xs text-muted-foreground text-center">
+                The Android APK is being prepared. Check back shortly!
+              </p>
+            </div>
           )}
         </div>
 
-        {/* Why install */}
-        <div className="space-y-2 pt-4">
-          <h3 className="font-semibold text-foreground">Why install?</h3>
-          <ul className="text-sm text-muted-foreground space-y-1">
-            <li>⚡ Loads instantly, even offline</li>
-            <li>🏠 One-tap access from home screen</li>
-            <li>🔔 Real-time delivery notifications</li>
-            <li>📦 Track deliveries on the go</li>
+        {/* Alternative: Use in browser */}
+        <div className="bg-muted/50 border border-border rounded-2xl p-5 space-y-3">
+          <div className="flex items-center gap-3">
+            <Chrome className="w-5 h-5 text-muted-foreground shrink-0" />
+            <div>
+              <h3 className="font-medium text-foreground text-sm">Use in Browser</h3>
+              <p className="text-xs text-muted-foreground">
+                Don't want to download? Use DROPEE directly at{" "}
+                <a href="https://dropee.in" className="text-primary underline">dropee.in</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Push Notifications */}
+        <div className="bg-card border border-border rounded-2xl p-5 space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+              <Bell className="w-4 h-4 text-primary" />
+            </div>
+            <h3 className="font-medium text-foreground text-sm">Push Notifications</h3>
+          </div>
+          {notifPermission === "granted" ? (
+            <div className="flex items-center gap-2 text-sm text-primary px-1">
+              <CheckCircle className="w-4 h-4 shrink-0" />
+              <span>Enabled — you'll get delivery updates!</span>
+            </div>
+          ) : notifPermission === "denied" ? (
+            <p className="text-xs text-muted-foreground px-1">
+              Notifications are blocked. Enable them in your browser/device settings.
+            </p>
+          ) : (
+            <Button onClick={enableNotifications} variant="outline" size="sm" className="w-full gap-2">
+              <Bell className="w-4 h-4" />
+              Enable Notifications
+            </Button>
+          )}
+        </div>
+
+        {/* App info */}
+        <div className="space-y-3 px-1">
+          <h3 className="font-semibold text-foreground text-sm">What you get</h3>
+          <ul className="text-sm text-muted-foreground space-y-2">
+            <li className="flex gap-2 items-start">
+              <span className="text-primary mt-0.5">⚡</span>
+              <span>Native Android app experience — fast & smooth</span>
+            </li>
+            <li className="flex gap-2 items-start">
+              <span className="text-primary mt-0.5">🔔</span>
+              <span>Real-time delivery status notifications</span>
+            </li>
+            <li className="flex gap-2 items-start">
+              <span className="text-primary mt-0.5">🏠</span>
+              <span>Home screen icon — one tap to open</span>
+            </li>
+            <li className="flex gap-2 items-start">
+              <span className="text-primary mt-0.5">🎡</span>
+              <span>Spin the wheel for rewards & free deliveries</span>
+            </li>
           </ul>
         </div>
 
-        <Link to="/">
-          <Button variant="ghost" className="text-muted-foreground gap-1">
-            <ArrowLeft className="w-4 h-4" /> Back to Home
-          </Button>
-        </Link>
+        {/* Back */}
+        <div className="text-center">
+          <Link to="/">
+            <Button variant="ghost" className="text-muted-foreground gap-1">
+              <ArrowLeft className="w-4 h-4" /> Back to Home
+            </Button>
+          </Link>
+        </div>
       </motion.div>
     </div>
   );
