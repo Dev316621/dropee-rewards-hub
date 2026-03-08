@@ -130,7 +130,7 @@ Deno.serve(async (req) => {
         order_id: order.id,
         old_status: null,
         new_status: "pending",
-        changed_by: `api:${website.name}`,
+        changed_by: `api:${websiteName}`,
       });
 
       return new Response(JSON.stringify({ hub_order_id: order.id, status: "pending" }), {
