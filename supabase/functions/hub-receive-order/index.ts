@@ -42,29 +42,57 @@ Deno.serve(async (req) => {
 
     // POST — receive new order
     if (req.method === "POST") {
-      const apiKey = req.headers.get("x-api-key");
-      if (!apiKey) {
-        return new Response(JSON.stringify({ error: "Missing x-api-key header" }), {
-          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
+      const body = await req.json();
 
-      // Validate API key
-      const { data: website, error: wErr } = await supabase
-        .from("hub_websites")
-        .select("id, name, is_active")
-        .eq("api_key", apiKey)
-        .single();
+      let websiteId: string;
+      let websiteName: string;
 
-      if (wErr || !website) {
-        return new Response(JSON.stringify({ error: "Invalid API key" }), {
-          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (!website.is_active) {
-        return new Response(JSON.stringify({ error: "Website is deactivated" }), {
-          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+      // Internal call from the Dropee site itself
+      if (body._internal === true && body.website_name) {
+        const { data: website, error: wErr } = await supabase
+          .from("hub_websites")
+          .select("id, name, is_active")
+          .eq("name", body.website_name)
+          .single();
+        if (wErr || !website) {
+          return new Response(JSON.stringify({ error: "Website not registered in hub" }), {
+            status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        if (!website.is_active) {
+          return new Response(JSON.stringify({ error: "Website is deactivated" }), {
+            status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        websiteId = website.id;
+        websiteName = website.name;
+      } else {
+        // External call — validate API key
+        const apiKey = req.headers.get("x-api-key");
+        if (!apiKey) {
+          return new Response(JSON.stringify({ error: "Missing x-api-key header" }), {
+            status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+
+        const { data: website, error: wErr } = await supabase
+          .from("hub_websites")
+          .select("id, name, is_active")
+          .eq("api_key", apiKey)
+          .single();
+
+        if (wErr || !website) {
+          return new Response(JSON.stringify({ error: "Invalid API key" }), {
+            status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        if (!website.is_active) {
+          return new Response(JSON.stringify({ error: "Website is deactivated" }), {
+            status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        websiteId = website.id;
+        websiteName = website.name;
       }
 
       const body = await req.json();
