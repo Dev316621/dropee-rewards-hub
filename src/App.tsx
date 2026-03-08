@@ -54,6 +54,7 @@ import AdminServiceBookings from "./components/admin/AdminServiceBookings";
 import AdminHubOrders from "./components/admin/AdminHubOrders";
 import AdminHubWebsites from "./components/admin/AdminHubWebsites";
 import AdminHubAgents from "./components/admin/AdminHubAgents";
+import AdminApiDocs from "./components/admin/AdminApiDocs";
 import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
 
