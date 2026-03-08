@@ -86,9 +86,9 @@ const Services = () => {
           <p className="text-sm text-muted-foreground mb-5 sm:mb-6 max-w-md mx-auto">
             Join DROPEE today and earn rewards with every delivery.
           </p>
-          <Link to="/login">
+          <Link to="/book">
             <Button variant="hero" size="lg" className="w-full sm:w-auto h-12 sm:h-auto text-sm sm:text-base">
-              Sign Up Now <ArrowRight className="w-4 h-4" />
+              Book a Service <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
         </div>
