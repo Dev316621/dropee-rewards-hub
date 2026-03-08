@@ -1,0 +1,3 @@
+ALTER TABLE public.blog_posts
+  ADD COLUMN IF NOT EXISTS booking_enabled BOOLEAN NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS booking_label TEXT DEFAULT '';
