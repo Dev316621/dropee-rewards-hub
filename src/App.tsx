@@ -51,6 +51,9 @@ import AdminPricing from "./components/admin/AdminPricing";
 import AdminServices from "./components/admin/AdminServices";
 import AdminShop from "./components/admin/AdminShop";
 import AdminServiceBookings from "./components/admin/AdminServiceBookings";
+import AdminHubOrders from "./components/admin/AdminHubOrders";
+import AdminHubWebsites from "./components/admin/AdminHubWebsites";
+import AdminHubAgents from "./components/admin/AdminHubAgents";
 import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
 
