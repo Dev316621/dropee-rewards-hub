@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Package, Coins, Award, MapPin, Save, Loader2, Truck, Star, Navigation, ExternalLink, Wifi, WifiOff } from "lucide-react";
+import { ArrowLeft, Package, Coins, Award, MapPin, Save, Loader2, Truck, Star, Navigation, ExternalLink, Wifi, WifiOff, Phone, MessageCircle } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
@@ -167,51 +167,75 @@ const AdminCustomerDetail = () => {
   const completedDeliveries = (deliveries.data ?? []).filter(d => d.status === "completed").length;
   const totalDeliveries = deliveries.data?.length ?? 0;
   const loc = location.data;
-
+  const isOnline = p?.updated_at && (Date.now() - new Date(p.updated_at).getTime()) < 15 * 60 * 1000;
   if (isLoading) return <div className="space-y-4 p-6"><Skeleton className="h-8 w-48 bg-dashboard-border" /><Skeleton className="h-64 bg-dashboard-border" /></div>;
+
+  // Clean phone for links
+  const cleanPhone = (p?.phone || "").replace(/[^0-9+]/g, "");
+  const hasPhone = cleanPhone.length >= 7;
 
   return (
     <div className="space-y-6">
+      {/* Back button */}
+      <Button variant="ghost" size="sm" onClick={() => navigate("/admin/customers")} className="gap-1 text-muted-foreground -mb-2">
+        <ArrowLeft className="h-3.5 w-3.5" /> Back to Customers
+      </Button>
+
       {/* Profile Cover + Header */}
-      <div className="relative">
+      <div className="relative rounded-xl overflow-hidden">
         {/* Cover gradient */}
-        <div className="h-28 sm:h-36 rounded-xl bg-gradient-to-br from-primary/30 via-primary/10 to-secondary/20 border border-dashboard-border" />
+        <div className="h-24 sm:h-32 bg-gradient-to-br from-primary/30 via-primary/10 to-secondary/20" />
         
         {/* Profile info overlay */}
-        <div className="px-4 -mt-10 flex items-end gap-4">
-          {/* Avatar */}
-          <div className="relative">
-            <div className="h-20 w-20 rounded-full bg-dashboard-card border-4 border-dashboard-bg flex items-center justify-center text-2xl font-bold text-primary shadow-lg">
-              {p?.full_name?.charAt(0)?.toUpperCase() || "?"}
+        <div className="bg-card border border-border rounded-b-xl px-4 sm:px-6 pb-4 pt-0 -mt-0">
+          <div className="flex items-start gap-4 -mt-10">
+            {/* Avatar */}
+            <div className="relative shrink-0">
+              <div className="h-20 w-20 rounded-full bg-card border-4 border-background flex items-center justify-center text-2xl font-bold text-primary shadow-lg">
+                {p?.full_name?.charAt(0)?.toUpperCase() || "?"}
+              </div>
+              <span className={`absolute bottom-1 right-1 h-4 w-4 rounded-full border-2 border-background ${isOnline ? "bg-green-500" : "bg-muted-foreground/40"}`} />
             </div>
-            {/* Online/Offline indicator */}
-            <span className={`absolute bottom-1 right-1 h-4 w-4 rounded-full border-2 border-dashboard-bg ${
-              p?.updated_at && (Date.now() - new Date(p.updated_at).getTime()) < 15 * 60 * 1000
-                ? "bg-green-500" : "bg-muted-foreground/40"
-            }`} />
-          </div>
-          <div className="pb-1 flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-xl font-bold font-display text-dashboard-card-foreground">{p?.full_name || "Customer"}</h1>
-              <Badge variant="outline" className="text-[10px] gap-1 border-dashboard-border">
-                {p?.updated_at && (Date.now() - new Date(p.updated_at).getTime()) < 15 * 60 * 1000 ? (
-                  <><Wifi className="h-2.5 w-2.5 text-green-500" /> Online</>
-                ) : (
-                  <><WifiOff className="h-2.5 w-2.5 text-muted-foreground" /> Offline</>
+
+            {/* Name + meta */}
+            <div className="pt-12 flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-lg sm:text-xl font-bold font-display text-foreground">{p?.full_name || "Customer"}</h1>
+                <Badge variant="outline" className="text-[10px] gap-1">
+                  {isOnline ? (
+                    <><Wifi className="h-2.5 w-2.5 text-green-500" /> Online</>
+                  ) : (
+                    <><WifiOff className="h-2.5 w-2.5 text-muted-foreground" /> Offline</>
+                  )}
+                </Badge>
+                <Badge variant="secondary" className="text-[10px]">{tier.data?.tier_name ?? "Starter"}</Badge>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {p?.updated_at && (
+                  <>Last seen {format(new Date(p.updated_at), "MMM d, yyyy 'at' h:mm a")} · </>
                 )}
-              </Badge>
-              <Badge variant="secondary" className="text-[10px]">{tier.data?.tier_name ?? "Starter"}</Badge>
+                Joined {p ? format(new Date(p.created_at), "MMM d, yyyy") : "—"}
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground mt-0.5 truncate">
-              ID: {userId}
-              {p?.updated_at && (
-                <span className="ml-2">· Last seen {format(new Date(p.updated_at), "MMM d, yyyy 'at' h:mm a")}</span>
+
+            {/* Quick action buttons */}
+            <div className="pt-12 flex gap-1.5 shrink-0">
+              {hasPhone && (
+                <>
+                  <a href={`https://wa.me/${cleanPhone.replace(/^\+/, "")}`} target="_blank" rel="noopener noreferrer">
+                    <Button size="icon" variant="outline" className="h-9 w-9 text-green-600 hover:text-green-700 hover:bg-green-50 border-green-200" title="WhatsApp">
+                      <MessageCircle className="h-4 w-4" />
+                    </Button>
+                  </a>
+                  <a href={`tel:${cleanPhone}`}>
+                    <Button size="icon" variant="outline" className="h-9 w-9 text-blue-600 hover:text-blue-700 hover:bg-blue-50 border-blue-200" title="Call">
+                      <Phone className="h-4 w-4" />
+                    </Button>
+                  </a>
+                </>
               )}
-            </p>
+            </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={() => navigate("/admin/customers")} className="text-muted-foreground mb-1">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
         </div>
       </div>
 
@@ -240,10 +264,26 @@ const AdminCustomerDetail = () => {
                     type={key === "date_of_birth" ? "date" : "text"}
                     value={editForm[key]}
                     onChange={e => setEditForm({ ...editForm, [key]: e.target.value })}
-                    className="bg-dashboard-bg border-dashboard-border text-sm"
+                    className="text-sm"
                   />
                 ) : (
-                  <p className="text-sm text-dashboard-card-foreground">{(p as any)?.[key] || "—"}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm text-foreground">{(p as any)?.[key] || "—"}</p>
+                    {key === "phone" && hasPhone && !editing && (
+                      <div className="flex gap-1">
+                        <a href={`https://wa.me/${cleanPhone.replace(/^\+/, "")}`} target="_blank" rel="noopener noreferrer">
+                          <Button size="icon" variant="ghost" className="h-6 w-6 text-green-600" title="WhatsApp">
+                            <MessageCircle className="h-3.5 w-3.5" />
+                          </Button>
+                        </a>
+                        <a href={`tel:${cleanPhone}`}>
+                          <Button size="icon" variant="ghost" className="h-6 w-6 text-blue-600" title="Call">
+                            <Phone className="h-3.5 w-3.5" />
+                          </Button>
+                        </a>
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
             ))}
