@@ -42,7 +42,7 @@ const tiers = [
     perks: ["All Regular perks", "Priority handling on deliveries", "Exclusive promo access", "Birthday free delivery 🎂"],
   },
   {
-    name: "DROPEE Prime", icon: "💎", range: "50+ deliveries", cssClass: "tier-diamond",
+    name: "DROPEE Prime", IconComponent: DiamondGem, range: "50+ deliveries", cssClass: "tier-diamond",
     glowClass: "hover:shadow-[0_0_30px_hsl(260_80%_65%/0.3)]",
     perks: ["All Elite perks", "Top priority — PRIME tag", "Exclusive partner discounts", "Early access to all offers", "Special animated badge"],
   },
