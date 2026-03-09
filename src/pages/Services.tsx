@@ -18,11 +18,11 @@ import { AvailableAgents } from "@/components/AvailableAgents";
 const iconMap: Record<string, any> = { Package, Truck, ShoppingBag, Zap, Handshake };
 
 const fallbackServices = [
-  { icon: Package, title: "Pick & Drop", description: "From documents to parcels, DROPEE picks up from any location in Ukhrul and drops it where you need.", base_price: 30, eta: "30–60 min" },
-  { icon: Truck, title: "Custom Delivery", description: "Fragile items, timed deliveries, or special handling — we customize the delivery experience.", base_price: 50, eta: "1–2 hrs" },
-  { icon: ShoppingBag, title: "Food & Grocery", description: "Fresh food and daily essentials from restaurants and local stores, right to your doorstep.", base_price: 25, eta: "20–45 min" },
-  { icon: Zap, title: "Instant Delivery", description: "Urgent delivery? Your package moves within minutes with priority handling.", base_price: 60, eta: "15–30 min" },
-  { icon: Handshake, title: "Business Partnership", description: "Bulk rates, dedicated support, and featured placement on our platform for your business.", base_price: 0, eta: "Contact us" },
+  { icon: Package, title: "Pick & Drop", description: "From documents to parcels, DROPEE picks up from any location in Ukhrul and drops it where you need.", base_price: 30, eta: "30–60 min", image_url: null as string | null },
+  { icon: Truck, title: "Custom Delivery", description: "Fragile items, timed deliveries, or special handling — we customize the delivery experience.", base_price: 50, eta: "1–2 hrs", image_url: null as string | null },
+  { icon: ShoppingBag, title: "Food & Grocery", description: "Fresh food and daily essentials from restaurants and local stores, right to your doorstep.", base_price: 25, eta: "20–45 min", image_url: null as string | null },
+  { icon: Zap, title: "Instant Delivery", description: "Urgent delivery? Your package moves within minutes with priority handling.", base_price: 60, eta: "15–30 min", image_url: null as string | null },
+  { icon: Handshake, title: "Business Partnership", description: "Bulk rates, dedicated support, and featured placement on our platform for your business.", base_price: 0, eta: "Contact us", image_url: null as string | null },
 ];
 
 const Services = () => {

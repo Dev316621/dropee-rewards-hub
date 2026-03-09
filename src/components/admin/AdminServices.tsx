@@ -12,9 +12,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Settings, Plus, Trash2, Loader2, Package, Clock, CheckCircle2, XCircle, Truck, User } from "lucide-react";
+import { Settings, Plus, Trash2, Loader2, Package, Clock, CheckCircle2, XCircle, Truck, User, Edit } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import ImageUpload from "./ImageUpload";
 
 // ── Hooks ──
 const useServiceTypes = () =>
@@ -30,7 +31,7 @@ const useServiceTypes = () =>
 const useUpsertServiceType = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (st: { id?: string; name: string; description?: string; icon?: string; base_price: number; is_active?: boolean; display_order?: number }) => {
+    mutationFn: async (st: { id?: string; name: string; description?: string; icon?: string; base_price: number; is_active?: boolean; display_order?: number; image_url?: string | null }) => {
       const { error } = st.id
         ? await supabase.from("service_types").update(st).eq("id", st.id)
         : await supabase.from("service_types").insert(st);
@@ -113,18 +114,30 @@ const ServiceTypesTab = () => {
   const del = useDeleteServiceType();
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState<string | undefined>();
-  const [form, setForm] = useState({ name: "", description: "", icon: "Package", base_price: 0, display_order: 0 });
+  const [form, setForm] = useState({ name: "", description: "", icon: "Package", base_price: 0, display_order: 0, image_url: "" });
+
+  const resetForm = () => {
+    setEditId(undefined);
+    setForm({ name: "", description: "", icon: "Package", base_price: 0, display_order: 0, image_url: "" });
+  };
 
   const handleSave = () => {
-    upsert.mutate({ ...form, id: editId }, {
-      onSuccess: () => { toast.success("Saved"); setOpen(false); setEditId(undefined); },
+    upsert.mutate({ ...form, image_url: form.image_url || null, id: editId }, {
+      onSuccess: () => { toast.success("Saved"); setOpen(false); resetForm(); },
       onError: () => toast.error("Failed"),
     });
   };
 
   const handleEdit = (t: any) => {
     setEditId(t.id);
-    setForm({ name: t.name, description: t.description || "", icon: t.icon || "Package", base_price: Number(t.base_price), display_order: t.display_order });
+    setForm({
+      name: t.name,
+      description: t.description || "",
+      icon: t.icon || "Package",
+      base_price: Number(t.base_price),
+      display_order: t.display_order,
+      image_url: t.image_url || "",
+    });
     setOpen(true);
   };
 
@@ -132,15 +145,21 @@ const ServiceTypesTab = () => {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <p className="text-sm text-muted-foreground">{(types ?? []).length} service types</p>
-        <Dialog open={open} onOpenChange={o => { setOpen(o); if (!o) { setEditId(undefined); setForm({ name: "", description: "", icon: "Package", base_price: 0, display_order: 0 }); } }}>
+        <Dialog open={open} onOpenChange={o => { setOpen(o); if (!o) resetForm(); }}>
           <DialogTrigger asChild>
             <Button size="sm" className="gap-1 text-xs"><Plus className="h-3 w-3" /> Add Service</Button>
           </DialogTrigger>
-          <DialogContent className="bg-dashboard-card border-dashboard-border">
+          <DialogContent className="bg-dashboard-card border-dashboard-border max-h-[90vh] overflow-y-auto">
             <DialogHeader><DialogTitle className="text-dashboard-card-foreground">{editId ? "Edit" : "New"} Service Type</DialogTitle></DialogHeader>
             <div className="space-y-3">
-              <div><Label className="text-xs">Name</Label><Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="bg-dashboard-bg border-dashboard-border" /></div>
-              <div><Label className="text-xs">Description</Label><Textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="bg-dashboard-bg border-dashboard-border" rows={2} /></div>
+              <ImageUpload
+                value={form.image_url}
+                onChange={url => setForm({ ...form, image_url: url })}
+                label="Service Image"
+                folder="services"
+              />
+              <div><Label className="text-xs">Name</Label><Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="bg-dashboard-bg border-dashboard-border" placeholder="e.g. Laundry, Electrician, House Cleaning" /></div>
+              <div><Label className="text-xs">Description</Label><Textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="bg-dashboard-bg border-dashboard-border" rows={2} placeholder="Describe the service..." /></div>
               <div className="grid grid-cols-2 gap-2">
                 <div><Label className="text-xs">Icon (Lucide name)</Label><Input value={form.icon} onChange={e => setForm({ ...form, icon: e.target.value })} className="bg-dashboard-bg border-dashboard-border" placeholder="Package" /></div>
                 <div><Label className="text-xs">Base Price (₹)</Label><Input type="number" value={form.base_price} onChange={e => setForm({ ...form, base_price: Number(e.target.value) })} className="bg-dashboard-bg border-dashboard-border" /></div>
@@ -151,31 +170,39 @@ const ServiceTypesTab = () => {
           </DialogContent>
         </Dialog>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow className="border-dashboard-border hover:bg-transparent">
-            <TableHead className="text-muted-foreground text-xs">Name</TableHead>
-            <TableHead className="text-muted-foreground text-xs">Base Price</TableHead>
-            <TableHead className="text-muted-foreground text-xs">Active</TableHead>
-            <TableHead className="text-muted-foreground text-xs">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {(types ?? []).map(t => (
-            <TableRow key={t.id} className="border-dashboard-border">
-              <TableCell className="text-sm text-dashboard-card-foreground">{t.name}</TableCell>
-              <TableCell className="text-sm text-muted-foreground">₹{t.base_price}</TableCell>
-              <TableCell>
-                <Switch checked={t.is_active} onCheckedChange={v => upsert.mutate({ id: t.id, name: t.name, base_price: Number(t.base_price), is_active: v })} />
-              </TableCell>
-              <TableCell className="flex gap-1">
-                <Button size="sm" variant="ghost" onClick={() => handleEdit(t)} className="text-xs h-7">Edit</Button>
-                <Button size="sm" variant="ghost" onClick={() => del.mutate(t.id, { onSuccess: () => toast.success("Deleted") })} className="text-destructive h-7"><Trash2 className="h-3 w-3" /></Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+
+      {/* Card grid view for services */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {(types ?? []).map(t => (
+          <Card key={t.id} className="bg-dashboard-card border-dashboard-border overflow-hidden">
+            {t.image_url && (
+              <div className="h-32 w-full overflow-hidden">
+                <img src={t.image_url} alt={t.name} className="w-full h-full object-cover" />
+              </div>
+            )}
+            <CardContent className="p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-dashboard-card-foreground">{t.name}</h3>
+                <Badge variant={t.is_active ? "default" : "secondary"} className="text-[10px]">
+                  {t.is_active ? "Active" : "Inactive"}
+                </Badge>
+              </div>
+              {t.description && <p className="text-xs text-muted-foreground line-clamp-2">{t.description}</p>}
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-bold text-primary">₹{t.base_price}</span>
+                <div className="flex gap-1">
+                  <Switch
+                    checked={t.is_active}
+                    onCheckedChange={v => upsert.mutate({ id: t.id, name: t.name, base_price: Number(t.base_price), is_active: v }, { onSuccess: () => toast.success("Updated") })}
+                  />
+                  <Button size="sm" variant="ghost" onClick={() => handleEdit(t)} className="h-7 w-7 p-0"><Edit className="h-3 w-3" /></Button>
+                  <Button size="sm" variant="ghost" onClick={() => del.mutate(t.id, { onSuccess: () => toast.success("Deleted") })} className="text-destructive h-7 w-7 p-0"><Trash2 className="h-3 w-3" /></Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };
@@ -200,7 +227,6 @@ const LiveOrdersTab = () => {
 
   return (
     <div className="space-y-4">
-      {/* Status filter */}
       <div className="flex gap-2 flex-wrap">
         {["all", "new", "accepted", "in_progress", "completed", "cancelled"].map(s => (
           <Button
@@ -215,7 +241,6 @@ const LiveOrdersTab = () => {
         ))}
       </div>
 
-      {/* Order cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {(filtered ?? []).map((order: any) => {
           const StatusIcon = statusIcons[order.status] || Clock;
@@ -238,7 +263,6 @@ const LiveOrdersTab = () => {
                   <p className="text-dashboard-card-foreground font-medium">₹{order.estimated_fee}</p>
                 </div>
 
-                {/* Assign driver */}
                 <div className="flex gap-1">
                   <Input
                     placeholder="Assign driver"
@@ -248,7 +272,6 @@ const LiveOrdersTab = () => {
                   />
                 </div>
 
-                {/* Status actions */}
                 <div className="flex gap-1 flex-wrap">
                   {order.status === "new" && (
                     <>
