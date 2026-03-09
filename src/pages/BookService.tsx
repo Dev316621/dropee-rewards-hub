@@ -19,6 +19,7 @@ import { Link, useNavigate } from "react-router-dom";
 const BookService = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { pay } = useRazorpay();
   const [serviceTypeId, setServiceTypeId] = useState("");
   const [pickup, setPickup] = useState("");
   const [dropoff, setDropoff] = useState("");
