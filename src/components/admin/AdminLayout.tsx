@@ -3,7 +3,7 @@ import {
   BarChart3, Users, Truck, Gift, Settings, FileText, 
   Handshake, Ticket, LogOut, Package, ChevronLeft, ChevronRight,
   LayoutDashboard, Disc3, Home, ScrollText, ShoppingBag, CalendarCheck,
-  Globe, Network, UserCheck, BookOpen, Plus, Search, Bell, Activity
+  Globe, Network, UserCheck, BookOpen, Plus, Search, Bell, Activity, MessageCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -42,6 +42,7 @@ const navSections = [
     items: [
       { icon: Users, label: "Customers", path: "/admin/customers" },
       { icon: Truck, label: "Deliveries", path: "/admin/deliveries" },
+      { icon: MessageCircle, label: "Messaging", path: "/admin/messaging" },
       { icon: Ticket, label: "Coupons", path: "/admin/coupons" },
       { icon: Package, label: "API Tracking", path: "/admin/api-integrations" },
       { icon: Settings, label: "Pricing", path: "/admin/pricing" },
