@@ -228,8 +228,8 @@ const AdminHubWebsites = () => {
                 <TableRow key={a.id}>
                   <TableCell>
                     <div className="flex items-center gap-1.5">
-                      <span className={`h-2.5 w-2.5 rounded-full ${a.is_online ? "bg-green-500 animate-pulse" : "bg-muted-foreground/40"}`} />
-                      <span className="text-xs font-medium">{a.is_online ? "Online" : "Offline"}</span>
+                      <span className={`h-2.5 w-2.5 rounded-full ${a.is_online ? "bg-green-500 animate-pulse" : "bg-red-500"}`} />
+                      <span className={`text-xs font-medium ${a.is_online ? "text-green-600" : "text-red-500"}`}>{a.is_online ? "Online" : "Offline"}</span>
                     </div>
                   </TableCell>
                   <TableCell><Badge variant="secondary" className="font-mono text-[10px]">{a.agent_code || "—"}</Badge></TableCell>
