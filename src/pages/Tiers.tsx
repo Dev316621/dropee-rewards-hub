@@ -138,13 +138,13 @@ const Tiers = () => {
                 <div className={`${tier.cssClass} p-4 sm:p-5 relative overflow-hidden`}>
                   <div className="absolute top-0 right-0 w-20 h-20 rounded-full bg-white/10 -translate-y-1/2 translate-x-1/2" />
                   <div className="relative z-10 flex items-center gap-3">
-                    <motion.span
-                      className="text-2xl sm:text-3xl"
-                      whileHover={{ rotate: [0, -10, 10, 0], scale: 1.2 }}
+                    <motion.div
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 flex items-center justify-center"
+                      whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
                       transition={{ duration: 0.4 }}
                     >
-                      {tier.icon}
-                    </motion.span>
+                      <tier.IconComponent />
+                    </motion.div>
                     <div className="text-primary-foreground">
                       <h3 className="font-display text-lg sm:text-xl font-bold">{tier.name}</h3>
                       <p className="text-xs sm:text-sm opacity-80">{tier.range}</p>
