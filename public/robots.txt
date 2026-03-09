@@ -14,5 +14,6 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /dashboard
+Disallow: /agent
 
-Sitemap: https://dropee.in/sitemap.xml
+Sitemap: https://dropee.discoverukhrul.site/sitemap.xml
