@@ -83,7 +83,7 @@ const AdminHubWebsites = () => {
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="gap-1">
-            <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+            <span className="h-2 w-2 rounded-full bg-success animate-pulse" />
             Live
           </Badge>
           <Button onClick={() => setShowAdd(true)} className="gap-1"><Plus className="h-4 w-4" /> Add Website</Button>
@@ -100,12 +100,12 @@ const AdminHubWebsites = () => {
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
+                <span className="h-2.5 w-2.5 rounded-full bg-success" />
                 <span className="text-sm text-foreground font-medium">{onlineAgents.length}</span>
                 <span className="text-xs text-muted-foreground">Online</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/40" />
+                <span className="h-2.5 w-2.5 rounded-full bg-destructive" />
                 <span className="text-sm text-foreground font-medium">{offlineAgents.length}</span>
                 <span className="text-xs text-muted-foreground">Offline</span>
               </div>

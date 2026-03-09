@@ -29,11 +29,8 @@ interface AvailableAgentsProps {
   showDeliveryFee?: boolean;
 }
 
-export const AvailableAgents = ({ 
-  title = "Available Agents",
-  showDeliveryFee = true 
-}: AvailableAgentsProps) => {
-  const { user } = useAuth();
+export const AvailableAgents = (props: AvailableAgentsProps) => {
+  const { title = "Available Agents" } = props;
   const queryClient = useQueryClient();
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [rating, setRating] = useState(5);
