@@ -1000,6 +1000,8 @@ export type Database = {
           date_of_birth: string | null
           full_name: string
           id: string
+          latitude: number | null
+          longitude: number | null
           phone: string | null
           plus_code: string | null
           profile_completed: boolean | null
@@ -1014,6 +1016,8 @@ export type Database = {
           date_of_birth?: string | null
           full_name?: string
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           phone?: string | null
           plus_code?: string | null
           profile_completed?: boolean | null
@@ -1028,6 +1032,8 @@ export type Database = {
           date_of_birth?: string | null
           full_name?: string
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           phone?: string | null
           plus_code?: string | null
           profile_completed?: boolean | null
