@@ -189,7 +189,17 @@ const AgentDashboard = () => {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <Switch
+                id="online-toggle"
+                checked={isOnline}
+                onCheckedChange={toggleOnline}
+              />
+              <Label htmlFor="online-toggle" className={`text-sm font-semibold ${isOnline ? "text-success" : "text-muted-foreground"}`}>
+                {isOnline ? "Online" : "Offline"}
+              </Label>
+            </div>
             <Button variant="outline" size="icon" onClick={() => refetch()}>
               <RefreshCw className="h-4 w-4" />
             </Button>
