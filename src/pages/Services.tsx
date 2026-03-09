@@ -18,11 +18,11 @@ import { AvailableAgents } from "@/components/AvailableAgents";
 const iconMap: Record<string, any> = { Package, Truck, ShoppingBag, Zap, Handshake };
 
 const fallbackServices = [
-  { icon: Package, title: "Pick & Drop", description: "From documents to parcels, DROPEE picks up from any location in Ukhrul and drops it where you need.", base_price: 30, eta: "30–60 min" },
-  { icon: Truck, title: "Custom Delivery", description: "Fragile items, timed deliveries, or special handling — we customize the delivery experience.", base_price: 50, eta: "1–2 hrs" },
-  { icon: ShoppingBag, title: "Food & Grocery", description: "Fresh food and daily essentials from restaurants and local stores, right to your doorstep.", base_price: 25, eta: "20–45 min" },
-  { icon: Zap, title: "Instant Delivery", description: "Urgent delivery? Your package moves within minutes with priority handling.", base_price: 60, eta: "15–30 min" },
-  { icon: Handshake, title: "Business Partnership", description: "Bulk rates, dedicated support, and featured placement on our platform for your business.", base_price: 0, eta: "Contact us" },
+  { icon: Package, title: "Pick & Drop", description: "From documents to parcels, DROPEE picks up from any location in Ukhrul and drops it where you need.", base_price: 30, eta: "30–60 min", image_url: null as string | null },
+  { icon: Truck, title: "Custom Delivery", description: "Fragile items, timed deliveries, or special handling — we customize the delivery experience.", base_price: 50, eta: "1–2 hrs", image_url: null as string | null },
+  { icon: ShoppingBag, title: "Food & Grocery", description: "Fresh food and daily essentials from restaurants and local stores, right to your doorstep.", base_price: 25, eta: "20–45 min", image_url: null as string | null },
+  { icon: Zap, title: "Instant Delivery", description: "Urgent delivery? Your package moves within minutes with priority handling.", base_price: 60, eta: "15–30 min", image_url: null as string | null },
+  { icon: Handshake, title: "Business Partnership", description: "Bulk rates, dedicated support, and featured placement on our platform for your business.", base_price: 0, eta: "Contact us", image_url: null as string | null },
 ];
 
 const Services = () => {
@@ -58,6 +58,7 @@ const Services = () => {
         description: s.description || "",
         base_price: Number(s.base_price),
         eta: s.description?.match(/(\d+.*min|hrs?|hour)/i)?.[0] || "30–60 min",
+        image_url: (s as any).image_url || null,
       }))
     : fallbackServices.map((s, i) => ({ ...s, id: `fallback-${i}` }));
 
@@ -145,17 +146,40 @@ const Services = () => {
                   className={`card-elevated p-5 sm:p-6 group cursor-pointer transition-all duration-300 ${isSelected ? "ring-2 ring-primary shadow-lg shadow-primary/10" : "hover:shadow-xl"}`}
                   onClick={() => setSelectedService(isSelected ? null : service.id)}
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <service.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+                  {/* Service Image */}
+                  {service.image_url && (
+                    <div className="w-full h-36 sm:h-40 rounded-xl overflow-hidden mb-4">
+                      <img src={service.image_url} alt={service.title} className="w-full h-full object-cover" />
                     </div>
-                    {service.base_price > 0 && (
-                      <div className="text-right">
-                        <p className="text-lg sm:text-xl font-bold font-display text-primary">₹{totalPrice}</p>
-                        <p className="text-[10px] text-muted-foreground">starting price</p>
+                  )}
+
+                  {!service.image_url && (
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                        <service.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
                       </div>
-                    )}
-                  </div>
+                      {service.base_price > 0 && (
+                        <div className="text-right">
+                          <p className="text-lg sm:text-xl font-bold font-display text-primary">₹{totalPrice}</p>
+                          <p className="text-[10px] text-muted-foreground">starting price</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {service.image_url && (
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <service.icon className="w-4 h-4 text-primary" />
+                      </div>
+                      {service.base_price > 0 && (
+                        <div className="text-right">
+                          <p className="text-lg sm:text-xl font-bold font-display text-primary">₹{totalPrice}</p>
+                          <p className="text-[10px] text-muted-foreground">starting price</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   <h3 className="font-display text-lg sm:text-xl font-bold mb-2">{service.title}</h3>
                   <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-4">{service.description}</p>
