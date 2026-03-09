@@ -13,7 +13,8 @@ import { Slider } from "@/components/ui/slider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingCart, Plus, Minus, Trash2, Package, ArrowRight, CheckCircle, Search, ShoppingBag, ExternalLink, Star, Clock, Ticket, Tag } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, Package, ArrowRight, CheckCircle, Search, ShoppingBag, ExternalLink, Star, Clock, Ticket, Tag, CreditCard } from "lucide-react";
+import { useRazorpay } from "@/hooks/useRazorpay";
 import { Link } from "react-router-dom";
 
 type CartItem = { id: string; name: string; price: number; image_url: string | null; qty: number; product_type: string };

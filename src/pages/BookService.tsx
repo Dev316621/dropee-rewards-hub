@@ -12,7 +12,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { MapPin, Package, Weight, Calculator, ArrowRight, CheckCircle } from "lucide-react";
+import { MapPin, Package, Weight, Calculator, ArrowRight, CheckCircle, CreditCard } from "lucide-react";
+import { useRazorpay } from "@/hooks/useRazorpay";
 import { Link, useNavigate } from "react-router-dom";
 
 const BookService = () => {

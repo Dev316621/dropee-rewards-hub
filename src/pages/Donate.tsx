@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Heart, Truck, TreePine, Users, ArrowRight, CheckCircle, IndianRupee } from "lucide-react";
+import { useRazorpay } from "@/hooks/useRazorpay";
 import { toast } from "sonner";
 
 const causes = [
