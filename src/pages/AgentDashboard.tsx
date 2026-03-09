@@ -89,13 +89,21 @@ const AgentDashboard = () => {
     return () => clearInterval(interval);
   }, [isOnline, agent.id]);
 
-  // Set offline on page unload
+  // Set offline on page unload using fetch keepalive
   useEffect(() => {
     const handleUnload = () => {
-      navigator.sendBeacon && supabase
-        .from("hub_delivery_agents")
-        .update({ is_online: false } as any)
-        .eq("id", agent.id);
+      const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/hub_delivery_agents?id=eq.${agent.id}`;
+      fetch(url, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          "Prefer": "return=minimal",
+        },
+        body: JSON.stringify({ is_online: false }),
+        keepalive: true,
+      });
     };
     window.addEventListener("beforeunload", handleUnload);
     return () => window.removeEventListener("beforeunload", handleUnload);
