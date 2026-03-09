@@ -280,13 +280,9 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
             )}
             <Badge
               variant="outline"
-              className={`text-[10px] rounded-full px-2 shrink-0 ${
-                agent.is_online
-                  ? "border-success/30 text-success bg-success/5"
-                  : "border-muted-foreground/20 text-muted-foreground"
-              }`}
+              className={`text-[10px] rounded-full px-2 shrink-0 ${statusBadgeClass}`}
             >
-              {agent.is_online ? "Online" : "Offline"}
+              {statusLabel}
             </Badge>
           </div>
           
