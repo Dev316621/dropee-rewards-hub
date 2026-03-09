@@ -58,6 +58,7 @@ const Services = () => {
         description: s.description || "",
         base_price: Number(s.base_price),
         eta: s.description?.match(/(\d+.*min|hrs?|hour)/i)?.[0] || "30–60 min",
+        image_url: (s as any).image_url || null,
       }))
     : fallbackServices.map((s, i) => ({ ...s, id: `fallback-${i}` }));
 
