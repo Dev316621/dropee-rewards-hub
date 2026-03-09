@@ -264,10 +264,27 @@ const AdminCustomerDetail = () => {
                     type={key === "date_of_birth" ? "date" : "text"}
                     value={editForm[key]}
                     onChange={e => setEditForm({ ...editForm, [key]: e.target.value })}
-                    className="bg-dashboard-bg border-dashboard-border text-sm"
+                    className="text-sm"
                   />
                 ) : (
-                  <p className="text-sm text-dashboard-card-foreground">{(p as any)?.[key] || "—"}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm text-foreground">{(p as any)?.[key] || "—"}</p>
+                    {key === "phone" && hasPhone && !editing && (
+                      <div className="flex gap-1">
+                        <a href={`https://wa.me/${cleanPhone.replace(/^\+/, "")}`} target="_blank" rel="noopener noreferrer">
+                          <Button size="icon" variant="ghost" className="h-6 w-6 text-green-600" title="WhatsApp">
+                            <MessageCircle className="h-3.5 w-3.5" />
+                          </Button>
+                        </a>
+                        <a href={`tel:${cleanPhone}`}>
+                          <Button size="icon" variant="ghost" className="h-6 w-6 text-blue-600" title="Call">
+                            <Phone className="h-3.5 w-3.5" />
+                          </Button>
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                )}
                 )}
               </div>
             ))}
