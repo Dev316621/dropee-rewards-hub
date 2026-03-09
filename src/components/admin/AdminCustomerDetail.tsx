@@ -202,7 +202,12 @@ const AdminCustomerDetail = () => {
               </Badge>
               <Badge variant="secondary" className="text-[10px]">{tier.data?.tier_name ?? "Starter"}</Badge>
             </div>
-            <p className="text-xs text-muted-foreground mt-0.5 truncate">ID: {userId}</p>
+            <p className="text-xs text-muted-foreground mt-0.5 truncate">
+              ID: {userId}
+              {p?.updated_at && (
+                <span className="ml-2">· Last seen {format(new Date(p.updated_at), "MMM d, yyyy 'at' h:mm a")}</span>
+              )}
+            </p>
           </div>
           <Button variant="ghost" size="icon" onClick={() => navigate("/admin/customers")} className="text-muted-foreground mb-1">
             <ArrowLeft className="h-4 w-4" />

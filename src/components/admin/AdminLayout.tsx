@@ -3,7 +3,8 @@ import {
   BarChart3, Users, Truck, Gift, Settings, FileText, 
   Handshake, Ticket, LogOut, Package, ChevronLeft, ChevronRight,
   LayoutDashboard, Disc3, Home, ScrollText, ShoppingBag, CalendarCheck,
-  Globe, Network, UserCheck, BookOpen, Plus, Search, Bell, Activity, MessageCircle
+  Globe, Network, UserCheck, BookOpen, Plus, Search, Bell, Activity, MessageCircle,
+  Clock, Palette
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -49,6 +50,7 @@ const navSections = [
       { icon: ScrollText, label: "Services", path: "/admin/services" },
       { icon: ShoppingBag, label: "Shop", path: "/admin/shop" },
       { icon: CalendarCheck, label: "Bookings", path: "/admin/bookings" },
+      { icon: Clock, label: "Delivery Times", path: "/admin/delivery-times" },
     ],
   },
   {
@@ -64,6 +66,7 @@ const navSections = [
       { icon: FileText, label: "Blog", path: "/admin/blog" },
       { icon: Handshake, label: "Partners", path: "/admin/partners" },
       { icon: ScrollText, label: "Site Content", path: "/admin/content" },
+      { icon: Palette, label: "Site Settings", path: "/admin/site-settings" },
     ],
   },
   {

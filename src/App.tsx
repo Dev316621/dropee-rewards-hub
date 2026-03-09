@@ -57,6 +57,8 @@ import AdminHubAgents from "./components/admin/AdminHubAgents";
 import AdminAgentTracking from "./components/admin/AdminAgentTracking";
 import AdminMessaging from "./components/admin/AdminMessaging";
 import AdminApiDocs from "./components/admin/AdminApiDocs";
+import AdminDeliveryTimes from "./components/admin/AdminDeliveryTimes";
+import AdminSiteSettings from "./components/admin/AdminSiteSettings";
 import AgentRoute from "./components/AgentRoute";
 import AgentLogin from "./pages/AgentLogin";
 import AgentDashboard from "./pages/AgentDashboard";
@@ -146,6 +148,8 @@ const App = () => (
                 <Route path="/admin/agent-tracking" element={<AdminAgentTracking />} />
                 <Route path="/admin/messaging" element={<AdminMessaging />} />
                 <Route path="/admin/hub-docs" element={<AdminApiDocs />} />
+                <Route path="/admin/delivery-times" element={<AdminDeliveryTimes />} />
+                <Route path="/admin/site-settings" element={<AdminSiteSettings />} />
               </Route>
             </Route>
 
