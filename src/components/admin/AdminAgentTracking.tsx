@@ -337,7 +337,7 @@ const AdminAgentTracking = () => {
                 <Card>
                   <CardContent className="p-3 text-center">
                     <p className="text-xs text-muted-foreground">Completed</p>
-                    <p className="text-xl font-bold text-green-600">{selectedAgent.completedOrders}</p>
+                    <p className="text-xl font-bold text-primary">{selectedAgent.completedOrders}</p>
                   </CardContent>
                 </Card>
                 <Card>
