@@ -8,7 +8,7 @@ interface SEOHeadProps {
 }
 
 const SEOHead = ({ title, description, path = "/", type = "website" }: SEOHeadProps) => {
-  const url = `https://dropee.in${path}`;
+  const url = `https://dropee.discoverukhrul.site${path}`;
   const fullTitle = path === "/" ? title : `${title} | DROPEE`;
 
   return (
