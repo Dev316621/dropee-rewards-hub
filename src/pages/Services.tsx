@@ -146,17 +146,40 @@ const Services = () => {
                   className={`card-elevated p-5 sm:p-6 group cursor-pointer transition-all duration-300 ${isSelected ? "ring-2 ring-primary shadow-lg shadow-primary/10" : "hover:shadow-xl"}`}
                   onClick={() => setSelectedService(isSelected ? null : service.id)}
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <service.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+                  {/* Service Image */}
+                  {service.image_url && (
+                    <div className="w-full h-36 sm:h-40 rounded-xl overflow-hidden mb-4">
+                      <img src={service.image_url} alt={service.title} className="w-full h-full object-cover" />
                     </div>
-                    {service.base_price > 0 && (
-                      <div className="text-right">
-                        <p className="text-lg sm:text-xl font-bold font-display text-primary">₹{totalPrice}</p>
-                        <p className="text-[10px] text-muted-foreground">starting price</p>
+                  )}
+
+                  {!service.image_url && (
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                        <service.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
                       </div>
-                    )}
-                  </div>
+                      {service.base_price > 0 && (
+                        <div className="text-right">
+                          <p className="text-lg sm:text-xl font-bold font-display text-primary">₹{totalPrice}</p>
+                          <p className="text-[10px] text-muted-foreground">starting price</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {service.image_url && (
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <service.icon className="w-4 h-4 text-primary" />
+                      </div>
+                      {service.base_price > 0 && (
+                        <div className="text-right">
+                          <p className="text-lg sm:text-xl font-bold font-display text-primary">₹{totalPrice}</p>
+                          <p className="text-[10px] text-muted-foreground">starting price</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   <h3 className="font-display text-lg sm:text-xl font-bold mb-2">{service.title}</h3>
                   <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-4">{service.description}</p>
