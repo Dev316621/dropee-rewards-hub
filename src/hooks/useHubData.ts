@@ -123,8 +123,20 @@ export const useDeleteHubWebsite = () => {
 };
 
 // ---- Agents ----
-export const useHubAgents = () =>
-  useQuery({
+export const useHubAgents = () => {
+  const qc = useQueryClient();
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("hub-agents-realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "hub_delivery_agents" }, () => {
+        qc.invalidateQueries({ queryKey: ["hub-agents"] });
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [qc]);
+
+  return useQuery({
     queryKey: ["hub-agents"],
     queryFn: async () => {
       const { data, error } = await supabase.from("hub_delivery_agents").select("*").order("created_at", { ascending: false });
@@ -132,6 +144,7 @@ export const useHubAgents = () =>
       return data as HubAgent[];
     },
   });
+};
 
 export const useCreateHubAgent = () => {
   const qc = useQueryClient();
