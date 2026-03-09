@@ -55,6 +55,9 @@ import AdminHubOrders from "./components/admin/AdminHubOrders";
 import AdminHubWebsites from "./components/admin/AdminHubWebsites";
 import AdminHubAgents from "./components/admin/AdminHubAgents";
 import AdminApiDocs from "./components/admin/AdminApiDocs";
+import AgentRoute from "./components/AgentRoute";
+import AgentLogin from "./pages/AgentLogin";
+import AgentDashboard from "./pages/AgentDashboard";
 import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
 
@@ -94,6 +97,12 @@ const App = () => (
             <Route path="/complete-profile" element={<CompleteProfile />} />
             <Route path="/share-location/:token" element={<ShareLocation />} />
             <Route path="/install" element={<Install />} />
+            <Route path="/agent/login" element={<AgentLogin />} />
+
+            {/* Agent dashboard routes */}
+            <Route element={<AgentRoute />}>
+              <Route path="/agent/dashboard" element={<AgentDashboard />} />
+            </Route>
 
             {/* Protected dashboard routes */}
             <Route element={<ProtectedRoute />}>

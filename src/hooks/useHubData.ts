@@ -12,6 +12,12 @@ export interface HubWebsite {
   created_at: string;
 }
 
+interface OrderItem {
+  name: string;
+  qty: number;
+  price: number;
+}
+
 export interface HubAgent {
   id: string;
   name: string;
@@ -21,6 +27,7 @@ export interface HubAgent {
   user_id: string | null;
   is_active: boolean;
   created_at: string;
+  agent_code: string;
 }
 
 export interface HubOrder {
@@ -30,7 +37,7 @@ export interface HubOrder {
   customer_name: string;
   customer_phone: string;
   customer_address: string;
-  items: { name: string; qty: number; price: number }[];
+  items: OrderItem[];
   total: number;
   notes: string;
   status: string;
@@ -38,7 +45,7 @@ export interface HubOrder {
   created_at: string;
   updated_at: string;
   hub_websites?: { name: string; label_color: string };
-  hub_delivery_agents?: { name: string; phone: string } | null;
+  hub_delivery_agents?: { name: string; phone: string; agent_code: string } | null;
 }
 
 export interface HubStatusLog {
@@ -201,10 +208,13 @@ export const useHubOrders = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("hub_orders")
-        .select("*, hub_websites(name, label_color), hub_delivery_agents(name, phone)")
+        .select("*, hub_websites(name, label_color), hub_delivery_agents(name, phone, agent_code)")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data as HubOrder[];
+      return (data || []).map(order => ({
+        ...order,
+        items: Array.isArray(order.items) ? (order.items as unknown as OrderItem[]) : []
+      })) as HubOrder[];
     },
   });
 };
