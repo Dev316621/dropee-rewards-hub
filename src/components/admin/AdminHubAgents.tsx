@@ -161,7 +161,7 @@ const AdminHubAgents = () => {
                 </TableHeader>
                 <TableBody>
                   {approvedAgents.length === 0 && (
-                    <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground py-8">No active agents</TableCell></TableRow>
+                    <TableRow><TableCell colSpan={8} className="text-center text-muted-foreground py-8">No active agents</TableCell></TableRow>
                   )}
                   {approvedAgents.map((a) => (
                     <TableRow key={a.id}>
@@ -169,6 +169,15 @@ const AdminHubAgents = () => {
                       <TableCell className="font-medium">{a.name}</TableCell>
                       <TableCell>{a.phone || "—"}</TableCell>
                       <TableCell className="text-sm">{a.email || "—"}</TableCell>
+                      <TableCell>
+                        <Input
+                          type="number"
+                          className="w-20 h-8 text-sm"
+                          value={a.delivery_fee || 0}
+                          onChange={(e) => updateAgent.mutate({ id: a.id, delivery_fee: parseFloat(e.target.value) || 0 })}
+                          min={0}
+                        />
+                      </TableCell>
                       <TableCell>{statusBadge(a.status)}</TableCell>
                       <TableCell>
                         <Switch checked={a.is_active} onCheckedChange={(checked) => updateAgent.mutate({ id: a.id, is_active: checked })} />
