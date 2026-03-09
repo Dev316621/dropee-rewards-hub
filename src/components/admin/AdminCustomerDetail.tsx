@@ -281,6 +281,11 @@ const AdminCustomerDetail = () => {
                             <MessageCircle className="h-3.5 w-3.5" />
                           </Button>
                         </a>
+                        <a href={`sms:${cleanPhone}`}>
+                          <Button size="icon" variant="ghost" className="h-6 w-6 text-orange-600" title="SMS">
+                            <MessageSquare className="h-3.5 w-3.5" />
+                          </Button>
+                        </a>
                         <a href={`tel:${cleanPhone}`}>
                           <Button size="icon" variant="ghost" className="h-6 w-6 text-blue-600" title="Call">
                             <Phone className="h-3.5 w-3.5" />
