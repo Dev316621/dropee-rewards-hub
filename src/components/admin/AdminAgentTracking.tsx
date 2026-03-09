@@ -350,7 +350,7 @@ const AdminAgentTracking = () => {
                   <CardContent className="p-3 text-center">
                     <p className="text-xs text-muted-foreground">Rating</p>
                     <p className="text-xl font-bold flex items-center justify-center gap-1">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <Star className="h-4 w-4 fill-primary text-primary" />
                       {selectedAgent.avgRating.toFixed(1)}
                     </p>
                   </CardContent>
