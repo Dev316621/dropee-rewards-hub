@@ -253,6 +253,9 @@ const AdminHubAgents = () => {
         <DialogContent>
           <DialogHeader><DialogTitle>Add Delivery Agent</DialogTitle></DialogHeader>
           <div className="space-y-4">
+            <div className="p-3 bg-muted rounded-lg">
+              <p className="text-xs text-muted-foreground">Agent ID will be auto-generated (e.g. <span className="font-mono font-bold text-primary">DROP1</span>)</p>
+            </div>
             <div>
               <label className="text-sm font-medium">Name *</label>
               <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Agent name" />
