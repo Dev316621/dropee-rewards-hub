@@ -293,11 +293,6 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
             </span>
           </div>
           
-          {showDeliveryFee && agent.delivery_fee > 0 && (
-            <p className="text-xs text-muted-foreground mt-1">
-              Fee: ₹{agent.delivery_fee}
-            </p>
-          )}
         </div>
         
         <div className="flex flex-col sm:flex-row gap-1.5 shrink-0">
