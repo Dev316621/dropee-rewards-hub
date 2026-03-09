@@ -167,7 +167,7 @@ const AdminCustomerDetail = () => {
   const completedDeliveries = (deliveries.data ?? []).filter(d => d.status === "completed").length;
   const totalDeliveries = deliveries.data?.length ?? 0;
   const loc = location.data;
-
+  const isOnline = p?.updated_at && (Date.now() - new Date(p.updated_at).getTime()) < 15 * 60 * 1000;
   if (isLoading) return <div className="space-y-4 p-6"><Skeleton className="h-8 w-48 bg-dashboard-border" /><Skeleton className="h-64 bg-dashboard-border" /></div>;
 
   // Clean phone for links
