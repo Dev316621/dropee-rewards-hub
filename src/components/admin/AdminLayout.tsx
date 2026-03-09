@@ -3,7 +3,7 @@ import {
   BarChart3, Users, Truck, Gift, Settings, FileText, 
   Handshake, Ticket, LogOut, Package, ChevronLeft, ChevronRight,
   LayoutDashboard, Disc3, Home, ScrollText, ShoppingBag, CalendarCheck,
-  Globe, Network, UserCheck, BookOpen, Plus, Search, Bell
+  Globe, Network, UserCheck, BookOpen, Plus, Search, Bell, Activity
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
