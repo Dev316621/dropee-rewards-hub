@@ -103,8 +103,9 @@ const AdminCustomerDetail = () => {
   const qc = useQueryClient();
   const { profile, deliveries, pointsLog, spinHistory, badges, location, pointsBalance, tier } = useAdminCustomerDetail(userId!);
 
-  const [editForm, setEditForm] = useState({ full_name: "", phone: "", date_of_birth: "", address: "", plus_code: "" });
+  const [editForm, setEditForm] = useState({ full_name: "", phone: "", date_of_birth: "", address: "", plus_code: "", latitude: null as number | null, longitude: null as number | null });
   const [editing, setEditing] = useState(false);
+  const [isLocating, setIsLocating] = useState(false);
 
   useEffect(() => {
     if (profile.data) {
@@ -114,9 +115,37 @@ const AdminCustomerDetail = () => {
         date_of_birth: profile.data.date_of_birth || "",
         address: profile.data.address || "",
         plus_code: (profile.data as any)?.plus_code || "",
+        latitude: (profile.data as any)?.latitude ?? null,
+        longitude: (profile.data as any)?.longitude ?? null,
       });
     }
   }, [profile.data]);
+
+  const handleLocateMe = () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation not supported");
+      return;
+    }
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setEditForm(prev => ({
+          ...prev,
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude,
+        }));
+        setIsLocating(false);
+        setEditing(true);
+        toast.success("Location captured! Click Save to store it.");
+      },
+      (err) => {
+        console.error(err);
+        toast.error("Could not get location. Please allow GPS access.");
+        setIsLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 15000 }
+    );
+  };
 
   const updateProfile = useMutation({
     mutationFn: async (data: typeof editForm) => {
