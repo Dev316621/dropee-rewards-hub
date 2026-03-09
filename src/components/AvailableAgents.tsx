@@ -47,22 +47,36 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
         .eq("status", "approved")
         .order("is_online", { ascending: false })
         .order("average_rating", { ascending: false });
-      
+
       if (error) throw error;
       return data as Agent[];
     },
   });
 
-  // Realtime subscription for agent status changes
+  const { data: activeAssignments } = useQuery({
+    queryKey: ["agent-active-assignments"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("hub_orders")
+        .select("assigned_agent_id, status")
+        .not("assigned_agent_id", "is", null)
+        .not("status", "in", '("delivered","cancelled")');
+
+      if (error) throw error;
+      return (data || []) as { assigned_agent_id: string; status: string }[];
+    },
+  });
+
+  // Realtime subscription for agent status + busy state changes
   useEffect(() => {
-    const channel = supabase
-      .channel('agents-status')
+    const agentsChannel = supabase
+      .channel("agents-status")
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'hub_delivery_agents',
+          event: "*",
+          schema: "public",
+          table: "hub_delivery_agents",
         },
         () => {
           queryClient.invalidateQueries({ queryKey: ["available-agents"] });
@@ -70,8 +84,24 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
       )
       .subscribe();
 
+    const ordersChannel = supabase
+      .channel("agents-busy")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "hub_orders",
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["agent-active-assignments"] });
+        }
+      )
+      .subscribe();
+
     return () => {
-      supabase.removeChannel(channel);
+      supabase.removeChannel(agentsChannel);
+      supabase.removeChannel(ordersChannel);
     };
   }, [queryClient]);
 
