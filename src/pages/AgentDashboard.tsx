@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
@@ -60,6 +62,53 @@ const AgentDashboard = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
+  const [isOnline, setIsOnline] = useState(false);
+
+  // Fetch current online status
+  useEffect(() => {
+    const fetchStatus = async () => {
+      const { data } = await supabase
+        .from("hub_delivery_agents")
+        .select("is_online")
+        .eq("id", agent.id)
+        .single();
+      if (data) setIsOnline(data.is_online);
+    };
+    fetchStatus();
+  }, [agent.id]);
+
+  // Heartbeat: update last_seen_at every 60s while online
+  useEffect(() => {
+    if (!isOnline) return;
+    const interval = setInterval(async () => {
+      await supabase
+        .from("hub_delivery_agents")
+        .update({ last_seen_at: new Date().toISOString() } as any)
+        .eq("id", agent.id);
+    }, 60000);
+    return () => clearInterval(interval);
+  }, [isOnline, agent.id]);
+
+  // Set offline on page unload
+  useEffect(() => {
+    const handleUnload = () => {
+      navigator.sendBeacon && supabase
+        .from("hub_delivery_agents")
+        .update({ is_online: false } as any)
+        .eq("id", agent.id);
+    };
+    window.addEventListener("beforeunload", handleUnload);
+    return () => window.removeEventListener("beforeunload", handleUnload);
+  }, [agent.id]);
+
+  const toggleOnline = async (online: boolean) => {
+    setIsOnline(online);
+    await supabase
+      .from("hub_delivery_agents")
+      .update({ is_online: online, last_seen_at: new Date().toISOString() } as any)
+      .eq("id", agent.id);
+    toast.success(online ? "You're now online!" : "You're now offline");
+  };
 
   const { data: orders = [], isLoading, refetch } = useQuery({
     queryKey: ["agent-orders", agent.id],
@@ -140,7 +189,17 @@ const AgentDashboard = () => {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <Switch
+                id="online-toggle"
+                checked={isOnline}
+                onCheckedChange={toggleOnline}
+              />
+              <Label htmlFor="online-toggle" className={`text-sm font-semibold ${isOnline ? "text-success" : "text-muted-foreground"}`}>
+                {isOnline ? "Online" : "Offline"}
+              </Label>
+            </div>
             <Button variant="outline" size="icon" onClick={() => refetch()}>
               <RefreshCw className="h-4 w-4" />
             </Button>
