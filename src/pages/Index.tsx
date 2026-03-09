@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import CountUp from "@/components/CountUp";
 import AnimatedSection from "@/components/AnimatedSection";
 import SEOHead from "@/components/SEOHead";
+import { AvailableAgents } from "@/components/AvailableAgents";
 import { motion } from "framer-motion";
-import { Package, Truck, Users, Star, ArrowRight, Gift, Zap, Clock, Trophy, ChevronRight, Sparkles, Shield, MapPin } from "lucide-react";
+import { Package, Truck, Users, Star, ArrowRight, Gift, Zap, Clock, Trophy, ChevronRight, Sparkles, Shield, MapPin, Bike } from "lucide-react";
 
 const DeliveryAnimation = () => (
   <div className="relative w-full h-32 sm:h-48 md:h-64">
@@ -208,6 +209,24 @@ const Index = () => {
                 <p className="text-xs sm:text-sm text-muted-foreground mt-1 font-medium">{stat.label}</p>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </AnimatedSection>
+
+      {/* Realtime Delivery Agents */}
+      <AnimatedSection className="py-12 sm:py-20">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between mb-6 sm:mb-8">
+            <div>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success/10 text-success text-xs font-medium mb-3 border border-success/10">
+                <Bike className="w-3.5 h-3.5" /> Live Status
+              </span>
+              <h2 className="font-display text-xl sm:text-3xl font-bold">Our Delivery Agents</h2>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1">Real-time availability — contact directly via WhatsApp or call</p>
+            </div>
+          </div>
+          <div className="max-w-2xl">
+            <AvailableAgents title="Delivery Agents" showDeliveryFee={true} />
           </div>
         </div>
       </AnimatedSection>
