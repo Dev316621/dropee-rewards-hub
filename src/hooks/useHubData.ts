@@ -26,11 +26,13 @@ export interface HubAgent {
   status: string;
   user_id: string | null;
   is_active: boolean;
+  is_online: boolean;
   created_at: string;
   agent_code: string;
   delivery_fee: number;
   average_rating: number | null;
   total_ratings: number | null;
+  last_seen_at: string | null;
 }
 
 export interface HubOrder {
