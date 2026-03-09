@@ -59,8 +59,11 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-8 pt-4 border-t border-background/10 text-center text-xs text-background/40">
-          © {new Date().getFullYear()} DROPEE. All rights reserved.
+        <div className="mt-8 pt-4 border-t border-background/10 text-center text-xs text-background/40 space-y-1">
+          <p>© {new Date().getFullYear()} DROPEE. All rights reserved.</p>
+          <p>
+            Developed by <a href="https://instagram.com/itsnextgenfounder" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">@itsnextgenfounder</a> — eX Holdings. Jihal Shimray
+          </p>
         </div>
       </div>
     </footer>
