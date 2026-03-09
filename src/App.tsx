@@ -148,6 +148,8 @@ const App = () => (
                 <Route path="/admin/agent-tracking" element={<AdminAgentTracking />} />
                 <Route path="/admin/messaging" element={<AdminMessaging />} />
                 <Route path="/admin/hub-docs" element={<AdminApiDocs />} />
+                <Route path="/admin/delivery-times" element={<AdminDeliveryTimes />} />
+                <Route path="/admin/site-settings" element={<AdminSiteSettings />} />
               </Route>
             </Route>
 

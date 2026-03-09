@@ -66,6 +66,7 @@ const navSections = [
       { icon: FileText, label: "Blog", path: "/admin/blog" },
       { icon: Handshake, label: "Partners", path: "/admin/partners" },
       { icon: ScrollText, label: "Site Content", path: "/admin/content" },
+      { icon: Palette, label: "Site Settings", path: "/admin/site-settings" },
     ],
   },
   {
