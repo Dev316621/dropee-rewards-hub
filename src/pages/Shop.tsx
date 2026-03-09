@@ -64,6 +64,7 @@ const Shop = () => {
   const { user } = useAuth();
   const [cart, setCart] = useState<CartItem[]>([]);
   const { pay } = useRazorpay();
+  const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
