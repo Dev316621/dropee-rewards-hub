@@ -31,6 +31,7 @@ interface AvailableAgentsProps {
 
 export const AvailableAgents = (props: AvailableAgentsProps) => {
   const { title = "Available Agents" } = props;
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [rating, setRating] = useState(5);
