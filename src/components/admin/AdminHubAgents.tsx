@@ -153,7 +153,6 @@ const AdminHubAgents = () => {
                     <TableHead>Name</TableHead>
                     <TableHead>Phone</TableHead>
                     <TableHead>Email</TableHead>
-                    <TableHead>Fee (₹)</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Active</TableHead>
                     <TableHead>Actions</TableHead>
@@ -161,7 +160,7 @@ const AdminHubAgents = () => {
                 </TableHeader>
                 <TableBody>
                   {approvedAgents.length === 0 && (
-                    <TableRow><TableCell colSpan={8} className="text-center text-muted-foreground py-8">No active agents</TableCell></TableRow>
+                    <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground py-8">No active agents</TableCell></TableRow>
                   )}
                   {approvedAgents.map((a) => (
                     <TableRow key={a.id}>
@@ -170,15 +169,11 @@ const AdminHubAgents = () => {
                       <TableCell>{a.phone || "—"}</TableCell>
                       <TableCell className="text-sm">{a.email || "—"}</TableCell>
                       <TableCell>
-                        <Input
-                          type="number"
-                          className="w-20 h-8 text-sm"
-                          value={a.delivery_fee || 0}
-                          onChange={(e) => updateAgent.mutate({ id: a.id, delivery_fee: parseFloat(e.target.value) || 0 })}
-                          min={0}
-                        />
+                        <div className="flex items-center gap-1.5">
+                          <span className={`h-2.5 w-2.5 rounded-full ${a.is_online ? "bg-green-500 animate-pulse" : "bg-red-500"}`} />
+                          <span className={`text-xs font-medium ${a.is_online ? "text-green-600" : "text-red-500"}`}>{a.is_online ? "Online" : "Offline"}</span>
+                        </div>
                       </TableCell>
-                      <TableCell>{statusBadge(a.status)}</TableCell>
                       <TableCell>
                         <Switch checked={a.is_active} onCheckedChange={(checked) => updateAgent.mutate({ id: a.id, is_active: checked })} />
                       </TableCell>
