@@ -52,18 +52,44 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Create auth account
-    const { data: newUser, error: createError } = await adminClient.auth.admin.createUser({
-      email: email.toLowerCase().trim(),
-      password,
-      email_confirm: true,
-      user_metadata: { full_name: name.trim(), phone: (phone || "").trim(), role: "agent" },
-    });
+    const normalizedEmail = email.toLowerCase().trim();
 
-    if (createError) {
-      return new Response(JSON.stringify({ error: createError.message }), {
-        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    // Check if user already exists
+    const { data: existingUsers } = await adminClient.auth.admin.listUsers();
+    const existingUser = existingUsers?.users?.find(u => u.email?.toLowerCase() === normalizedEmail);
+
+    let userId: string;
+
+    if (existingUser) {
+      // Check if already an agent
+      const { data: existingAgent } = await adminClient
+        .from("hub_delivery_agents")
+        .select("id")
+        .eq("user_id", existingUser.id)
+        .maybeSingle();
+
+      if (existingAgent) {
+        return new Response(JSON.stringify({ error: "This user is already registered as an agent" }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      userId = existingUser.id;
+    } else {
+      // Create new auth account
+      const { data: newUser, error: createError } = await adminClient.auth.admin.createUser({
+        email: normalizedEmail,
+        password,
+        email_confirm: true,
+        user_metadata: { full_name: name.trim(), phone: (phone || "").trim(), role: "agent" },
       });
+
+      if (createError) {
+        return new Response(JSON.stringify({ error: createError.message }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      userId = newUser.user.id;
     }
 
     // Generate agent code
@@ -76,18 +102,16 @@ Deno.serve(async (req) => {
       .insert({
         name: name.trim(),
         phone: (phone || "").trim(),
-        email: email.toLowerCase().trim(),
+        email: normalizedEmail,
         status: "approved",
         is_active: true,
-        user_id: newUser.user.id,
+        user_id: userId,
         agent_code: agentCode,
       })
       .select()
       .single();
 
     if (insertError) {
-      // Rollback auth user
-      await adminClient.auth.admin.deleteUser(newUser.user.id);
       return new Response(JSON.stringify({ error: insertError.message }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
