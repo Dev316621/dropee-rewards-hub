@@ -226,22 +226,53 @@ const AdminCustomerDetail = () => {
 
         {/* Map Card */}
         <Card className="bg-dashboard-card border-dashboard-border">
-          <CardHeader className="pb-2">
+          <CardHeader className="pb-2 flex flex-row items-center justify-between">
             <CardTitle className="text-sm text-dashboard-card-foreground flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" /> Location</CardTitle>
+            <Button size="sm" variant="outline" onClick={handleLocateMe} disabled={isLocating} className="gap-1 text-xs">
+              <Navigation className={`h-3 w-3 ${isLocating ? "animate-pulse" : ""}`} />
+              {isLocating ? "Getting..." : "Locate Me"}
+            </Button>
           </CardHeader>
-          <CardContent>
-            {loc?.latitude && loc?.longitude ? (
+          <CardContent className="space-y-3">
+            {/* Profile saved location (priority) or location request */}
+            {(editForm.latitude && editForm.longitude) || (loc?.latitude && loc?.longitude) ? (
               <div className="space-y-2">
                 <iframe
-                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${loc.longitude - 0.01},${loc.latitude - 0.01},${loc.longitude + 0.01},${loc.latitude + 0.01}&layer=mapnik&marker=${loc.latitude},${loc.longitude}`}
-                  className="w-full h-48 rounded-lg border border-dashboard-border"
+                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${(editForm.longitude ?? loc?.longitude)! - 0.01},${(editForm.latitude ?? loc?.latitude)! - 0.01},${(editForm.longitude ?? loc?.longitude)! + 0.01},${(editForm.latitude ?? loc?.latitude)! + 0.01}&layer=mapnik&marker=${editForm.latitude ?? loc?.latitude},${editForm.longitude ?? loc?.longitude}`}
+                  className="w-full h-40 rounded-lg border border-dashboard-border"
                   title="Customer location"
                 />
-                <p className="text-[10px] text-muted-foreground">Last updated: {loc.completed_at ? format(new Date(loc.completed_at), "MMM d, yyyy HH:mm") : "—"}</p>
+                <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                  <span>Lat: {(editForm.latitude ?? loc?.latitude)?.toFixed(6)}, Lng: {(editForm.longitude ?? loc?.longitude)?.toFixed(6)}</span>
+                  <a
+                    href={`https://www.google.com/maps?q=${editForm.latitude ?? loc?.latitude},${editForm.longitude ?? loc?.longitude}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline flex items-center gap-1"
+                  >
+                    Open in Maps <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
               </div>
             ) : (
-              <div className="h-48 flex items-center justify-center text-muted-foreground text-sm rounded-lg bg-dashboard-bg border border-dashboard-border">
-                <MapPin className="h-5 w-5 mr-2" /> No location data available
+              <div className="h-40 flex flex-col items-center justify-center text-muted-foreground text-sm rounded-lg bg-dashboard-bg border border-dashboard-border gap-2">
+                <MapPin className="h-5 w-5" />
+                <span>No location saved</span>
+                <span className="text-[10px]">Use "Locate Me" when at customer's home</span>
+              </div>
+            )}
+            {/* Plus Code display */}
+            {(p as any)?.plus_code && (
+              <div className="flex items-center gap-2 text-xs">
+                <Badge variant="outline" className="font-mono border-dashboard-border">{(p as any).plus_code}</Badge>
+                <a
+                  href={`https://plus.codes/${(p as any).plus_code}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline text-[10px]"
+                >
+                  View Plus Code →
+                </a>
               </div>
             )}
           </CardContent>
