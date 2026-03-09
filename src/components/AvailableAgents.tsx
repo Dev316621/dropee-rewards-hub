@@ -374,6 +374,12 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
           <Badge variant="outline" className="rounded-full text-xs px-2.5">
             <span className="w-2 h-2 rounded-full bg-success mr-1.5 inline-block" />
             {onlineAgents.length} online
+            <span className="mx-2 text-muted-foreground">•</span>
+            <span className="w-2 h-2 rounded-full bg-primary mr-1.5 inline-block" />
+            {busyAgents.length} busy
+            <span className="mx-2 text-muted-foreground">•</span>
+            <span className="w-2 h-2 rounded-full bg-destructive mr-1.5 inline-block" />
+            {offlineAgents.length} offline
           </Badge>
         </div>
         
