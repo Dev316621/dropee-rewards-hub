@@ -27,6 +27,7 @@ export interface HubAgent {
   user_id: string | null;
   is_active: boolean;
   created_at: string;
+  agent_code: string;
 }
 
 export interface HubOrder {
