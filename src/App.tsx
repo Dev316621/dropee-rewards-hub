@@ -54,6 +54,7 @@ import AdminServiceBookings from "./components/admin/AdminServiceBookings";
 import AdminHubOrders from "./components/admin/AdminHubOrders";
 import AdminHubWebsites from "./components/admin/AdminHubWebsites";
 import AdminHubAgents from "./components/admin/AdminHubAgents";
+import AdminAgentTracking from "./components/admin/AdminAgentTracking";
 import AdminApiDocs from "./components/admin/AdminApiDocs";
 import AgentRoute from "./components/AgentRoute";
 import AgentLogin from "./pages/AgentLogin";
@@ -141,6 +142,7 @@ const App = () => (
                 <Route path="/admin/hub" element={<AdminHubOrders />} />
                 <Route path="/admin/hub-websites" element={<AdminHubWebsites />} />
                 <Route path="/admin/hub-agents" element={<AdminHubAgents />} />
+                <Route path="/admin/agent-tracking" element={<AdminAgentTracking />} />
                 <Route path="/admin/hub-docs" element={<AdminApiDocs />} />
               </Route>
             </Route>
