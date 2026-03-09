@@ -285,7 +285,7 @@ const AdminCustomerDetail = () => {
                     )}
                   </div>
                 )}
-                )}
+              </div>
               </div>
             ))}
             <div>
