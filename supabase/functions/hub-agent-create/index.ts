@@ -66,6 +66,10 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Generate agent code
+    const { data: codeResult } = await adminClient.rpc("generate_agent_code");
+    const agentCode = codeResult || `DROP${Date.now().toString().slice(-4)}`;
+
     // Insert agent record
     const { data: agent, error: insertError } = await adminClient
       .from("hub_delivery_agents")
@@ -76,6 +80,7 @@ Deno.serve(async (req) => {
         status: "approved",
         is_active: true,
         user_id: newUser.user.id,
+        agent_code: agentCode,
       })
       .select()
       .single();
