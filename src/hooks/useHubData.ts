@@ -213,7 +213,7 @@ export const useHubOrders = () => {
       if (error) throw error;
       return (data || []).map(order => ({
         ...order,
-        items: Array.isArray(order.items) ? order.items as OrderItem[] : []
+        items: Array.isArray(order.items) ? (order.items as unknown as OrderItem[]) : []
       })) as HubOrder[];
     },
   });

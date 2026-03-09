@@ -98,6 +98,12 @@ const App = () => (
             <Route path="/complete-profile" element={<CompleteProfile />} />
             <Route path="/share-location/:token" element={<ShareLocation />} />
             <Route path="/install" element={<Install />} />
+            <Route path="/agent/login" element={<AgentLogin />} />
+
+            {/* Agent dashboard routes */}
+            <Route element={<AgentRoute />}>
+              <Route path="/agent/dashboard" element={<AgentDashboard />} />
+            </Route>
 
             {/* Protected dashboard routes */}
             <Route element={<ProtectedRoute />}>
