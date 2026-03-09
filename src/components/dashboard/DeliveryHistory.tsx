@@ -1,10 +1,11 @@
 import { format } from "date-fns";
 import { motion } from "framer-motion";
-import { Truck, Filter } from "lucide-react";
+import { Truck } from "lucide-react";
 import { useDeliveries } from "@/hooks/useDeliveries";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AvailableAgents } from "@/components/AvailableAgents";
 
 const statusColors: Record<string, string> = {
   pending: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
