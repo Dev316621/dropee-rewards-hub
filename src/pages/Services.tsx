@@ -6,7 +6,7 @@ import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Package, Truck, ShoppingBag, Zap, Handshake, ArrowRight, Clock, IndianRupee, CheckCircle, MapPin } from "lucide-react";
+import { Package, Truck, ShoppingBag, Zap, Handshake, ArrowRight, Clock, IndianRupee, CheckCircle, MapPin, Sparkles } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -100,35 +100,32 @@ const Services = () => {
       {/* Hero */}
       <section className="hero-section py-16 sm:py-24 md:py-32 relative overflow-hidden">
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 0.1, scale: 1 }}
-          transition={{ duration: 1.5 }}
-          className="absolute top-10 right-10 w-64 h-64 rounded-full bg-primary blur-3xl"
+          animate={{ scale: [1, 1.3, 1], opacity: [0.06, 0.1, 0.06] }}
+          transition={{ duration: 8, repeat: Infinity }}
+          className="absolute top-10 right-10 w-72 h-72 rounded-full bg-primary blur-[80px]"
         />
         <div className="container mx-auto px-4 relative z-10">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <Badge className="mb-4 bg-primary/20 text-primary border-primary/30 text-xs">
-              <Zap className="w-3 h-3 mr-1" /> Fast & Reliable
-            </Badge>
-            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-4">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/15 text-primary text-xs font-medium mb-5 border border-primary/20 backdrop-blur-sm">
+              <Sparkles className="w-3.5 h-3.5" /> Fast & Reliable
+            </span>
+            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-4 leading-[1.1]">
               Our <span className="text-gradient-primary">Services</span>
             </h1>
-            <p className="text-sm sm:text-lg text-primary-foreground/70 max-w-xl mb-6">
+            <p className="text-sm sm:text-lg text-primary-foreground/60 max-w-xl mb-6 leading-relaxed">
               Everything you need, delivered. From instant parcels to business partnerships — all with transparent pricing.
             </p>
-            <div className="flex items-center gap-3 text-xs sm:text-sm text-primary-foreground/60">
-              <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> 15 min fastest</span>
-              <span className="w-1 h-1 rounded-full bg-primary-foreground/30" />
-              <span className="flex items-center gap-1"><IndianRupee className="w-3.5 h-3.5" /> From ₹{baseFee}</span>
-              <span className="w-1 h-1 rounded-full bg-primary-foreground/30" />
-              <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> Ukhrul</span>
+            <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-primary-foreground/40">
+              <span className="flex items-center gap-1.5 bg-primary-foreground/5 px-3 py-1 rounded-full border border-primary-foreground/10"><Clock className="w-3.5 h-3.5 text-primary/60" /> 15 min fastest</span>
+              <span className="flex items-center gap-1.5 bg-primary-foreground/5 px-3 py-1 rounded-full border border-primary-foreground/10"><IndianRupee className="w-3.5 h-3.5 text-primary/60" /> From ₹{baseFee}</span>
+              <span className="flex items-center gap-1.5 bg-primary-foreground/5 px-3 py-1 rounded-full border border-primary-foreground/10"><MapPin className="w-3.5 h-3.5 text-primary/60" /> Ukhrul</span>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* Service Cards */}
-      <AnimatedSection className="py-10 sm:py-16">
+      <AnimatedSection className="py-12 sm:py-20">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {services.map((service, i) => {
@@ -143,25 +140,26 @@ const Services = () => {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.08, duration: 0.5 }}
                   layout
-                  className={`card-elevated p-5 sm:p-6 group cursor-pointer transition-all duration-300 ${isSelected ? "ring-2 ring-primary shadow-lg shadow-primary/10" : "hover:shadow-xl"}`}
+                  className={`card-elevated p-5 sm:p-6 group cursor-pointer transition-all duration-300 ${isSelected ? "ring-2 ring-primary shadow-lg shadow-primary/10 !translate-y-0" : ""}`}
                   onClick={() => setSelectedService(isSelected ? null : service.id)}
                 >
                   {/* Service Image */}
                   {service.image_url && (
-                    <div className="w-full h-36 sm:h-40 rounded-xl overflow-hidden mb-4">
-                      <img src={service.image_url} alt={service.title} className="w-full h-full object-cover" />
+                    <div className="w-full h-36 sm:h-44 rounded-xl overflow-hidden mb-4 relative">
+                      <img src={service.image_url} alt={service.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 to-transparent" />
                     </div>
                   )}
 
                   {!service.image_url && (
                     <div className="flex items-start justify-between mb-4">
-                      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                      <div className="icon-box w-13 h-13 sm:w-14 sm:h-14">
                         <service.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
                       </div>
                       {service.base_price > 0 && (
                         <div className="text-right">
                           <p className="text-lg sm:text-xl font-bold font-display text-primary">₹{totalPrice}</p>
-                          <p className="text-[10px] text-muted-foreground">starting price</p>
+                          <p className="text-[10px] text-muted-foreground font-medium">starting price</p>
                         </div>
                       )}
                     </div>
@@ -169,13 +167,13 @@ const Services = () => {
 
                   {service.image_url && (
                     <div className="flex items-start justify-between mb-2">
-                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <div className="icon-box w-9 h-9">
                         <service.icon className="w-4 h-4 text-primary" />
                       </div>
                       {service.base_price > 0 && (
                         <div className="text-right">
                           <p className="text-lg sm:text-xl font-bold font-display text-primary">₹{totalPrice}</p>
-                          <p className="text-[10px] text-muted-foreground">starting price</p>
+                          <p className="text-[10px] text-muted-foreground font-medium">starting price</p>
                         </div>
                       )}
                     </div>
@@ -185,13 +183,13 @@ const Services = () => {
                   <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-4">{service.description}</p>
 
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3 text-[10px] sm:text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {service.eta}</span>
-                      <Badge variant="outline" className="text-[10px] border-emerald-500/30 text-emerald-600">
+                    <div className="flex items-center gap-2 text-[10px] sm:text-xs text-muted-foreground">
+                      <span className="flex items-center gap-1 bg-muted px-2 py-0.5 rounded-full"><Clock className="w-3 h-3" /> {service.eta}</span>
+                      <Badge variant="outline" className="text-[10px] border-success/30 text-success rounded-full px-2">
                         <CheckCircle className="w-2.5 h-2.5 mr-0.5" /> Available
                       </Badge>
                     </div>
-                    <ArrowRight className={`w-4 h-4 text-primary transition-transform ${isSelected ? "rotate-90" : "group-hover:translate-x-1"}`} />
+                    <ArrowRight className={`w-4 h-4 text-primary transition-transform duration-300 ${isSelected ? "rotate-90" : "group-hover:translate-x-1"}`} />
                   </div>
 
                   {/* Inline Quick Book */}
@@ -207,26 +205,26 @@ const Services = () => {
                       >
                         <div className="border-t border-border mt-4 pt-4 space-y-3">
                           {!user ? (
-                            <div className="text-center py-2">
-                              <p className="text-xs text-muted-foreground mb-2">Sign in to book</p>
-                              <Link to="/login"><Button size="sm" variant="outline" className="text-xs">Sign In</Button></Link>
+                            <div className="text-center py-3">
+                              <p className="text-xs text-muted-foreground mb-3">Sign in to book this service</p>
+                              <Link to="/login"><Button size="sm" variant="outline" className="text-xs rounded-xl">Sign In</Button></Link>
                             </div>
                           ) : (
                             <>
                               <div className="grid grid-cols-1 gap-2">
                                 <div>
-                                  <Label className="text-[10px] flex items-center gap-1"><MapPin className="w-3 h-3 text-emerald-500" />Pickup</Label>
-                                  <Input placeholder="Pickup address" value={quickBookForm.pickup} onChange={e => setQuickBookForm(f => ({ ...f, pickup: e.target.value }))} className="h-8 text-xs" />
+                                  <Label className="text-[10px] flex items-center gap-1 mb-1"><MapPin className="w-3 h-3 text-success" />Pickup</Label>
+                                  <Input placeholder="Pickup address" value={quickBookForm.pickup} onChange={e => setQuickBookForm(f => ({ ...f, pickup: e.target.value }))} className="h-9 text-xs rounded-xl" />
                                 </div>
                                 <div>
-                                  <Label className="text-[10px] flex items-center gap-1"><MapPin className="w-3 h-3 text-destructive" />Dropoff</Label>
-                                  <Input placeholder="Dropoff address" value={quickBookForm.dropoff} onChange={e => setQuickBookForm(f => ({ ...f, dropoff: e.target.value }))} className="h-8 text-xs" />
+                                  <Label className="text-[10px] flex items-center gap-1 mb-1"><MapPin className="w-3 h-3 text-destructive" />Dropoff</Label>
+                                  <Input placeholder="Dropoff address" value={quickBookForm.dropoff} onChange={e => setQuickBookForm(f => ({ ...f, dropoff: e.target.value }))} className="h-9 text-xs rounded-xl" />
                                 </div>
                               </div>
-                              <Textarea placeholder="Notes (optional)" value={quickBookForm.notes} onChange={e => setQuickBookForm(f => ({ ...f, notes: e.target.value }))} rows={2} className="text-xs" />
+                              <Textarea placeholder="Notes (optional)" value={quickBookForm.notes} onChange={e => setQuickBookForm(f => ({ ...f, notes: e.target.value }))} rows={2} className="text-xs rounded-xl" />
                               <Button
                                 size="sm"
-                                className="w-full text-xs"
+                                className="w-full text-xs rounded-xl"
                                 disabled={!quickBookForm.pickup || !quickBookForm.dropoff || bookMutation.isPending}
                                 onClick={() => bookMutation.mutate()}
                               >
@@ -258,14 +256,17 @@ const Services = () => {
       <PricingZonesSection />
 
       {/* CTA */}
-      <AnimatedSection className="py-10 sm:py-16 bg-muted">
+      <AnimatedSection className="py-12 sm:py-20 bg-muted">
         <div className="container mx-auto px-4 text-center">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-4 border border-primary/10">
+            Custom Orders
+          </span>
           <h2 className="font-display text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Need Something Custom?</h2>
-          <p className="text-sm text-muted-foreground mb-5 sm:mb-6 max-w-md mx-auto">
+          <p className="text-sm text-muted-foreground mb-6 sm:mb-8 max-w-md mx-auto">
             Use our full booking page for detailed options, add-ons, and weight-based pricing.
           </p>
           <Link to="/book">
-            <Button variant="hero" size="lg" className="w-full sm:w-auto h-12 sm:h-auto text-sm sm:text-base">
+            <Button variant="hero" size="lg" className="w-full sm:w-auto h-12 sm:h-auto text-sm sm:text-base rounded-2xl">
               Full Booking Page <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
@@ -291,18 +292,21 @@ const PricingZonesSection = () => {
   return (
     <AnimatedSection className="py-10 sm:py-16">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-6">
+        <div className="text-center mb-8">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-3 border border-primary/10">
+            <MapPin className="w-3.5 h-3.5" /> Coverage
+          </span>
           <h2 className="font-display text-2xl sm:text-3xl font-bold mb-2">Delivery Zones</h2>
           <p className="text-sm text-muted-foreground">See our coverage areas and pricing multipliers across Ukhrul</p>
         </div>
         <div className="card-elevated overflow-hidden">
           <ZoneMap zones={zones} />
-          <div className="p-4 flex flex-wrap gap-3 border-t border-border">
+          <div className="p-4 sm:p-5 flex flex-wrap gap-3 border-t border-border">
             {zones.map(z => (
-              <div key={z.id} className="flex items-center gap-2 text-xs">
-                <span className="w-3 h-3 rounded-full" style={{ backgroundColor: z.color || "#FF6B35" }} />
+              <div key={z.id} className="flex items-center gap-2 text-xs bg-muted px-3 py-1.5 rounded-full">
+                <span className="w-2.5 h-2.5 rounded-full shadow-sm" style={{ backgroundColor: z.color || "#FF6B35" }} />
                 <span className="font-medium">{z.name}</span>
-                <span className="text-muted-foreground">({Number(z.multiplier)}× rate, {z.radius_km}km)</span>
+                <span className="text-muted-foreground">({Number(z.multiplier)}×, {z.radius_km}km)</span>
               </div>
             ))}
           </div>
