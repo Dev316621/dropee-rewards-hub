@@ -357,7 +357,8 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
             </Dialog>
           )}
         </div>
-      </motion.div>
+        );
+      })()
     );
   };
 
