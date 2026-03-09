@@ -61,6 +61,7 @@ const AgentDashboard = () => {
   const { agent } = useOutletContext<AgentContext>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
   const [isOnline, setIsOnline] = useState(false);
 
   // Fetch current online status
