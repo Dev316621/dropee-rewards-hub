@@ -54,6 +54,7 @@ import AdminServiceBookings from "./components/admin/AdminServiceBookings";
 import AdminHubOrders from "./components/admin/AdminHubOrders";
 import AdminHubWebsites from "./components/admin/AdminHubWebsites";
 import AdminHubAgents from "./components/admin/AdminHubAgents";
+import AdminAgentTracking from "./components/admin/AdminAgentTracking";
 import AdminApiDocs from "./components/admin/AdminApiDocs";
 import AgentRoute from "./components/AgentRoute";
 import AgentLogin from "./pages/AgentLogin";
