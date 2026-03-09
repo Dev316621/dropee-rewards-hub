@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Heart, Truck, TreePine, Users, ArrowRight, CheckCircle, IndianRupee } from "lucide-react";
+import { useRazorpay } from "@/hooks/useRazorpay";
 import { toast } from "sonner";
 
 const causes = [
@@ -49,15 +50,28 @@ const Donate = () => {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const { pay } = useRazorpay();
 
   const handleDonate = () => {
     if (!amount || amount < 1) {
       toast.error("Please enter a valid amount");
       return;
     }
-    // Placeholder — payment API will be integrated here
-    toast.info("Payment gateway coming soon! Your donation will be processed once payments are connected.");
-    setSubmitted(true);
+    const causeName = selectedCause ? causes.find(c => c.id === selectedCause)?.title : "General";
+    pay({
+      amount,
+      receipt: `donate_${Date.now()}`,
+      description: `Donation to DROPEE — ${causeName}`,
+      notes: { cause: selectedCause || "general", donor_name: name || "Anonymous" },
+      prefill: { name: name || undefined },
+      onSuccess: () => {
+        setSubmitted(true);
+        toast.success("Thank you for your donation! 💛");
+      },
+      onError: () => {
+        toast.error("Payment failed. Please try again.");
+      },
+    });
   };
 
   if (submitted) {
@@ -75,7 +89,7 @@ const Donate = () => {
                 ? `Your ₹${amount} donation to "${causes.find(c => c.id === selectedCause)?.title}" is appreciated.`
                 : `Your ₹${amount} donation means a lot to us.`}
             </p>
-            <p className="text-sm text-muted-foreground mb-6">Payment will be processed once our payment gateway is live.</p>
+             <p className="text-sm text-muted-foreground mb-6">Your donation has been processed successfully.</p>
             <Button onClick={() => { setSubmitted(false); setAmount(0); setSelectedCause(null); setName(""); setMessage(""); }}>
               Donate Again
             </Button>
@@ -247,7 +261,7 @@ const Donate = () => {
             </Button>
 
             <p className="text-[10px] text-center text-muted-foreground">
-              Payment gateway will be connected soon. Your intent is recorded.
+              Payments are securely processed via Razorpay.
             </p>
           </div>
         </div>

@@ -13,7 +13,8 @@ import { Slider } from "@/components/ui/slider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingCart, Plus, Minus, Trash2, Package, ArrowRight, CheckCircle, Search, ShoppingBag, ExternalLink, Star, Clock, Ticket, Tag } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, Package, ArrowRight, CheckCircle, Search, ShoppingBag, ExternalLink, Star, Clock, Ticket, Tag, CreditCard } from "lucide-react";
+import { useRazorpay } from "@/hooks/useRazorpay";
 import { Link } from "react-router-dom";
 
 type CartItem = { id: string; name: string; price: number; image_url: string | null; qty: number; product_type: string };
@@ -62,6 +63,7 @@ const getEffectivePrice = (product: any) => {
 const Shop = () => {
   const { user } = useAuth();
   const [cart, setCart] = useState<CartItem[]>([]);
+  const { pay } = useRazorpay();
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -179,16 +181,33 @@ const Shop = () => {
           },
         });
       } catch {
-        // Hub forwarding is non-critical — don't block the order
         console.warn("Hub forwarding failed, order still placed");
       }
+
+      return shopOrder;
     },
-    onSuccess: () => {
-      setOrderPlaced(true);
-      setCart([]);
-      setCheckoutOpen(false);
-      setCouponCode(""); setCouponDiscount(0); setCouponApplied(false);
-      toast.success("Order placed!");
+    onSuccess: (shopOrder) => {
+      // Trigger Razorpay payment
+      pay({
+        amount: finalTotal,
+        receipt: `shop_${shopOrder.id}`,
+        description: "DROPEE Shop Order",
+        notes: { order_id: shopOrder.id, type: "shop_order" },
+        onSuccess: () => {
+          setOrderPlaced(true);
+          setCart([]);
+          setCheckoutOpen(false);
+          setCouponCode(""); setCouponDiscount(0); setCouponApplied(false);
+          toast.success("Payment successful! Order confirmed.");
+        },
+        onError: () => {
+          setOrderPlaced(true);
+          setCart([]);
+          setCheckoutOpen(false);
+          setCouponCode(""); setCouponDiscount(0); setCouponApplied(false);
+          toast.info("Order placed! Payment can be completed later.");
+        },
+      });
     },
     onError: () => toast.error("Failed to place order"),
   });
@@ -464,7 +483,7 @@ const Shop = () => {
             <Button className="w-full" disabled={!address || !phone || placeMutation.isPending} onClick={() => placeMutation.mutate()}>
               {placeMutation.isPending ? "Placing Order..." : "Place Order"}
             </Button>
-            <p className="text-[10px] text-muted-foreground text-center">Payment will be collected on delivery</p>
+            <p className="text-[10px] text-muted-foreground text-center">Payments securely processed via Razorpay</p>
           </div>
         </DialogContent>
       </Dialog>
