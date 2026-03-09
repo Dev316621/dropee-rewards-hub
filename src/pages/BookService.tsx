@@ -75,7 +75,7 @@ const BookService = () => {
   const bookMutation = useMutation({
     mutationFn: async () => {
       const addonData = (addons ?? []).filter(a => selectedAddons.includes(a.id)).map(a => ({ id: a.id, name: a.name, price: a.price }));
-      const { error } = await supabase.from("service_bookings").insert({
+      const { data: booking, error } = await supabase.from("service_bookings").insert({
         user_id: user!.id,
         service_type_id: serviceTypeId || null,
         pickup,
@@ -84,12 +84,26 @@ const BookService = () => {
         estimated_fee: estimatedFee,
         addons: addonData,
         notes,
-      });
+      }).select("id").single();
       if (error) throw error;
+      return booking;
     },
-    onSuccess: () => {
-      setSubmitted(true);
-      toast.success("Service booked successfully!");
+    onSuccess: (booking) => {
+      // Trigger Razorpay payment
+      pay({
+        amount: estimatedFee,
+        receipt: `booking_${booking.id}`,
+        description: `DROPEE Service Booking`,
+        notes: { booking_id: booking.id, type: "service_booking" },
+        onSuccess: (response) => {
+          setSubmitted(true);
+          toast.success("Payment successful! Booking confirmed.");
+        },
+        onError: () => {
+          toast.info("Booking saved. You can pay later.");
+          setSubmitted(true);
+        },
+      });
     },
     onError: () => toast.error("Failed to book service"),
   });
