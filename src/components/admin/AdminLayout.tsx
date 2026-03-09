@@ -72,8 +72,18 @@ const navSections = [
   },
 ];
 
+const quickActions = [
+  { icon: Network, label: "View Orders", path: "/admin/hub" },
+  { icon: UserCheck, label: "Manage Agents", path: "/admin/hub-agents" },
+  { icon: Users, label: "Customers", path: "/admin/customers" },
+  { icon: Truck, label: "Deliveries", path: "/admin/deliveries" },
+  { icon: Ticket, label: "Coupons", path: "/admin/coupons" },
+  { icon: ShoppingBag, label: "Shop Products", path: "/admin/shop" },
+];
+
 const AdminLayout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { signOut, user } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
