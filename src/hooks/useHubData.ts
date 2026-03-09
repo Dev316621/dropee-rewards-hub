@@ -208,10 +208,13 @@ export const useHubOrders = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("hub_orders")
-        .select("*, hub_websites(name, label_color), hub_delivery_agents(name, phone)")
+        .select("*, hub_websites(name, label_color), hub_delivery_agents(name, phone, agent_code)")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data as HubOrder[];
+      return (data || []).map(order => ({
+        ...order,
+        items: Array.isArray(order.items) ? order.items as OrderItem[] : []
+      })) as HubOrder[];
     },
   });
 };
