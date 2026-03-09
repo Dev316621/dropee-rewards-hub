@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import CountUp from "@/components/CountUp";
 import AnimatedSection from "@/components/AnimatedSection";
 import SEOHead from "@/components/SEOHead";
+import { AvailableAgents } from "@/components/AvailableAgents";
 import { motion } from "framer-motion";
-import { Package, Truck, Users, Star, ArrowRight, Gift, Zap, Clock, Trophy, ChevronRight, Sparkles, Shield, MapPin } from "lucide-react";
+import { Package, Truck, Users, Star, ArrowRight, Gift, Zap, Clock, Trophy, ChevronRight, Sparkles, Shield, MapPin, Bike } from "lucide-react";
 
 const DeliveryAnimation = () => (
   <div className="relative w-full h-32 sm:h-48 md:h-64">
