@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      agent_ratings: {
+        Row: {
+          agent_id: string
+          comment: string | null
+          created_at: string
+          id: string
+          rating: number
+          user_id: string
+        }
+        Insert: {
+          agent_id: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating: number
+          user_id: string
+        }
+        Update: {
+          agent_id?: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_ratings_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "hub_delivery_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       api_integrations: {
         Row: {
           api_key_encrypted: string | null
@@ -346,6 +381,7 @@ export type Database = {
       hub_delivery_agents: {
         Row: {
           agent_code: string | null
+          average_rating: number | null
           created_at: string
           delivery_fee: number
           email: string | null
@@ -354,10 +390,12 @@ export type Database = {
           name: string
           phone: string
           status: string
+          total_ratings: number | null
           user_id: string | null
         }
         Insert: {
           agent_code?: string | null
+          average_rating?: number | null
           created_at?: string
           delivery_fee?: number
           email?: string | null
@@ -366,10 +404,12 @@ export type Database = {
           name: string
           phone?: string
           status?: string
+          total_ratings?: number | null
           user_id?: string | null
         }
         Update: {
           agent_code?: string | null
+          average_rating?: number | null
           created_at?: string
           delivery_fee?: number
           email?: string | null
@@ -378,6 +418,7 @@ export type Database = {
           name?: string
           phone?: string
           status?: string
+          total_ratings?: number | null
           user_id?: string | null
         }
         Relationships: []

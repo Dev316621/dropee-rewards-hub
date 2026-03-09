@@ -1,10 +1,11 @@
 import { format } from "date-fns";
 import { motion } from "framer-motion";
-import { Truck, Filter } from "lucide-react";
+import { Truck } from "lucide-react";
 import { useDeliveries } from "@/hooks/useDeliveries";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AvailableAgents } from "@/components/AvailableAgents";
 
 const statusColors: Record<string, string> = {
   pending: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
@@ -23,6 +24,9 @@ const DeliveryHistory = () => {
 
   return (
     <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-4">
+      {/* Available Agents Section */}
+      <AvailableAgents title="Contact a Delivery Agent" />
+
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold font-display text-dashboard-card-foreground">
           Delivery History
