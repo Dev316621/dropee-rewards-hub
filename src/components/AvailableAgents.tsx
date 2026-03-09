@@ -221,22 +221,19 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
   const renderAgent = (agent: Agent, index: number) => {
     const userRating = getUserRating(agent.id);
 
+    const presence = getPresence(agent);
+    const isOnline = presence === "online";
+    const isBusy = presence === "busy";
+
+    const statusLabel = isOnline ? "Online" : isBusy ? "Busy" : "Offline";
+    const statusDotClass = isOnline ? "bg-success" : isBusy ? "bg-primary" : "bg-destructive";
+    const statusBadgeClass = isOnline
+      ? "border-success/30 text-success bg-success/5"
+      : isBusy
+        ? "border-primary/30 text-primary bg-primary/5"
+        : "border-destructive/30 text-destructive bg-destructive/5";
+
     return (
-      (() => {
-        const presence = getPresence(agent);
-        const isOnline = presence === "online";
-        const isBusy = presence === "busy";
-
-        const statusLabel = isOnline ? "Online" : isBusy ? "Busy" : "Offline";
-        const statusDotClass = isOnline ? "bg-success" : isBusy ? "bg-primary" : "bg-destructive";
-        const statusBadgeClass = isOnline
-          ? "border-success/30 text-success bg-success/5"
-          : isBusy
-            ? "border-primary/30 text-primary bg-primary/5"
-            : "border-destructive/30 text-destructive bg-destructive/5";
-
-        return (
-
       <motion.div
         key={agent.id}
         initial={{ opacity: 0, y: 10 }}
@@ -253,24 +250,26 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
         {/* Avatar with status indicator */}
         <div className="relative shrink-0">
           <Avatar className="h-12 w-12">
-            <AvatarFallback className={`font-semibold text-sm ${
-              isOnline
-                ? "bg-success/10 text-success"
-                : isBusy
-                  ? "bg-primary/10 text-primary"
-                  : "bg-muted text-muted-foreground"
-            }`}>
+            <AvatarFallback
+              className={`font-semibold text-sm ${
+                isOnline
+                  ? "bg-success/10 text-success"
+                  : isBusy
+                    ? "bg-primary/10 text-primary"
+                    : "bg-muted text-muted-foreground"
+              }`}
+            >
               {agent.name.slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
           {/* Online/Busy/Offline dot */}
-          <span className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-2 border-background flex items-center justify-center ${statusDotClass}`}>
-            {isOnline && (
-              <span className="w-2 h-2 rounded-full bg-success animate-ping absolute" />
-            )}
+          <span
+            className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-2 border-background flex items-center justify-center ${statusDotClass}`}
+          >
+            {isOnline && <span className="w-2 h-2 rounded-full bg-success animate-ping absolute" />}
           </span>
         </div>
-        
+
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="font-semibold text-sm truncate">{agent.name}</span>
@@ -279,33 +278,22 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
                 {agent.agent_code}
               </Badge>
             )}
-            <Badge
-              variant="outline"
-              className={`text-[10px] rounded-full px-2 shrink-0 ${statusBadgeClass}`}
-            >
+            <Badge variant="outline" className={`text-[10px] rounded-full px-2 shrink-0 ${statusBadgeClass}`}>
               {statusLabel}
             </Badge>
           </div>
-          
+
           <div className="flex items-center gap-2 mt-1">
             {renderStars(Math.round(agent.average_rating || 0))}
-            <span className="text-xs text-muted-foreground">
-              ({agent.total_ratings || 0})
-            </span>
+            <span className="text-xs text-muted-foreground">({agent.total_ratings || 0})</span>
           </div>
-          
         </div>
-        
+
         <div className="flex flex-col sm:flex-row gap-1.5 shrink-0">
-          <Button
-            size="sm"
-            variant="outline"
-            className="h-9 w-9 p-0 rounded-xl"
-            onClick={() => handleCall(agent.phone)}
-          >
+          <Button size="sm" variant="outline" className="h-9 w-9 p-0 rounded-xl" onClick={() => handleCall(agent.phone)}>
             <Phone className="h-4 w-4" />
           </Button>
-          
+
           <Button
             size="sm"
             className="h-9 w-9 p-0 rounded-xl bg-success text-success-foreground hover:bg-success/90"
@@ -313,21 +301,20 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
           >
             <MessageCircle className="h-4 w-4" />
           </Button>
-          
+
           {user && (
-            <Dialog open={ratingDialogOpen && selectedAgent?.id === agent.id} onOpenChange={(open) => {
-              setRatingDialogOpen(open);
-              if (open) {
-                setSelectedAgent(agent);
-                setRating(userRating || 5);
-              }
-            }}>
+            <Dialog
+              open={ratingDialogOpen && selectedAgent?.id === agent.id}
+              onOpenChange={(open) => {
+                setRatingDialogOpen(open);
+                if (open) {
+                  setSelectedAgent(agent);
+                  setRating(userRating || 5);
+                }
+              }}
+            >
               <DialogTrigger asChild>
-                <Button
-                  size="sm"
-                  variant={userRating ? "secondary" : "ghost"}
-                  className="h-9 w-9 p-0 rounded-xl"
-                >
+                <Button size="sm" variant={userRating ? "secondary" : "ghost"} className="h-9 w-9 p-0 rounded-xl">
                   <Star className={`h-4 w-4 ${userRating ? "fill-yellow-400 text-yellow-400" : ""}`} />
                 </Button>
               </DialogTrigger>
@@ -336,9 +323,7 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
                   <DialogTitle>Rate {agent.name}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
-                  <div className="flex justify-center">
-                    {renderStars(rating, true, setRating)}
-                  </div>
+                  <div className="flex justify-center">{renderStars(rating, true, setRating)}</div>
                   <Textarea
                     placeholder="Leave a comment (optional)"
                     value={comment}
@@ -358,8 +343,7 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
             </Dialog>
           )}
         </div>
-        );
-      })()
+      </motion.div>
     );
   };
 
