@@ -177,11 +177,34 @@ const AdminLayout = () => {
             <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
               <Package className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="text-sm font-bold font-display">Admin Panel</span>
+            <span className="text-sm font-bold font-display">Admin</span>
           </Link>
-          <Button variant="ghost" size="sm" onClick={signOut} className="text-muted-foreground">
-            <LogOut className="h-4 w-4" />
-          </Button>
+          
+          <div className="flex items-center gap-1">
+            {/* Quick Actions */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-9 w-9 text-primary">
+                  <Plus className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuLabel>Quick Actions</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {quickActions.map(({ icon: Icon, label, path }) => (
+                  <DropdownMenuItem key={path} onClick={() => navigate(path)} className="gap-2">
+                    <Icon className="h-4 w-4" />
+                    {label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Sign Out */}
+            <Button variant="ghost" size="icon" onClick={signOut} className="h-9 w-9 text-muted-foreground">
+              <LogOut className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
 
