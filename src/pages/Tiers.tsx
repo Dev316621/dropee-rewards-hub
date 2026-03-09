@@ -109,9 +109,9 @@ const Tiers = () => {
                     whileInView={{ scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.15, type: "spring", stiffness: 200 }}
-                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full ${tier.cssClass} flex items-center justify-center text-lg sm:text-xl shadow-lg ring-2 ring-background`}
+                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full ${tier.cssClass} flex items-center justify-center shadow-lg ring-2 ring-background`}
                   >
-                    {tier.icon}
+                    <tier.IconComponent />
                   </motion.div>
                   <span className="text-[10px] sm:text-xs font-bold mt-2 sm:mt-2.5 text-center">{tier.name}</span>
                   <span className="text-[9px] sm:text-[10px] text-muted-foreground">{milestones[i]}+ deliveries</span>
