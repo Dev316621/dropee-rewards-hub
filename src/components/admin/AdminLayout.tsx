@@ -42,6 +42,7 @@ const navSections = [
     items: [
       { icon: Users, label: "Customers", path: "/admin/customers" },
       { icon: Truck, label: "Deliveries", path: "/admin/deliveries" },
+      { icon: MessageCircle, label: "Messaging", path: "/admin/messaging" },
       { icon: Ticket, label: "Coupons", path: "/admin/coupons" },
       { icon: Package, label: "API Tracking", path: "/admin/api-integrations" },
       { icon: Settings, label: "Pricing", path: "/admin/pricing" },
