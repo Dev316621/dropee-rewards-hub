@@ -253,16 +253,18 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
         <div className="relative shrink-0">
           <Avatar className="h-12 w-12">
             <AvatarFallback className={`font-semibold text-sm ${
-              agent.is_online ? "bg-success/10 text-success" : "bg-muted text-muted-foreground"
+              isOnline
+                ? "bg-success/10 text-success"
+                : isBusy
+                  ? "bg-primary/10 text-primary"
+                  : "bg-muted text-muted-foreground"
             }`}>
               {agent.name.slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          {/* Online/Offline dot */}
-          <span className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-2 border-background flex items-center justify-center ${
-            agent.is_online ? "bg-success" : "bg-muted-foreground/40"
-          }`}>
-            {agent.is_online && (
+          {/* Online/Busy/Offline dot */}
+          <span className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-2 border-background flex items-center justify-center ${statusDotClass}`}>
+            {isOnline && (
               <span className="w-2 h-2 rounded-full bg-success animate-ping absolute" />
             )}
           </span>
