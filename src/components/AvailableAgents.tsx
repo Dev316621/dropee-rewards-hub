@@ -307,7 +307,7 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
           
           <Button
             size="sm"
-            className="h-9 w-9 p-0 rounded-xl bg-green-600 hover:bg-green-700"
+            className="h-9 w-9 p-0 rounded-xl bg-success text-success-foreground hover:bg-success/90"
             onClick={() => handleWhatsApp(agent.phone, agent.name)}
           >
             <MessageCircle className="h-4 w-4" />
