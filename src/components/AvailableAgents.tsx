@@ -29,10 +29,8 @@ interface AvailableAgentsProps {
   showDeliveryFee?: boolean;
 }
 
-export const AvailableAgents = ({ 
-  title = "Available Agents",
-  showDeliveryFee = true 
-}: AvailableAgentsProps) => {
+export const AvailableAgents = (props: AvailableAgentsProps) => {
+  const { title = "Available Agents" } = props;
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
@@ -50,22 +48,36 @@ export const AvailableAgents = ({
         .eq("status", "approved")
         .order("is_online", { ascending: false })
         .order("average_rating", { ascending: false });
-      
+
       if (error) throw error;
       return data as Agent[];
     },
   });
 
-  // Realtime subscription for agent status changes
+  const { data: activeAssignments } = useQuery({
+    queryKey: ["agent-active-assignments"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("hub_orders")
+        .select("assigned_agent_id, status")
+        .not("assigned_agent_id", "is", null)
+        .not("status", "in", '("delivered","cancelled")');
+
+      if (error) throw error;
+      return (data || []) as { assigned_agent_id: string; status: string }[];
+    },
+  });
+
+  // Realtime subscription for agent status + busy state changes
   useEffect(() => {
-    const channel = supabase
-      .channel('agents-status')
+    const agentsChannel = supabase
+      .channel("agents-status")
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'hub_delivery_agents',
+          event: "*",
+          schema: "public",
+          table: "hub_delivery_agents",
         },
         () => {
           queryClient.invalidateQueries({ queryKey: ["available-agents"] });
@@ -73,8 +85,24 @@ export const AvailableAgents = ({
       )
       .subscribe();
 
+    const ordersChannel = supabase
+      .channel("agents-busy")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "hub_orders",
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["agent-active-assignments"] });
+        }
+      )
+      .subscribe();
+
     return () => {
-      supabase.removeChannel(channel);
+      supabase.removeChannel(agentsChannel);
+      supabase.removeChannel(ordersChannel);
     };
   }, [queryClient]);
 
@@ -152,8 +180,18 @@ export const AvailableAgents = ({
     );
   };
 
-  const onlineAgents = agents?.filter(a => a.is_online) || [];
-  const offlineAgents = agents?.filter(a => !a.is_online) || [];
+  const busyAgentIds = new Set((activeAssignments || []).map(a => a.assigned_agent_id).filter(Boolean));
+
+  type AgentPresence = "online" | "busy" | "offline";
+  const getPresence = (agent: Agent): AgentPresence => {
+    if (!agent.is_online) return "offline";
+    if (busyAgentIds.has(agent.id)) return "busy";
+    return "online";
+  };
+
+  const onlineAgents = (agents || []).filter(a => getPresence(a) === "online");
+  const busyAgents = (agents || []).filter(a => getPresence(a) === "busy");
+  const offlineAgents = (agents || []).filter(a => getPresence(a) === "offline");
 
   if (isLoading) {
     return (
@@ -183,6 +221,18 @@ export const AvailableAgents = ({
   const renderAgent = (agent: Agent, index: number) => {
     const userRating = getUserRating(agent.id);
 
+    const presence = getPresence(agent);
+    const isOnline = presence === "online";
+    const isBusy = presence === "busy";
+
+    const statusLabel = isOnline ? "Online" : isBusy ? "Busy" : "Offline";
+    const statusDotClass = isOnline ? "bg-success" : isBusy ? "bg-primary" : "bg-destructive";
+    const statusBadgeClass = isOnline
+      ? "border-success/30 text-success bg-success/5"
+      : isBusy
+        ? "border-primary/30 text-primary bg-primary/5"
+        : "border-destructive/30 text-destructive bg-destructive/5";
+
     return (
       <motion.div
         key={agent.id}
@@ -190,30 +240,36 @@ export const AvailableAgents = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.05 }}
         className={`flex items-center gap-3 p-3 sm:p-4 rounded-xl transition-all duration-300 ${
-          agent.is_online
+          presence === "online"
             ? "bg-success/5 border border-success/10 hover:border-success/20"
-            : "bg-muted/50 hover:bg-muted opacity-70"
+            : presence === "busy"
+              ? "bg-primary/5 border border-primary/10 hover:border-primary/20"
+              : "bg-muted/50 hover:bg-muted opacity-70"
         }`}
       >
         {/* Avatar with status indicator */}
         <div className="relative shrink-0">
           <Avatar className="h-12 w-12">
-            <AvatarFallback className={`font-semibold text-sm ${
-              agent.is_online ? "bg-success/10 text-success" : "bg-muted text-muted-foreground"
-            }`}>
+            <AvatarFallback
+              className={`font-semibold text-sm ${
+                isOnline
+                  ? "bg-success/10 text-success"
+                  : isBusy
+                    ? "bg-primary/10 text-primary"
+                    : "bg-muted text-muted-foreground"
+              }`}
+            >
               {agent.name.slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          {/* Online/Offline dot */}
-          <span className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-2 border-background flex items-center justify-center ${
-            agent.is_online ? "bg-success" : "bg-muted-foreground/40"
-          }`}>
-            {agent.is_online && (
-              <span className="w-2 h-2 rounded-full bg-success animate-ping absolute" />
-            )}
+          {/* Online/Busy/Offline dot */}
+          <span
+            className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full border-2 border-background flex items-center justify-center ${statusDotClass}`}
+          >
+            {isOnline && <span className="w-2 h-2 rounded-full bg-success animate-ping absolute" />}
           </span>
         </div>
-        
+
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="font-semibold text-sm truncate">{agent.name}</span>
@@ -222,64 +278,43 @@ export const AvailableAgents = ({
                 {agent.agent_code}
               </Badge>
             )}
-            <Badge
-              variant="outline"
-              className={`text-[10px] rounded-full px-2 shrink-0 ${
-                agent.is_online
-                  ? "border-success/30 text-success bg-success/5"
-                  : "border-muted-foreground/20 text-muted-foreground"
-              }`}
-            >
-              {agent.is_online ? "Online" : "Offline"}
+            <Badge variant="outline" className={`text-[10px] rounded-full px-2 shrink-0 ${statusBadgeClass}`}>
+              {statusLabel}
             </Badge>
           </div>
-          
+
           <div className="flex items-center gap-2 mt-1">
             {renderStars(Math.round(agent.average_rating || 0))}
-            <span className="text-xs text-muted-foreground">
-              ({agent.total_ratings || 0})
-            </span>
+            <span className="text-xs text-muted-foreground">({agent.total_ratings || 0})</span>
           </div>
-          
-          {showDeliveryFee && agent.delivery_fee > 0 && (
-            <p className="text-xs text-muted-foreground mt-1">
-              Fee: ₹{agent.delivery_fee}
-            </p>
-          )}
         </div>
-        
+
         <div className="flex flex-col sm:flex-row gap-1.5 shrink-0">
-          <Button
-            size="sm"
-            variant="outline"
-            className="h-9 w-9 p-0 rounded-xl"
-            onClick={() => handleCall(agent.phone)}
-          >
+          <Button size="sm" variant="outline" className="h-9 w-9 p-0 rounded-xl" onClick={() => handleCall(agent.phone)}>
             <Phone className="h-4 w-4" />
           </Button>
-          
+
           <Button
             size="sm"
-            className="h-9 w-9 p-0 rounded-xl bg-green-600 hover:bg-green-700"
+            className="h-9 w-9 p-0 rounded-xl bg-success text-success-foreground hover:bg-success/90"
             onClick={() => handleWhatsApp(agent.phone, agent.name)}
           >
             <MessageCircle className="h-4 w-4" />
           </Button>
-          
+
           {user && (
-            <Dialog open={ratingDialogOpen && selectedAgent?.id === agent.id} onOpenChange={(open) => {
-              setRatingDialogOpen(open);
-              if (open) {
-                setSelectedAgent(agent);
-                setRating(userRating || 5);
-              }
-            }}>
+            <Dialog
+              open={ratingDialogOpen && selectedAgent?.id === agent.id}
+              onOpenChange={(open) => {
+                setRatingDialogOpen(open);
+                if (open) {
+                  setSelectedAgent(agent);
+                  setRating(userRating || 5);
+                }
+              }}
+            >
               <DialogTrigger asChild>
-                <Button
-                  size="sm"
-                  variant={userRating ? "secondary" : "ghost"}
-                  className="h-9 w-9 p-0 rounded-xl"
-                >
+                <Button size="sm" variant={userRating ? "secondary" : "ghost"} className="h-9 w-9 p-0 rounded-xl">
                   <Star className={`h-4 w-4 ${userRating ? "fill-yellow-400 text-yellow-400" : ""}`} />
                 </Button>
               </DialogTrigger>
@@ -288,9 +323,7 @@ export const AvailableAgents = ({
                   <DialogTitle>Rate {agent.name}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
-                  <div className="flex justify-center">
-                    {renderStars(rating, true, setRating)}
-                  </div>
+                  <div className="flex justify-center">{renderStars(rating, true, setRating)}</div>
                   <Textarea
                     placeholder="Leave a comment (optional)"
                     value={comment}
@@ -327,24 +360,38 @@ export const AvailableAgents = ({
           <Badge variant="outline" className="rounded-full text-xs px-2.5">
             <span className="w-2 h-2 rounded-full bg-success mr-1.5 inline-block" />
             {onlineAgents.length} online
+            <span className="mx-2 text-muted-foreground">•</span>
+            <span className="w-2 h-2 rounded-full bg-primary mr-1.5 inline-block" />
+            {busyAgents.length} busy
+            <span className="mx-2 text-muted-foreground">•</span>
+            <span className="w-2 h-2 rounded-full bg-destructive mr-1.5 inline-block" />
+            {offlineAgents.length} offline
           </Badge>
         </div>
         
         <div className="space-y-2">
           {/* Online agents first */}
           {onlineAgents.map((agent, i) => renderAgent(agent, i))}
-          
-          {/* Divider if both groups exist */}
-          {onlineAgents.length > 0 && offlineAgents.length > 0 && (
+
+          {/* Busy */}
+          {onlineAgents.length > 0 && busyAgents.length > 0 && (
+            <div className="flex items-center gap-3 py-2">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Busy</span>
+              <div className="flex-1 h-px bg-border" />
+            </div>
+          )}
+          {busyAgents.map((agent, i) => renderAgent(agent, onlineAgents.length + i))}
+
+          {/* Offline */}
+          {(onlineAgents.length + busyAgents.length) > 0 && offlineAgents.length > 0 && (
             <div className="flex items-center gap-3 py-2">
               <div className="flex-1 h-px bg-border" />
               <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Offline</span>
               <div className="flex-1 h-px bg-border" />
             </div>
           )}
-          
-          {/* Offline agents */}
-          {offlineAgents.map((agent, i) => renderAgent(agent, onlineAgents.length + i))}
+          {offlineAgents.map((agent, i) => renderAgent(agent, onlineAgents.length + busyAgents.length + i))}
         </div>
       </CardContent>
     </Card>
