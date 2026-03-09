@@ -24,6 +24,9 @@ const DeliveryHistory = () => {
 
   return (
     <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-4">
+      {/* Available Agents Section */}
+      <AvailableAgents title="Contact a Delivery Agent" />
+
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold font-display text-dashboard-card-foreground">
           Delivery History

@@ -221,6 +221,15 @@ const Services = () => {
         </div>
       </AnimatedSection>
 
+      {/* Available Agents */}
+      <AnimatedSection className="py-10 sm:py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto">
+            <AvailableAgents title="Our Delivery Agents" showDeliveryFee />
+          </div>
+        </div>
+      </AnimatedSection>
+
       {/* Pricing Zones Map */}
       <PricingZonesSection />
 
