@@ -8,7 +8,7 @@ interface SEOHeadProps {
 }
 
 const SEOHead = ({ title, description, path = "/", type = "website" }: SEOHeadProps) => {
-  const url = `https://dropee.in${path}`;
+  const url = `https://dropee.discoverukhrul.site${path}`;
   const fullTitle = path === "/" ? title : `${title} | DROPEE`;
 
   return (
@@ -20,11 +20,11 @@ const SEOHead = ({ title, description, path = "/", type = "website" }: SEOHeadPr
       <meta property="og:description" content={description} />
       <meta property="og:type" content={type} />
       <meta property="og:url" content={url} />
-      <meta property="og:image" content="https://dropee.in/og-image.png" />
+      <meta property="og:image" content="https://dropee.discoverukhrul.site/og-image.png" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content="https://dropee.in/og-image.png" />
+      <meta name="twitter:image" content="https://dropee.discoverukhrul.site/og-image.png" />
     </Helmet>
   );
 };

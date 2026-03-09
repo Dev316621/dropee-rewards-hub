@@ -84,7 +84,7 @@ const Install = () => {
               <h3 className="font-medium text-foreground text-sm">Use in Browser</h3>
               <p className="text-xs text-muted-foreground">
                 Don't want to download? Use DROPEE directly at{" "}
-                <a href="https://dropee.in" className="text-primary underline">dropee.in</a>
+                <a href="https://dropee.discoverukhrul.site" className="text-primary underline">dropee.discoverukhrul.site</a>
               </p>
             </div>
           </div>

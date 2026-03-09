@@ -8,7 +8,7 @@ const Footer = () => {
 
   const address = settings.contact_address || "Ukhrul, Manipur";
   const phone = settings.contact_phone || "+91 XXXXX XXXXX";
-  const email = settings.contact_email || "hello@dropee.in";
+  const email = settings.contact_email || "hello@dropee.discoverukhrul.site";
 
   return (
     <footer className="bg-foreground text-background">
