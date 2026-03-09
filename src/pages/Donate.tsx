@@ -56,9 +56,21 @@ const Donate = () => {
       toast.error("Please enter a valid amount");
       return;
     }
-    // Placeholder — payment API will be integrated here
-    toast.info("Payment gateway coming soon! Your donation will be processed once payments are connected.");
-    setSubmitted(true);
+    const causeName = selectedCause ? causes.find(c => c.id === selectedCause)?.title : "General";
+    pay({
+      amount,
+      receipt: `donate_${Date.now()}`,
+      description: `Donation to DROPEE — ${causeName}`,
+      notes: { cause: selectedCause || "general", donor_name: name || "Anonymous" },
+      prefill: { name: name || undefined },
+      onSuccess: () => {
+        setSubmitted(true);
+        toast.success("Thank you for your donation! 💛");
+      },
+      onError: () => {
+        toast.error("Payment failed. Please try again.");
+      },
+    });
   };
 
   if (submitted) {
