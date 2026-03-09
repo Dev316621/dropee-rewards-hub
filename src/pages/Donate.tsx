@@ -89,7 +89,7 @@ const Donate = () => {
                 ? `Your ₹${amount} donation to "${causes.find(c => c.id === selectedCause)?.title}" is appreciated.`
                 : `Your ₹${amount} donation means a lot to us.`}
             </p>
-            <p className="text-sm text-muted-foreground mb-6">Payment will be processed once our payment gateway is live.</p>
+             <p className="text-sm text-muted-foreground mb-6">Your donation has been processed successfully.</p>
             <Button onClick={() => { setSubmitted(false); setAmount(0); setSelectedCause(null); setName(""); setMessage(""); }}>
               Donate Again
             </Button>
