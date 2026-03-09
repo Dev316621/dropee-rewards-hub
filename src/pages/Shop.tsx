@@ -181,16 +181,33 @@ const Shop = () => {
           },
         });
       } catch {
-        // Hub forwarding is non-critical — don't block the order
         console.warn("Hub forwarding failed, order still placed");
       }
+
+      return shopOrder;
     },
-    onSuccess: () => {
-      setOrderPlaced(true);
-      setCart([]);
-      setCheckoutOpen(false);
-      setCouponCode(""); setCouponDiscount(0); setCouponApplied(false);
-      toast.success("Order placed!");
+    onSuccess: (shopOrder) => {
+      // Trigger Razorpay payment
+      pay({
+        amount: finalTotal,
+        receipt: `shop_${shopOrder.id}`,
+        description: "DROPEE Shop Order",
+        notes: { order_id: shopOrder.id, type: "shop_order" },
+        onSuccess: () => {
+          setOrderPlaced(true);
+          setCart([]);
+          setCheckoutOpen(false);
+          setCouponCode(""); setCouponDiscount(0); setCouponApplied(false);
+          toast.success("Payment successful! Order confirmed.");
+        },
+        onError: () => {
+          setOrderPlaced(true);
+          setCart([]);
+          setCheckoutOpen(false);
+          setCouponCode(""); setCouponDiscount(0); setCouponApplied(false);
+          toast.info("Order placed! Payment can be completed later.");
+        },
+      });
     },
     onError: () => toast.error("Failed to place order"),
   });
