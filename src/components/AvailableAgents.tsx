@@ -227,9 +227,11 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.05 }}
         className={`flex items-center gap-3 p-3 sm:p-4 rounded-xl transition-all duration-300 ${
-          agent.is_online
+          presence === "online"
             ? "bg-success/5 border border-success/10 hover:border-success/20"
-            : "bg-muted/50 hover:bg-muted opacity-70"
+            : presence === "busy"
+              ? "bg-primary/5 border border-primary/10 hover:border-primary/20"
+              : "bg-muted/50 hover:bg-muted opacity-70"
         }`}
       >
         {/* Avatar with status indicator */}
