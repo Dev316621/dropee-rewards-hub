@@ -346,6 +346,7 @@ export type Database = {
       hub_delivery_agents: {
         Row: {
           created_at: string
+          delivery_fee: number
           email: string | null
           id: string
           is_active: boolean
@@ -356,6 +357,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          delivery_fee?: number
           email?: string | null
           id?: string
           is_active?: boolean
@@ -366,6 +368,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          delivery_fee?: number
           email?: string | null
           id?: string
           is_active?: boolean
@@ -421,6 +424,8 @@ export type Database = {
           external_order_id: string
           id: string
           items: Json
+          latitude: number | null
+          longitude: number | null
           notes: string | null
           status: string
           total: number
@@ -436,6 +441,8 @@ export type Database = {
           external_order_id?: string
           id?: string
           items?: Json
+          latitude?: number | null
+          longitude?: number | null
           notes?: string | null
           status?: string
           total?: number
@@ -451,6 +458,8 @@ export type Database = {
           external_order_id?: string
           id?: string
           items?: Json
+          latitude?: number | null
+          longitude?: number | null
           notes?: string | null
           status?: string
           total?: number
@@ -1015,6 +1024,8 @@ export type Database = {
           dropoff: string
           estimated_fee: number | null
           id: string
+          latitude: number | null
+          longitude: number | null
           notes: string | null
           pickup: string
           service_type_id: string | null
@@ -1029,6 +1040,8 @@ export type Database = {
           dropoff: string
           estimated_fee?: number | null
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           notes?: string | null
           pickup: string
           service_type_id?: string | null
@@ -1043,6 +1056,8 @@ export type Database = {
           dropoff?: string
           estimated_fee?: number | null
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           notes?: string | null
           pickup?: string
           service_type_id?: string | null
