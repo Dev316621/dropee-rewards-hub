@@ -179,8 +179,18 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
     );
   };
 
-  const onlineAgents = agents?.filter(a => a.is_online) || [];
-  const offlineAgents = agents?.filter(a => !a.is_online) || [];
+  const busyAgentIds = new Set((activeAssignments || []).map(a => a.assigned_agent_id).filter(Boolean));
+
+  type AgentPresence = "online" | "busy" | "offline";
+  const getPresence = (agent: Agent): AgentPresence => {
+    if (!agent.is_online) return "offline";
+    if (busyAgentIds.has(agent.id)) return "busy";
+    return "online";
+  };
+
+  const onlineAgents = (agents || []).filter(a => getPresence(a) === "online");
+  const busyAgents = (agents || []).filter(a => getPresence(a) === "busy");
+  const offlineAgents = (agents || []).filter(a => getPresence(a) === "offline");
 
   if (isLoading) {
     return (
