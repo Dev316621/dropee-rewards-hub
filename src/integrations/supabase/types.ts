@@ -294,6 +294,42 @@ export type Database = {
         }
         Relationships: []
       }
+      delivery_region_requests: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          description: string | null
+          id: string
+          region_name: string
+          status: string
+          suggested_location: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          region_name: string
+          status?: string
+          suggested_location?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          region_name?: string
+          status?: string
+          suggested_location?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       faqs: {
         Row: {
           answer: string
@@ -901,37 +937,58 @@ export type Database = {
       }
       pricing_zones: {
         Row: {
+          base_fee: number
           center_lat: number
           center_lng: number
           color: string | null
           created_at: string
+          description: string | null
+          display_order: number
+          estimated_time: string | null
+          extra_kg_fee: number
           id: string
           is_active: boolean
+          max_weight: number
           multiplier: number
           name: string
           radius_km: number
+          time_slots: Json | null
         }
         Insert: {
+          base_fee?: number
           center_lat?: number
           center_lng?: number
           color?: string | null
           created_at?: string
+          description?: string | null
+          display_order?: number
+          estimated_time?: string | null
+          extra_kg_fee?: number
           id?: string
           is_active?: boolean
+          max_weight?: number
           multiplier?: number
           name: string
           radius_km?: number
+          time_slots?: Json | null
         }
         Update: {
+          base_fee?: number
           center_lat?: number
           center_lng?: number
           color?: string | null
           created_at?: string
+          description?: string | null
+          display_order?: number
+          estimated_time?: string | null
+          extra_kg_fee?: number
           id?: string
           is_active?: boolean
+          max_weight?: number
           multiplier?: number
           name?: string
           radius_km?: number
+          time_slots?: Json | null
         }
         Relationships: []
       }
