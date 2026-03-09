@@ -63,7 +63,7 @@ const getEffectivePrice = (product: any) => {
 const Shop = () => {
   const { user } = useAuth();
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [cartOpen, setCartOpen] = useState(false);
+  const { pay } = useRazorpay();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");

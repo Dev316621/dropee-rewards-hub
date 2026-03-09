@@ -261,7 +261,7 @@ const Donate = () => {
             </Button>
 
             <p className="text-[10px] text-center text-muted-foreground">
-              Payment gateway will be connected soon. Your intent is recorded.
+              Payments are securely processed via Razorpay.
             </p>
           </div>
         </div>
