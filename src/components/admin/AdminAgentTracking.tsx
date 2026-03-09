@@ -175,8 +175,8 @@ const AdminAgentTracking = () => {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-blue-500/10">
-                <Package className="h-5 w-5 text-blue-600" />
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Package className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Total Orders</p>
@@ -188,8 +188,8 @@ const AdminAgentTracking = () => {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-green-500/10">
-                <TrendingUp className="h-5 w-5 text-green-600" />
+              <div className="p-2 rounded-lg bg-accent">
+                <TrendingUp className="h-5 w-5 text-accent-foreground" />
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Completed</p>
@@ -201,8 +201,8 @@ const AdminAgentTracking = () => {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-yellow-500/10">
-                <Star className="h-5 w-5 text-yellow-600" />
+              <div className="p-2 rounded-lg bg-secondary">
+                <Star className="h-5 w-5 text-secondary-foreground" />
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Total Revenue</p>
