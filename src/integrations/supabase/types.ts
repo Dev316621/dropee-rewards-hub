@@ -294,6 +294,27 @@ export type Database = {
         }
         Relationships: []
       }
+      delivery_holidays: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          reason: string | null
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          id?: string
+          reason?: string | null
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          reason?: string | null
+        }
+        Relationships: []
+      }
       delivery_region_requests: {
         Row: {
           admin_notes: string | null
@@ -327,6 +348,39 @@ export type Database = {
           suggested_location?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      delivery_time_slots: {
+        Row: {
+          created_at: string
+          display_order: number
+          end_time: string
+          id: string
+          is_active: boolean
+          label: string
+          max_orders: number | null
+          start_time: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          end_time: string
+          id?: string
+          is_active?: boolean
+          label: string
+          max_orders?: number | null
+          start_time: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          end_time?: string
+          id?: string
+          is_active?: boolean
+          label?: string
+          max_orders?: number | null
+          start_time?: string
         }
         Relationships: []
       }
@@ -815,6 +869,36 @@ export type Database = {
           title?: string
           valid_from?: string | null
           valid_to?: string | null
+        }
+        Relationships: []
+      }
+      operating_hours: {
+        Row: {
+          close_time: string
+          created_at: string
+          day_of_week: number
+          id: string
+          is_open: boolean
+          open_time: string
+          updated_at: string
+        }
+        Insert: {
+          close_time?: string
+          created_at?: string
+          day_of_week: number
+          id?: string
+          is_open?: boolean
+          open_time?: string
+          updated_at?: string
+        }
+        Update: {
+          close_time?: string
+          created_at?: string
+          day_of_week?: number
+          id?: string
+          is_open?: boolean
+          open_time?: string
+          updated_at?: string
         }
         Relationships: []
       }
