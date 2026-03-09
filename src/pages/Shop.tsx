@@ -483,7 +483,7 @@ const Shop = () => {
             <Button className="w-full" disabled={!address || !phone || placeMutation.isPending} onClick={() => placeMutation.mutate()}>
               {placeMutation.isPending ? "Placing Order..." : "Place Order"}
             </Button>
-            <p className="text-[10px] text-muted-foreground text-center">Payment will be collected on delivery</p>
+            <p className="text-[10px] text-muted-foreground text-center">Payments securely processed via Razorpay</p>
           </div>
         </DialogContent>
       </Dialog>
