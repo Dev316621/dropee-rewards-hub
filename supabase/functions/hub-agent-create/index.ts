@@ -102,18 +102,16 @@ Deno.serve(async (req) => {
       .insert({
         name: name.trim(),
         phone: (phone || "").trim(),
-        email: email.toLowerCase().trim(),
+        email: normalizedEmail,
         status: "approved",
         is_active: true,
-        user_id: newUser.user.id,
+        user_id: userId,
         agent_code: agentCode,
       })
       .select()
       .single();
 
     if (insertError) {
-      // Rollback auth user
-      await adminClient.auth.admin.deleteUser(newUser.user.id);
       return new Response(JSON.stringify({ error: insertError.message }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
