@@ -11,6 +11,8 @@ const typeIcons: Record<string, string> = {
   tier_upgrade: "🏆",
   spin_win: "🎡",
   coupon_received: "🎟️",
+  region_approved: "📍",
+  referral: "🤝",
   info: "ℹ️",
 };
 
