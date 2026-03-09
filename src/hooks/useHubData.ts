@@ -28,6 +28,7 @@ export interface HubAgent {
   is_active: boolean;
   created_at: string;
   agent_code: string;
+  delivery_fee: number;
 }
 
 export interface HubOrder {
