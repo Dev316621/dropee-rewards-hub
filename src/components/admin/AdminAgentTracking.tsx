@@ -283,15 +283,15 @@ const AdminAgentTracking = () => {
                   </TableCell>
                   <TableCell className="text-center font-medium">{stat.totalOrders}</TableCell>
                   <TableCell className="text-center">
-                    <Badge variant="outline" className="bg-green-500/10 text-green-700">{stat.completedOrders}</Badge>
+                    <Badge variant="outline" className="bg-accent text-accent-foreground">{stat.completedOrders}</Badge>
                   </TableCell>
                   <TableCell className="text-center">
-                    <Badge variant="outline" className="bg-yellow-500/10 text-yellow-700">{stat.pendingOrders}</Badge>
+                    <Badge variant="outline" className="bg-secondary text-secondary-foreground">{stat.pendingOrders}</Badge>
                   </TableCell>
                   <TableCell className="text-right font-medium">₹{stat.totalRevenue.toLocaleString()}</TableCell>
                   <TableCell className="text-center">
                     <div className="flex items-center justify-center gap-1">
-                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                      <Star className="h-3 w-3 fill-primary text-primary" />
                       <span className="text-sm">{stat.avgRating.toFixed(1)}</span>
                     </div>
                   </TableCell>
