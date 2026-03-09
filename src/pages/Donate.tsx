@@ -49,7 +49,7 @@ const Donate = () => {
   const [amount, setAmount] = useState<number>(0);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const { pay } = useRazorpay();
 
   const handleDonate = () => {
     if (!amount || amount < 1) {
