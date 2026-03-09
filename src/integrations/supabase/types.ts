@@ -1134,6 +1134,7 @@ export type Database = {
           display_order: number
           icon: string | null
           id: string
+          image_url: string | null
           is_active: boolean
           name: string
         }
@@ -1144,6 +1145,7 @@ export type Database = {
           display_order?: number
           icon?: string | null
           id?: string
+          image_url?: string | null
           is_active?: boolean
           name: string
         }
@@ -1154,6 +1156,7 @@ export type Database = {
           display_order?: number
           icon?: string | null
           id?: string
+          image_url?: string | null
           is_active?: boolean
           name?: string
         }
