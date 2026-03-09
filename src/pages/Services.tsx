@@ -225,7 +225,7 @@ const Services = () => {
       <AnimatedSection className="py-10 sm:py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
-            <AvailableAgents title="Our Delivery Agents" showDeliveryFee />
+            <AvailableAgents title="Our Delivery Agents" showDeliveryFee={false} />
           </div>
         </div>
       </AnimatedSection>
