@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Package, Coins, Award, MapPin, Save, Loader2, Truck, Star, Navigation, ExternalLink, Wifi, WifiOff, Phone, MessageCircle } from "lucide-react";
+import { ArrowLeft, Package, Coins, Award, MapPin, Save, Loader2, Truck, Star, Navigation, ExternalLink, Wifi, WifiOff, Phone, MessageCircle, MessageSquare } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
@@ -227,6 +227,11 @@ const AdminCustomerDetail = () => {
                       <MessageCircle className="h-4 w-4" />
                     </Button>
                   </a>
+                  <a href={`sms:${cleanPhone}`}>
+                    <Button size="icon" variant="outline" className="h-9 w-9 text-orange-600 hover:text-orange-700 hover:bg-orange-50 border-orange-200" title="SMS">
+                      <MessageSquare className="h-4 w-4" />
+                    </Button>
+                  </a>
                   <a href={`tel:${cleanPhone}`}>
                     <Button size="icon" variant="outline" className="h-9 w-9 text-blue-600 hover:text-blue-700 hover:bg-blue-50 border-blue-200" title="Call">
                       <Phone className="h-4 w-4" />
@@ -274,6 +279,11 @@ const AdminCustomerDetail = () => {
                         <a href={`https://wa.me/${cleanPhone.replace(/^\+/, "")}`} target="_blank" rel="noopener noreferrer">
                           <Button size="icon" variant="ghost" className="h-6 w-6 text-green-600" title="WhatsApp">
                             <MessageCircle className="h-3.5 w-3.5" />
+                          </Button>
+                        </a>
+                        <a href={`sms:${cleanPhone}`}>
+                          <Button size="icon" variant="ghost" className="h-6 w-6 text-orange-600" title="SMS">
+                            <MessageSquare className="h-3.5 w-3.5" />
                           </Button>
                         </a>
                         <a href={`tel:${cleanPhone}`}>
