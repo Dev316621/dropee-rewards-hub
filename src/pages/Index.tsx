@@ -67,7 +67,7 @@ const Index = () => {
         "name": "DROPEE",
         "description": "Fast, reliable delivery service in Ukhrul, Manipur with a gamified loyalty program.",
         "address": { "@type": "PostalAddress", "addressLocality": "Ukhrul", "addressRegion": "Manipur", "addressCountry": "IN" },
-        "url": "https://dropee.in",
+        "url": "https://dropee.discoverukhrul.site",
       })}} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
