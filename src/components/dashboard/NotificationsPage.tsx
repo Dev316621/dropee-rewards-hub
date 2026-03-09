@@ -12,6 +12,7 @@ const typeIcons: Record<string, string> = {
   spin_win: "🎡",
   coupon_received: "🎟️",
   region_approved: "📍",
+  region_rejected: "❌",
   referral: "🤝",
   info: "ℹ️",
 };
