@@ -1,15 +1,23 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { 
   BarChart3, Users, Truck, Gift, Settings, FileText, 
   Handshake, Ticket, LogOut, Package, ChevronLeft, ChevronRight,
   LayoutDashboard, Disc3, Home, ScrollText, ShoppingBag, CalendarCheck,
-  Globe, Network, UserCheck, BookOpen
+  Globe, Network, UserCheck, BookOpen, Plus, Search, Bell
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import AdminBottomNav from "./AdminBottomNav";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const navSections = [
   {
