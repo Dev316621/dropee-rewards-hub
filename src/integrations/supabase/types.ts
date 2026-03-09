@@ -345,6 +345,7 @@ export type Database = {
       }
       hub_delivery_agents: {
         Row: {
+          agent_code: string | null
           created_at: string
           delivery_fee: number
           email: string | null
@@ -356,6 +357,7 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          agent_code?: string | null
           created_at?: string
           delivery_fee?: number
           email?: string | null
@@ -367,6 +369,7 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          agent_code?: string | null
           created_at?: string
           delivery_fee?: number
           email?: string | null
@@ -1449,6 +1452,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_agent_code: { Args: never; Returns: string }
       generate_referral_code: { Args: never; Returns: string }
       get_user_delivery_count: { Args: { _user_id: string }; Returns: number }
       get_user_points_balance: { Args: { _user_id: string }; Returns: number }
