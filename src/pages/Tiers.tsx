@@ -1,21 +1,43 @@
 import AnimatedSection from "@/components/AnimatedSection";
 import SEOHead from "@/components/SEOHead";
 import { motion } from "framer-motion";
-import { ChevronRight, Check, Crown, Sparkles, Trophy, Award } from "lucide-react";
+import { ChevronRight, Check, Crown, Sparkles, Trophy, Award, Medal, Gem } from "lucide-react";
+import { ReactNode } from "react";
+
+// Tier badge components with realistic styling
+const TierBadge = ({ children, className }: { children: ReactNode; className?: string }) => (
+  <div className={`relative ${className}`}>{children}</div>
+);
+
+const BronzeMedal = () => (
+  <Medal className="w-6 h-6 sm:w-7 sm:h-7" style={{ color: "#CD7F32", filter: "drop-shadow(0 2px 4px rgba(205,127,50,0.4))" }} strokeWidth={1.5} />
+);
+
+const SilverMedal = () => (
+  <Medal className="w-6 h-6 sm:w-7 sm:h-7" style={{ color: "#C0C0C0", filter: "drop-shadow(0 2px 4px rgba(192,192,192,0.5))" }} strokeWidth={1.5} />
+);
+
+const GoldTrophy = () => (
+  <Trophy className="w-6 h-6 sm:w-7 sm:h-7" style={{ color: "#FFD700", filter: "drop-shadow(0 2px 4px rgba(255,215,0,0.5))" }} strokeWidth={1.5} fill="rgba(255,215,0,0.2)" />
+);
+
+const DiamondGem = () => (
+  <Gem className="w-6 h-6 sm:w-7 sm:h-7" style={{ color: "#B9F2FF", filter: "drop-shadow(0 2px 6px rgba(185,242,255,0.6))" }} strokeWidth={1.5} />
+);
 
 const tiers = [
   {
-    name: "Starter", icon: "🥉", range: "0–9 deliveries", cssClass: "tier-bronze",
+    name: "Starter", IconComponent: BronzeMedal, range: "0–9 deliveries", cssClass: "tier-bronze",
     glowClass: "hover:shadow-[0_0_30px_hsl(30_60%_50%/0.3)]",
     perks: ["Basic loyalty points (2 pts/delivery)", "Weekly Dropee Offer eligibility", "Daily & Weekly spin access"],
   },
   {
-    name: "Regular", icon: "🥈", range: "10–24 deliveries", cssClass: "tier-silver",
+    name: "Regular", IconComponent: SilverMedal, range: "10–24 deliveries", cssClass: "tier-silver",
     glowClass: "hover:shadow-[0_0_30px_hsl(0_0%_70%/0.3)]",
     perks: ["All Starter perks", "5% priority in delivery queue", "1 exclusive coupon per month", "Priority Tag on profile"],
   },
   {
-    name: "Elite", icon: "🥇", range: "25–49 deliveries", cssClass: "tier-gold",
+    name: "Elite", IconComponent: GoldTrophy, range: "25–49 deliveries", cssClass: "tier-gold",
     glowClass: "hover:shadow-[0_0_30px_hsl(45_93%_47%/0.3)]",
     perks: ["All Regular perks", "Priority handling on deliveries", "Exclusive promo access", "Birthday free delivery 🎂"],
   },
