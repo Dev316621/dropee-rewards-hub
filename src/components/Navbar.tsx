@@ -162,9 +162,19 @@ const Navbar = () => {
             </Link>
             <div className="pt-4 space-y-3">
               {user ? (
-                <Link to="/dashboard" onClick={() => setIsOpen(false)} className="block">
-                  <Button className="w-full h-12 text-base" size="lg">Dashboard</Button>
-                </Link>
+                <>
+                  <Link to="/dashboard" onClick={() => setIsOpen(false)} className="block">
+                    <Button className="w-full h-12 text-base" size="lg">Dashboard</Button>
+                  </Link>
+                  {isAdmin && (
+                    <Link to="/admin" onClick={() => setIsOpen(false)} className="block">
+                      <Button variant="outline" className="w-full h-12 text-base gap-2" size="lg">
+                        <Shield className="w-5 h-5" />
+                        Admin Panel
+                      </Button>
+                    </Link>
+                  )}
+                </>
               ) : (
                 <Link to="/login" onClick={() => setIsOpen(false)} className="block">
                   <Button className="w-full h-12 text-base" size="lg">Track Deliveries</Button>
