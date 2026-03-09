@@ -1,9 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Truck, Gift, Disc3, Bell } from "lucide-react";
+import { Home, Truck, Gift, Disc3, Bell, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useAuth } from "@/contexts/AuthContext";
 
-const navItems = [
+const baseNavItems = [
   { icon: Home, label: "Overview", path: "/dashboard" },
   { icon: Truck, label: "Deliveries", path: "/dashboard/deliveries" },
   { icon: Gift, label: "Rewards", path: "/dashboard/rewards" },
