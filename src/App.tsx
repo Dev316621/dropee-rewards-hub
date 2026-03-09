@@ -97,6 +97,7 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/complete-profile" element={<CompleteProfile />} />
             <Route path="/share-location/:token" element={<ShareLocation />} />
+            <Route path="/track" element={<TrackDelivery />} />
             <Route path="/install" element={<Install />} />
             <Route path="/agent/login" element={<AgentLogin />} />
 

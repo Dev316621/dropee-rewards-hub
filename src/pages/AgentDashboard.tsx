@@ -179,121 +179,202 @@ const AgentDashboard = () => {
         </div>
 
         {/* Active Orders */}
-        <section>
-          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Circle className="h-3 w-3 fill-orange-500 text-orange-500" />
-            Active Deliveries
-          </h2>
-          {isLoading ? (
-            <div className="text-center py-8 text-muted-foreground">Loading orders...</div>
-          ) : activeOrders.length === 0 ? (
-            <Card>
-              <CardContent className="py-8 text-center text-muted-foreground">
-                No active deliveries assigned to you.
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="space-y-4">
-              {activeOrders.map((order) => (
-                <Card key={order.id} className="overflow-hidden">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          {order.hub_websites && (
-                            <Badge
-                              style={{ backgroundColor: order.hub_websites.label_color }}
-                              className="text-white text-xs"
-                            >
-                              {order.hub_websites.name}
-                            </Badge>
-                          )}
-                          {getStatusBadge(order.status)}
+        <Tabs defaultValue="list" className="w-full">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <Circle className="h-3 w-3 fill-orange-500 text-orange-500" />
+              Active Deliveries
+            </h2>
+            <TabsList className="grid grid-cols-2 w-auto">
+              <TabsTrigger value="list" className="gap-1 px-3">
+                <List className="h-4 w-4" />
+                List
+              </TabsTrigger>
+              <TabsTrigger value="map" className="gap-1 px-3">
+                <Map className="h-4 w-4" />
+                Map
+              </TabsTrigger>
+            </TabsList>
+          </div>
+
+          <TabsContent value="list">
+            {isLoading ? (
+              <div className="text-center py-8 text-muted-foreground">Loading orders...</div>
+            ) : activeOrders.length === 0 ? (
+              <Card>
+                <CardContent className="py-8 text-center text-muted-foreground">
+                  No active deliveries assigned to you.
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-4">
+                {activeOrders.map((order) => (
+                  <Card key={order.id} className="overflow-hidden">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            {order.hub_websites && (
+                              <Badge
+                                style={{ backgroundColor: order.hub_websites.label_color }}
+                                className="text-white text-xs"
+                              >
+                                {order.hub_websites.name}
+                              </Badge>
+                            )}
+                            {getStatusBadge(order.status)}
+                          </div>
+                          <CardTitle className="text-base">
+                            Order #{order.external_order_id || order.id.slice(0, 8)}
+                          </CardTitle>
+                          <CardDescription className="flex items-center gap-1 mt-1">
+                            <Clock className="h-3 w-3" />
+                            {format(new Date(order.created_at), "MMM d, h:mm a")}
+                          </CardDescription>
                         </div>
-                        <CardTitle className="text-base">
-                          Order #{order.external_order_id || order.id.slice(0, 8)}
-                        </CardTitle>
-                        <CardDescription className="flex items-center gap-1 mt-1">
-                          <Clock className="h-3 w-3" />
-                          {format(new Date(order.created_at), "MMM d, h:mm a")}
-                        </CardDescription>
+                        <p className="text-lg font-bold text-primary">₹{order.total}</p>
                       </div>
-                      <p className="text-lg font-bold text-primary">₹{order.total}</p>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {/* Customer Info */}
-                    <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg">
-                      <User className="h-4 w-4 text-muted-foreground mt-0.5" />
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium">{order.customer_name}</p>
-                        <a
-                          href={`tel:${order.customer_phone}`}
-                          className="text-sm text-primary flex items-center gap-1"
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {/* Customer Info */}
+                      <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg">
+                        <User className="h-4 w-4 text-muted-foreground mt-0.5" />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium">{order.customer_name}</p>
+                          <a
+                            href={`tel:${order.customer_phone}`}
+                            className="text-sm text-primary flex items-center gap-1"
+                          >
+                            <Phone className="h-3 w-3" />
+                            {order.customer_phone}
+                          </a>
+                        </div>
+                      </div>
+
+                      {/* Address */}
+                      <div className="flex items-start gap-3">
+                        <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
+                        <div className="flex-1">
+                          <p className="text-sm">{order.customer_address}</p>
+                          {order.latitude && order.longitude && (
+                            <a
+                              href={`https://www.google.com/maps/dir/?api=1&destination=${order.latitude},${order.longitude}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs text-primary flex items-center gap-1 mt-1"
+                            >
+                              <Navigation className="h-3 w-3" />
+                              Open in Google Maps
+                            </a>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Items */}
+                      <div className="border-t pt-3">
+                        <p className="text-xs font-medium text-muted-foreground mb-2">Items:</p>
+                        <ul className="text-sm space-y-1">
+                          {Array.isArray(order.items) &&
+                            order.items.map((item: any, idx: number) => (
+                              <li key={idx} className="flex justify-between">
+                                <span>
+                                  {item.qty}x {item.name}
+                                </span>
+                                <span className="text-muted-foreground">₹{item.price * item.qty}</span>
+                              </li>
+                            ))}
+                        </ul>
+                      </div>
+
+                      {order.notes && (
+                        <div className="text-sm bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded text-yellow-800 dark:text-yellow-200">
+                          <strong>Note:</strong> {order.notes}
+                        </div>
+                      )}
+
+                      {/* Status Update */}
+                      <div className="border-t pt-3">
+                        <p className="text-xs font-medium text-muted-foreground mb-2">Update Status:</p>
+                        <Select
+                          value={order.status}
+                          onValueChange={(value) => handleStatusChange(order.id, value)}
+                          disabled={updatingOrderId === order.id}
                         >
-                          <Phone className="h-3 w-3" />
-                          {order.customer_phone}
-                        </a>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {STATUS_OPTIONS.map((opt) => (
+                              <SelectItem key={opt.value} value={opt.value}>
+                                <div className="flex items-center gap-2">
+                                  <Circle className={`h-2 w-2 ${opt.color} rounded-full`} />
+                                  {opt.label}
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
-                    </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
 
-                    {/* Address */}
-                    <div className="flex items-start gap-3">
-                      <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
-                      <p className="text-sm">{order.customer_address}</p>
-                    </div>
-
-                    {/* Items */}
-                    <div className="border-t pt-3">
-                      <p className="text-xs font-medium text-muted-foreground mb-2">Items:</p>
-                      <ul className="text-sm space-y-1">
-                        {Array.isArray(order.items) &&
-                          order.items.map((item: any, idx: number) => (
-                            <li key={idx} className="flex justify-between">
-                              <span>
-                                {item.qty}x {item.name}
-                              </span>
-                              <span className="text-muted-foreground">₹{item.price * item.qty}</span>
-                            </li>
-                          ))}
-                      </ul>
-                    </div>
-
-                    {order.notes && (
-                      <div className="text-sm bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded text-yellow-800 dark:text-yellow-200">
-                        <strong>Note:</strong> {order.notes}
-                      </div>
-                    )}
-
-                    {/* Status Update */}
-                    <div className="border-t pt-3">
-                      <p className="text-xs font-medium text-muted-foreground mb-2">Update Status:</p>
-                      <Select
-                        value={order.status}
-                        onValueChange={(value) => handleStatusChange(order.id, value)}
-                        disabled={updatingOrderId === order.id}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {STATUS_OPTIONS.map((opt) => (
-                            <SelectItem key={opt.value} value={opt.value}>
-                              <div className="flex items-center gap-2">
-                                <Circle className={`h-2 w-2 ${opt.color} rounded-full`} />
-                                {opt.label}
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </section>
+          <TabsContent value="map">
+            {activeOrders.filter(o => o.latitude && o.longitude).length === 0 ? (
+              <Card>
+                <CardContent className="py-8 text-center text-muted-foreground">
+                  <MapPin className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p className="font-medium">No pinned locations</p>
+                  <p className="text-sm">Orders with map locations will appear here</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="overflow-hidden">
+                <div className="h-[400px]">
+                  <MapContainer
+                    center={[
+                      activeOrders.find(o => o.latitude)?.latitude || 25.097,
+                      activeOrders.find(o => o.longitude)?.longitude || 94.361
+                    ]}
+                    zoom={13}
+                    style={{ height: "100%", width: "100%" }}
+                    scrollWheelZoom={true}
+                  >
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    {activeOrders
+                      .filter((o) => o.latitude && o.longitude)
+                      .map((order) => (
+                        <Marker key={order.id} position={[order.latitude!, order.longitude!]}>
+                          <Popup>
+                            <div className="text-sm space-y-1">
+                              <p className="font-bold">#{order.external_order_id || order.id.slice(0, 8)}</p>
+                              <p className="font-medium">{order.customer_name}</p>
+                              <p>{order.customer_address}</p>
+                              <a
+                                href={`https://www.google.com/maps/dir/?api=1&destination=${order.latitude},${order.longitude}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary flex items-center gap-1"
+                              >
+                                <Navigation className="h-3 w-3" />
+                                Navigate
+                              </a>
+                            </div>
+                          </Popup>
+                        </Marker>
+                      ))}
+                  </MapContainer>
+                </div>
+              </Card>
+            )}
+          </TabsContent>
+        </Tabs>
 
         {/* Completed Orders */}
         {completedOrders.length > 0 && (
