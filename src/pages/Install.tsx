@@ -21,8 +21,7 @@ const Install = () => {
     }
   };
 
-  // Placeholder — replace with actual APK URL once built
-  const APK_URL = "";
+  const APK_URL = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/storage/v1/object/public/public-assets/DROPEE.apk`;
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-12">
