@@ -227,6 +227,11 @@ const AdminCustomerDetail = () => {
                       <MessageCircle className="h-4 w-4" />
                     </Button>
                   </a>
+                  <a href={`sms:${cleanPhone}`}>
+                    <Button size="icon" variant="outline" className="h-9 w-9 text-orange-600 hover:text-orange-700 hover:bg-orange-50 border-orange-200" title="SMS">
+                      <MessageSquare className="h-4 w-4" />
+                    </Button>
+                  </a>
                   <a href={`tel:${cleanPhone}`}>
                     <Button size="icon" variant="outline" className="h-9 w-9 text-blue-600 hover:text-blue-700 hover:bg-blue-50 border-blue-200" title="Call">
                       <Phone className="h-4 w-4" />
