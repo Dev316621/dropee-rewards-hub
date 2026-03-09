@@ -12,6 +12,12 @@ export interface HubWebsite {
   created_at: string;
 }
 
+interface OrderItem {
+  name: string;
+  qty: number;
+  price: number;
+}
+
 export interface HubAgent {
   id: string;
   name: string;
