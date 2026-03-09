@@ -372,18 +372,26 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
         <div className="space-y-2">
           {/* Online agents first */}
           {onlineAgents.map((agent, i) => renderAgent(agent, i))}
-          
-          {/* Divider if both groups exist */}
-          {onlineAgents.length > 0 && offlineAgents.length > 0 && (
+
+          {/* Busy */}
+          {onlineAgents.length > 0 && busyAgents.length > 0 && (
+            <div className="flex items-center gap-3 py-2">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Busy</span>
+              <div className="flex-1 h-px bg-border" />
+            </div>
+          )}
+          {busyAgents.map((agent, i) => renderAgent(agent, onlineAgents.length + i))}
+
+          {/* Offline */}
+          {(onlineAgents.length + busyAgents.length) > 0 && offlineAgents.length > 0 && (
             <div className="flex items-center gap-3 py-2">
               <div className="flex-1 h-px bg-border" />
               <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Offline</span>
               <div className="flex-1 h-px bg-border" />
             </div>
           )}
-          
-          {/* Offline agents */}
-          {offlineAgents.map((agent, i) => renderAgent(agent, onlineAgents.length + i))}
+          {offlineAgents.map((agent, i) => renderAgent(agent, onlineAgents.length + busyAgents.length + i))}
         </div>
       </CardContent>
     </Card>
