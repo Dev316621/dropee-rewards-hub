@@ -33,7 +33,7 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isHome = location.pathname === "/";
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   return (
     <>
