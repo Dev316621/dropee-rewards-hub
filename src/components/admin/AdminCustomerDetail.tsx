@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Package, Coins, Award, MapPin, Save, Loader2, Truck, Star, Navigation, ExternalLink } from "lucide-react";
+import { ArrowLeft, Package, Coins, Award, MapPin, Save, Loader2, Truck, Star, Navigation, ExternalLink, Wifi, WifiOff } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
@@ -172,12 +172,41 @@ const AdminCustomerDetail = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="icon" onClick={() => navigate("/admin/customers")} className="text-muted-foreground"><ArrowLeft className="h-4 w-4" /></Button>
-        <div>
-          <h1 className="text-xl font-bold font-display text-dashboard-card-foreground">{p?.full_name || "Customer"}</h1>
-          <p className="text-xs text-muted-foreground">User ID: {userId}</p>
+      {/* Profile Cover + Header */}
+      <div className="relative">
+        {/* Cover gradient */}
+        <div className="h-28 sm:h-36 rounded-xl bg-gradient-to-br from-primary/30 via-primary/10 to-secondary/20 border border-dashboard-border" />
+        
+        {/* Profile info overlay */}
+        <div className="px-4 -mt-10 flex items-end gap-4">
+          {/* Avatar */}
+          <div className="relative">
+            <div className="h-20 w-20 rounded-full bg-dashboard-card border-4 border-dashboard-bg flex items-center justify-center text-2xl font-bold text-primary shadow-lg">
+              {p?.full_name?.charAt(0)?.toUpperCase() || "?"}
+            </div>
+            {/* Online/Offline indicator */}
+            <span className={`absolute bottom-1 right-1 h-4 w-4 rounded-full border-2 border-dashboard-bg ${
+              p?.updated_at && (Date.now() - new Date(p.updated_at).getTime()) < 15 * 60 * 1000
+                ? "bg-green-500" : "bg-muted-foreground/40"
+            }`} />
+          </div>
+          <div className="pb-1 flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="text-xl font-bold font-display text-dashboard-card-foreground">{p?.full_name || "Customer"}</h1>
+              <Badge variant="outline" className="text-[10px] gap-1 border-dashboard-border">
+                {p?.updated_at && (Date.now() - new Date(p.updated_at).getTime()) < 15 * 60 * 1000 ? (
+                  <><Wifi className="h-2.5 w-2.5 text-green-500" /> Online</>
+                ) : (
+                  <><WifiOff className="h-2.5 w-2.5 text-muted-foreground" /> Offline</>
+                )}
+              </Badge>
+              <Badge variant="secondary" className="text-[10px]">{tier.data?.tier_name ?? "Starter"}</Badge>
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5 truncate">ID: {userId}</p>
+          </div>
+          <Button variant="ghost" size="icon" onClick={() => navigate("/admin/customers")} className="text-muted-foreground mb-1">
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 
