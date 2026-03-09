@@ -37,7 +37,7 @@ export interface HubOrder {
   customer_name: string;
   customer_phone: string;
   customer_address: string;
-  items: { name: string; qty: number; price: number }[];
+  items: OrderItem[];
   total: number;
   notes: string;
   status: string;
@@ -45,7 +45,7 @@ export interface HubOrder {
   created_at: string;
   updated_at: string;
   hub_websites?: { name: string; label_color: string };
-  hub_delivery_agents?: { name: string; phone: string } | null;
+  hub_delivery_agents?: { name: string; phone: string; agent_code: string } | null;
 }
 
 export interface HubStatusLog {
