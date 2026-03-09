@@ -58,6 +58,7 @@ import AdminApiDocs from "./components/admin/AdminApiDocs";
 import AgentRoute from "./components/AgentRoute";
 import AgentLogin from "./pages/AgentLogin";
 import AgentDashboard from "./pages/AgentDashboard";
+import TrackDelivery from "./pages/TrackDelivery";
 import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
 
@@ -96,6 +97,7 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/complete-profile" element={<CompleteProfile />} />
             <Route path="/share-location/:token" element={<ShareLocation />} />
+            <Route path="/track" element={<TrackDelivery />} />
             <Route path="/install" element={<Install />} />
             <Route path="/agent/login" element={<AgentLogin />} />
 

@@ -28,6 +28,7 @@ export interface HubAgent {
   is_active: boolean;
   created_at: string;
   agent_code: string;
+  delivery_fee: number;
 }
 
 export interface HubOrder {
@@ -44,6 +45,8 @@ export interface HubOrder {
   assigned_agent_id: string | null;
   created_at: string;
   updated_at: string;
+  latitude: number | null;
+  longitude: number | null;
   hub_websites?: { name: string; label_color: string };
   hub_delivery_agents?: { name: string; phone: string; agent_code: string } | null;
 }
