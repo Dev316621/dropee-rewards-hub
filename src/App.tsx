@@ -55,7 +55,11 @@ import AdminHubOrders from "./components/admin/AdminHubOrders";
 import AdminHubWebsites from "./components/admin/AdminHubWebsites";
 import AdminHubAgents from "./components/admin/AdminHubAgents";
 import AdminApiDocs from "./components/admin/AdminApiDocs";
+import AgentRoute from "./components/AgentRoute";
+import AgentLogin from "./pages/AgentLogin";
+import AgentDashboard from "./pages/AgentDashboard";
 import Install from "./pages/Install";
+import NotFound from "./pages/NotFound";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
