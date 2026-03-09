@@ -221,6 +221,21 @@ export const AvailableAgents = (props: AvailableAgentsProps) => {
     const userRating = getUserRating(agent.id);
 
     return (
+      (() => {
+        const presence = getPresence(agent);
+        const isOnline = presence === "online";
+        const isBusy = presence === "busy";
+
+        const statusLabel = isOnline ? "Online" : isBusy ? "Busy" : "Offline";
+        const statusDotClass = isOnline ? "bg-success" : isBusy ? "bg-primary" : "bg-destructive";
+        const statusBadgeClass = isOnline
+          ? "border-success/30 text-success bg-success/5"
+          : isBusy
+            ? "border-primary/30 text-primary bg-primary/5"
+            : "border-destructive/30 text-destructive bg-destructive/5";
+
+        return (
+
       <motion.div
         key={agent.id}
         initial={{ opacity: 0, y: 10 }}
