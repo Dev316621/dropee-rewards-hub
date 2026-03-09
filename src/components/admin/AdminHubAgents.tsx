@@ -153,6 +153,7 @@ const AdminHubAgents = () => {
                     <TableHead>Name</TableHead>
                     <TableHead>Phone</TableHead>
                     <TableHead>Email</TableHead>
+                    <TableHead>Fee (₹)</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Active</TableHead>
                     <TableHead>Actions</TableHead>
