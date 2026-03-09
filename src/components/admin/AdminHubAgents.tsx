@@ -149,6 +149,7 @@ const AdminHubAgents = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead>Agent ID</TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Phone</TableHead>
                     <TableHead>Email</TableHead>
@@ -159,10 +160,11 @@ const AdminHubAgents = () => {
                 </TableHeader>
                 <TableBody>
                   {approvedAgents.length === 0 && (
-                    <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground py-8">No active agents</TableCell></TableRow>
+                    <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground py-8">No active agents</TableCell></TableRow>
                   )}
                   {approvedAgents.map((a) => (
                     <TableRow key={a.id}>
+                      <TableCell><Badge variant="secondary" className="font-mono font-bold">{a.agent_code || "—"}</Badge></TableCell>
                       <TableCell className="font-medium">{a.name}</TableCell>
                       <TableCell>{a.phone || "—"}</TableCell>
                       <TableCell className="text-sm">{a.email || "—"}</TableCell>
