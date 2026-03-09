@@ -58,6 +58,7 @@ import AdminApiDocs from "./components/admin/AdminApiDocs";
 import AgentRoute from "./components/AgentRoute";
 import AgentLogin from "./pages/AgentLogin";
 import AgentDashboard from "./pages/AgentDashboard";
+import TrackDelivery from "./pages/TrackDelivery";
 import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
 
