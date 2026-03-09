@@ -1,19 +1,19 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import AnimatedSection from "@/components/AnimatedSection";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Package, Truck, ShoppingBag, Zap, Handshake, ArrowRight, Clock, IndianRupee, CheckCircle, X, MapPin } from "lucide-react";
+import { Package, Truck, ShoppingBag, Zap, Handshake, ArrowRight, Clock, IndianRupee, CheckCircle, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
+import { AvailableAgents } from "@/components/AvailableAgents";
 
 const iconMap: Record<string, any> = { Package, Truck, ShoppingBag, Zap, Handshake };
 
