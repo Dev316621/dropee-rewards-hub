@@ -286,7 +286,6 @@ const AdminCustomerDetail = () => {
                   </div>
                 )}
               </div>
-              </div>
             ))}
             <div>
               <Label className="text-[10px] text-muted-foreground uppercase">Referral Code</Label>
